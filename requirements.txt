@@ -8,3 +8,5 @@ seaborn
 cliffs-delta
 jupyter
 scipy
+python-dotenv
+huggingface_hub

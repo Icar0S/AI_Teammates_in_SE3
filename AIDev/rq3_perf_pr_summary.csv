@@ -1,0 +1,6 @@
+agent,matched_files_count,distinct_prs,perf_pr_count
+OpenAI Codex,1660,830,207
+GitHub Copilot,924,168,44
+Cursor,42,20,24
+Devin,1590,109,62
+Claude Code,65,22,3

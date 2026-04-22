@@ -1,0 +1,17 @@
+Verdict: REFORMULATE
+
+VERDICT: Reformulate RQ3.
+k6-specific PRs: 10 (below threshold of 50).
+BUT total performance-related PRs (all tools): 1149.
+Suggested reformulation:
+  "Como agentes de IA abordam artefatos de performance (commits
+   do tipo 'perf', benchmarks, scripts de carga) comparado a
+   especialistas humanos? Quais estratégias de otimização são
+   mais frequentes?"
+Include: perf-type PRs (340),
+         benchmark files, and generic load-test scripts.
+
+
+Total k6 PRs: 10
+Total perf-pattern PRs: 1149
+Total pre-classified perf PRs: 340
