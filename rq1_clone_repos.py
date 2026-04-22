@@ -58,7 +58,7 @@ import csv
 import os
 import subprocess
 import sys
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 
 import pandas as pd
@@ -82,17 +82,17 @@ load_dotenv(ROOT_DIR / ".env")
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")
 GIT_TIMEOUT = 300  # segundos por operação git
 
-
 # ---------------------------------------------------------------------------
 # Estruturas de dados
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class CloneResult:
     repo_full_name: str
     pr_id: int
     sha: str
-    status: str          # "ok" | "skipped" | "repo_unavailable" | "clone_error" | "checkout_error"
+    status: str
     error_msg: str = ""
     worktree_path: str = ""
 
@@ -100,6 +100,7 @@ class CloneResult:
 # ---------------------------------------------------------------------------
 # GitHub API — verificação de disponibilidade
 # ---------------------------------------------------------------------------
+
 
 def check_repo_available(full_name: str) -> bool:
     """
@@ -125,6 +126,7 @@ def check_repo_available(full_name: str) -> bool:
 # Operações Git
 # ---------------------------------------------------------------------------
 
+
 def repo_to_dirname(full_name: str) -> str:
     """'owner/repo' → 'owner__repo' (seguro para nome de diretório)."""
     return full_name.replace("/", "__")
@@ -139,9 +141,10 @@ def clone_repo(full_name: str, clone_dir: Path) -> tuple[bool, str]:
     url = f"https://{token_prefix}github.com/{full_name}.git"
 
     cmd = [
-        "git", "clone",
-        "--filter=blob:none",   # partial clone: baixa blobs só quando necessário
-        "--no-single-branch",   # mantém refs de todos os branches
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "--no-single-branch",  # mantém refs de todos os branches
         url,
         str(clone_dir),
     ]
@@ -162,15 +165,20 @@ def clone_repo(full_name: str, clone_dir: Path) -> tuple[bool, str]:
         return False, "git não encontrado no PATH"
 
 
-def create_worktree(clone_dir: Path, sha: str, worktree_dir: Path) -> tuple[bool, str]:
+def create_worktree(
+    clone_dir: Path, sha: str, worktree_dir: Path
+) -> tuple[bool, str]:  # noqa: E501
     """
     Cria um worktree Git isolado no commit SHA especificado.
     Permite que múltiplas PRs do mesmo repo usem commits diferentes
     sem interferência, sem precisar clonar o repo múltiplas vezes.
     """
     cmd = [
-        "git", "-C", str(clone_dir),
-        "worktree", "add",
+        "git",
+        "-C",
+        str(clone_dir),
+        "worktree",
+        "add",
         "--detach",
         str(worktree_dir),
         sha,
@@ -215,10 +223,18 @@ def create_worktree(clone_dir: Path, sha: str, worktree_dir: Path) -> tuple[bool
 # Log de resultados
 # ---------------------------------------------------------------------------
 
+
 class CloneLogger:
     """Escreve clone_log.csv com checkpointing incremental."""
 
-    FIELDS = ["repo_full_name", "pr_id", "sha", "status", "error_msg", "worktree_path"]
+    FIELDS = [
+        "repo_full_name",
+        "pr_id",
+        "sha",
+        "status",
+        "error_msg",
+        "worktree_path",
+    ]  # noqa: E501
 
     def __init__(self, path: Path) -> None:
         self.path = path
@@ -227,8 +243,10 @@ class CloneLogger:
         if path.exists():
             df = pd.read_csv(path)
             for _, row in df.iterrows():
-                self._done[(row["repo_full_name"], int(row["pr_id"]))] = row["status"]
-            print(f"  Checkpoint: {len(self._done)} entradas anteriores carregadas.")
+                self._done[(row["repo_full_name"], int(row["pr_id"]))] = row[
+                    "status"
+                ]  # noqa: E501
+            print(f"Checkpoint: {len(self._done)} entradas anteriores carrega")
 
         self._fh = open(path, "a", newline="", encoding="utf-8")
         self._writer = csv.DictWriter(self._fh, fieldnames=self.FIELDS)
@@ -240,14 +258,16 @@ class CloneLogger:
         return status in ("ok", "skipped")
 
     def write(self, result: CloneResult) -> None:
-        self._writer.writerow({
-            "repo_full_name": result.repo_full_name,
-            "pr_id": result.pr_id,
-            "sha": result.sha,
-            "status": result.status,
-            "error_msg": result.error_msg,
-            "worktree_path": result.worktree_path,
-        })
+        self._writer.writerow(
+            {
+                "repo_full_name": result.repo_full_name,
+                "pr_id": result.pr_id,
+                "sha": result.sha,
+                "status": result.status,
+                "error_msg": result.error_msg,
+                "worktree_path": result.worktree_path,
+            }
+        )
         self._fh.flush()
 
     def close(self) -> None:
@@ -258,24 +278,32 @@ class CloneLogger:
 # Pipeline principal
 # ---------------------------------------------------------------------------
 
+
 def process_repos(sample: pd.DataFrame) -> None:
     logger = CloneLogger(CLONE_LOG)
-    counters = {"ok": 0, "skipped": 0, "repo_unavailable": 0, "clone_error": 0, "checkout_error": 0}
+    counters = {
+        "ok": 0,
+        "skipped": 0,
+        "repo_unavailable": 0,
+        "clone_error": 0,
+        "checkout_error": 0,
+    }
 
     # Agrupa por repo para clonar uma vez e criar N worktrees
     repos = sample.groupby("repo_full_name")
     total_repos = len(repos)
 
     for repo_idx, (full_name, group) in enumerate(repos, 1):
+        full_name = str(full_name)
         print(f"\n[{repo_idx}/{total_repos}] {full_name} ({len(group)} PRs)")
 
         clone_dir = REPOS_DIR / repo_to_dirname(full_name)
 
         # ── Verificação de disponibilidade ───────────────────────────────
         if not clone_dir.exists():
-            print(f"  Verificando disponibilidade no GitHub ...")
+            print("Verificando disponibilidade no GitHub ...")
             if not check_repo_available(full_name):
-                print(f"  INDISPONÍVEL — repo deletado, privado ou rate-limited.")
+                print("INDISPONÍVEL")
                 for _, pr_row in group.iterrows():
                     result = CloneResult(
                         repo_full_name=full_name,
@@ -304,9 +332,9 @@ def process_repos(sample: pd.DataFrame) -> None:
                     logger.write(result)
                     counters["clone_error"] += 1
                 continue
-            print(f"  Clone OK.")
+            print("Clone OK.")
         else:
-            print(f"  Clone base já existe, pulando git clone.")
+            print("Clone base já existe, pulando git clone.")
 
         # ── Worktrees por PR ──────────────────────────────────────────────
         for _, pr_row in group.iterrows():
@@ -335,7 +363,7 @@ def process_repos(sample: pd.DataFrame) -> None:
             worktree_dir = REPOS_DIR / f"{repo_to_dirname(full_name)}__{sha7}"
 
             if worktree_dir.exists():
-                print(f"  PR {pr_id} (SHA {sha7}): worktree já existe, pulando.")
+                print(f"  PR {pr_id} (SHA {sha7}): worktree existe pulando")
                 result = CloneResult(
                     repo_full_name=full_name,
                     pr_id=pr_id,
@@ -392,15 +420,30 @@ def process_repos(sample: pd.DataFrame) -> None:
 # Entry point
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
-    parser = argparse.ArgumentParser(description="RQ1 Fase 2 — Clone de repositórios")
-    parser.add_argument("--agent", help="Filtrar por agente específico (ex: 'Claude Code')")
-    parser.add_argument("--limit", type=int, help="Limitar número de repos (para testes)")
+    parser = argparse.ArgumentParser(description="RQ1 Fase 2 — Clone repo")
+    parser.add_argument(
+        "--agent", help="Filtrar por agente específico (ex: 'Claude Code')"
+    )
+    parser.add_argument(
+        "--limit", type=int, help="Limitar número de repos (para testes)"
+    )
+    parser.add_argument(
+        "--csv",
+        default=str(SAMPLE_CSV),
+        help="CSV de entrada (default: AIDev/rq1_sample.csv). "
+        "Use AIDev/rq1_eligible.csv para clonar apenas PRs elegíveis.",
+    )
     args = parser.parse_args()
 
-    if not SAMPLE_CSV.exists():
-        print(f"ERRO: {SAMPLE_CSV} não encontrado.")
-        print("Execute rq1_sample_selection.py antes desta fase.")
+    csv_path = Path(args.csv)
+    if not csv_path.exists():
+        print(f"ERRO: {csv_path} não encontrado.")
+        print(
+            "Execute rq1_sample_selection.py"
+            " (e rq1_02_eligibility_filter.py) antes desta fase."
+        )
         sys.exit(1)
 
     if not GITHUB_TOKEN:
@@ -408,7 +451,7 @@ def main() -> None:
         print("Repos indisponíveis não serão detectados antes do clone.")
         print("Adicione GITHUB_TOKEN=ghp_... no arquivo .env\n")
 
-    sample = pd.read_csv(SAMPLE_CSV)
+    sample = pd.read_csv(csv_path)
 
     if args.agent:
         sample = sample[sample["agent"] == args.agent].copy()

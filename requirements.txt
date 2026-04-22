@@ -10,3 +10,6 @@ jupyter
 scipy
 python-dotenv
 huggingface_hub
+lizard
+mutmut
+statsmodels
