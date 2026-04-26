@@ -64,6 +64,116 @@ Install required dependencies:
 pip install -r requirements.txt
 ```
 
+## Research Pipelines (GESAD/UECE — ESE Special Issue)
+
+This repository includes two empirical mining pipelines investigating AI-generated test quality.
+All scripts read from `OFFICIALDATASET.zip` (offline) or fall back to HuggingFace automatically.
+
+### Prerequisites
+
+```bash
+pip install -r requirements.txt
+# Copy .env.example → .env and set HF_TOKEN (only needed for online mode)
+```
+
+Place `OFFICIALDATASET.zip` (downloaded from [Zenodo](https://doi.org/10.5281/zenodo.16919272)) in the project root.
+
+---
+
+### RQ1 — Functional Effectiveness (Mutation Score Indicator)
+
+> *Qual é a capacidade real de detecção de falhas dos testes gerados por agentes de IA, medida pelo MSI?*
+
+| Script | Purpose |
+|--------|---------|
+| `rq1_00_explore_zenodo.py` | Inspect the ZIP without full extraction — lists files, reads parquet schemas, compares with HuggingFace |
+| `rq1_sample_selection.py` | Extract initial candidate test PRs from AIDev (vitest / pytest patterns) |
+| `rq1_01_expand_python_sample.py` | Expand sample to Python repos via `test_*.py` / `*_test.py` patterns |
+| `rq1_02_eligibility_filter.py` | Apply 4 protocol criteria (CI, passing tests, containerisable, JS/TS or Python) + stratified sampling (200/agent, seed=42) |
+| `rq1_clone_repos.py` | Clone repos to exact merge commit SHA, create git worktrees |
+| `rq1_03_setup_stryker.py` | Prepare JS/TS worktrees: `npm install`, detect test runner, generate `stryker.config.json` |
+| `rq1_04_run_stryker.py` | Execute Stryker, parse `stryker-report.json`, compute MSI global and per operator |
+| `rq1_05_run_mutmut.py` | Create venv, install deps, run `mutmut`, classify mutation operators via diff |
+| `rq1_06_aggregate_msi.py` | Unify results, compute cyclomatic complexity (lizard), count assertions, Spearman correlations |
+| `rq1_07_stats_analysis.py` | Mann-Whitney U, Cliff's delta, Kruskal-Wallis, Bonferroni post-hoc + 3 figures |
+
+**Execution order:**
+
+```bash
+python rq1_00_explore_zenodo.py
+python rq1_sample_selection.py --offline
+python rq1_01_expand_python_sample.py --offline
+python rq1_02_eligibility_filter.py --offline
+
+# Requires Docker and git
+python rq1_clone_repos.py --csv AIDev/rq1_eligible.csv
+
+# JS/TS and Python mutation testing can run in parallel
+python rq1_03_setup_stryker.py &
+python rq1_05_run_mutmut.py &
+wait
+
+python rq1_04_run_stryker.py
+python rq1_06_aggregate_msi.py
+python rq1_07_stats_analysis.py
+```
+
+**Outputs:** `AIDev/rq1_*.csv`, `figs/rq1_*.png`
+
+---
+
+### RQ2 — Test Technical Debt (TDT)
+
+> *Quais padrões de dívida técnica emergem em testes agênticos, e como evoluem ao longo do ciclo de vida dos PRs?*
+
+Detection is **patch-based** (no repo cloning required). Analyses 10 test smells across the unified catalog
+(Palomba / Bavota / Verdecchia) and introduces two dimensions absent from prior work:
+co-occurrence patterns (phi coefficient + Ward clustering) and temporal evolution (Delta-TDT).
+
+| Script | Purpose |
+|--------|---------|
+| `rq2_00_build_corpus.py` | Build (pr_id, commit_sha) corpus of all commits touching test files; attaches agent, language, task_type |
+| `rq2_01_detect_smells.py` | Detect 10 smells from unified diff patches (no cloning); supports `--resume` for large runs |
+| `rq2_02_aggregate_tdt.py` | Compute weighted TDT index per commit and Delta-TDT per PR |
+| `rq2_03_cooccurrence.py` | Phi coefficient matrix + Ward's hierarchical clustering to find composite smell patterns |
+| `rq2_04_stats_analysis.py` | Full statistical battery (Mann-Whitney U, Cliff's delta, Kruskal-Wallis, Bonferroni) + 4 figures |
+
+**Execution order:**
+
+```bash
+python rq2_00_build_corpus.py --offline          # ~few minutes
+python rq2_01_detect_smells.py --offline --resume # longest step — resumable
+python rq2_02_aggregate_tdt.py
+python rq2_03_cooccurrence.py                     # can run in parallel with rq2_04
+python rq2_04_stats_analysis.py
+```
+
+**Debug mode** (test with a small slice of data):
+
+```bash
+python rq2_00_build_corpus.py --offline --limit 5000
+python rq2_01_detect_smells.py --offline --limit 1000 --resume
+```
+
+**Outputs:** `AIDev/rq2_*.{parquet,csv}`, `figs/rq2_*.png`
+
+**Smell catalog (10 smells, weighted TDT index):**
+
+| Smell | Source | Weight |
+|-------|--------|--------|
+| UnknownTest | Palomba | 0.15 |
+| EagerTest | Palomba | 0.12 |
+| ResourceOptimism | Verdecchia | 0.11 |
+| AssertionRoulette | Palomba | 0.10 |
+| MissingExceptionTest | Bavota | 0.09 |
+| RedundantAssertion | Palomba | 0.08 |
+| GeneralFixture | Verdecchia | 0.08 |
+| MagicNumberTest | Palomba | 0.07 |
+| VerboseTest | Bavota | 0.06 |
+| DuplicateAssert | Palomba | 0.06 |
+
+---
+
 ## Key Findings
 
 The key findings from the analysis of are based on AIDev-pop, a subset of the AIDev dataset.

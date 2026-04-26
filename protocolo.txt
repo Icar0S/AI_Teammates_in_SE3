@@ -1,0 +1,321 @@
+
+Group of Software Engineering and Distributed Systems (GESAD)
+State University of Ceará (UECE) - Fortaleza, CE, Brazil
+Research Protocol: ESE Special Issue on Agentic Software Engineering
+Além da Cobertura: Uma Investigação Empírica sobre Eficácia de Mutação, Dívida Técnica e Performance em Testes Gerados por Agentes de IA
+Identificação e Contexto
+Pesquisadores: [ 4 Especialistas em QA / Alunos de Pós-Graduação]
+Icaro Santo ; Rubens Abraao Da Silva Sousa - PPGCC UECE; Levi Almeida Da Silva; Samuel Sousa Teles
+Domínio: Qualidade de Software, Testes de Performance e Inteligência Artificial.
+Dataset Base: AIDev Dataset (Hugging Face/Zenodo) — 456.000+ pull requests de cinco agentes (OpenAI Codex, Devin, GitHub Copilot, Cursor, Claude Code), em 61.000 repositórios, com 47.000 desenvolvedores.
+Perspectiva: Pragmatismo — foco na utilidade prática e ação no mundo real para criação de conhecimento.
+Estratégia metodológica: Multimétodos com Estratégia Sequencial Exploratória (fase quantitativa → fase qualitativa → síntese e teorização).
+
+1. Introdução
+
+Estudo de Avaliações empíricas de código gerado por agentes, incluindo compensações como velocidade versus confiabilidade, consistência do código e desafios de manutenção a longo prazo. 
+Como os agentes de IA contribuem com testes, avaliação de agentes em tarefas de nível de repositório e intervenções de desenvolvedores para garantir testes de software confiáveis.
+Objetivos Centrais
+Minerar e descobrir como os dados relacionados a testes, qualidade e segurança de software corroboram na criação de checklists, frameworks e categorizações para criação de testes com llms.
+Avaliar a Eficácia de Detecção de Falhas: Utilizar testes de mutação para medir o $MSI$ (Mutation Score Indicator) de commits autorados exclusivamente por IA.
+Mapear Dívida Técnica de Testes (TDT): Aplicar catálogos de estratégias de prevenção para identificar se agentes de IA mitigam ou amplificam a TDT em comparação a especialistas humanos.
+Analisar Modelagem de Performance: Comparar a complexidade e o realismo de scripts de carga (k6) gerados por IA em relação aos requisitos de performance de nível industrial.
+
+1.2. Questões de Pesquisa
+As questões foram formuladas seguindo os níveis de descrição e inferência sugeridos:
+RQ1 — Eficácia Funcional (Nível: Inferência comparativa) 
+Qual é a capacidade real de detecção de falhas — medida pelo Mutation Score Indicator (MSI) — dos testes de unidade gerados exclusivamente por agentes de IA, em comparação aos testes escritos por humanos, controlando por linguagem, complexidade ciclomática e tipo de tarefa (feat, fix, refactor)?
+Motivação: Yoshimoto et al. mostraram que agentes geram testes com mais assertions e menor complexidade ciclomática, e que a cobertura de linha é comparável à humana. Mas cobertura de linha é métrica fraca: um teste pode cobrir uma linha sem detectar mutantes ali presentes. O MSI vai além e mede quanto os testes realmente matam defeitos injetados, respondendo se a aparente "boa cobertura" agêntica é substantiva ou superficial.
+
+
+RQ2 — Dívida Técnica de Testes (Nível: Descrição + Inferência causal) Quais padrões de Test Debt Técnica (TDT) — identificados via catálogos de prevenção de test smells e antipadrões de testabilidade — emergem em testes agênticos, e como esses padrões evoluem ao longo do ciclo de vida dos PRs em comparação com testes humanos?
+Motivação: Milanese et al. identificaram diferenças estatísticas em test smells, mas com effect size negligenciável (Cliff's delta ≈ 0). Nossa hipótese é que a TDT agêntica se manifesta menos em smells individuais e mais em padrões compostos (ex.: Eager Test + Magic Number + Missing Exception Test combinados no mesmo arquivo). Além disso, investigaremos a TDT como fenômeno dinâmico — como ela acumula ou reduz ao longo do ciclo de vida de um PR.
+RQ3 — Estratégias de Performance (Nível: Descrição + Teorização) Quais estratégias de modelagem e otimização de performance os agentes de IA adotam em commits do tipo perf, e como essas estratégias diferem das adotadas por desenvolvedores humanos em termos de tipo de carga modelada, granularidade, cobertura de cenários de fronteira e realismo em relação a requisitos industriais de SLA?
+Motivação: Nenhum paper do corpus MSR 2026 tocou nesse tema. Scripts de teste de performance (k6, Locust, JMeter) são artefatos críticos para SRE e DevOps; sua qualidade é raramente avaliada empiricamente. Esta RQ constitui uma contribuição original e sem sobreposição com a literatura existente.
+RQ4 — Colaboração Humano-Agente (Nível: Inferência + Prescrição) Quais padrões de feedback de revisão (tipo, tom, intensidade, resolução) emergem especificamente em PRs com artefatos de teste gerados por agentes, e como esses padrões se correlacionam com a qualidade final dos testes (MSI, TDT) e com as decisões de merge?
+Motivação: Ferdous et al. identificaram o "Confidence Trap" — PRs com alta confiança do agente ainda introduzem breaking changes. Nossa hipótese complementar é que o feedback humano em artefatos de teste segue padrões distintos dos padrões em código de produção, e que revisores humanos aplicam heurísticas tácitas de qualidade de teste que não são capturadas pelas métricas automáticas.
+2. Posicionamento em Relação ao Estado da Arte (Gap Analysis)
+Os artigos publicados no MSR 2026 Mining Challenge sobre o mesmo dataset AIDev cobriram os seguintes aspectos:
+Haque et al. — frequência e momento de inclusão de testes em PRs agênticos, tamanho e taxa de merge.
+Yoshimoto et al. — frequência, estrutura (LOC, assertions, ciclomática) e cobertura de código dos testes gerados por agentes.
+Milanese et al. — caracterização comparada de test smells (usando catálogos existentes) entre HAPRs e HPRs, sem análise de eficácia detectiva real.
+Hoseinpour et al. — taxonomia de falhas em testes (compile-time vs. runtime), com análise de 500 PRs selecionados manualmente.
+Brahmi et al. — Self-Admitted Technical Debt (SATD) em comentários gerados por agentes, com análise temática de 525 instâncias.
+Ferdous et al. — breaking changes em PRs agênticos vs. humanos, com análise AST.
+Ghaleb — interações de agentes com configurações CI/CD (YAML).
+
+O que ainda não foi investigado e que este protocolo aborda de forma única:
+Mutation Testing (MSI — Mutation Score Indicator): Nenhum paper existente mediu a eficácia real de detecção de falhas dos testes gerados por agentes. Milanese et al. usaram test smells como proxy de qualidade, mas smells têm efeito de tamanho negligenciável nas suas análises. Yoshimoto et al. mediram cobertura de linha, que não captura a capacidade de matar mutantes. Este estudo será o primeiro a aplicar testes de mutação ao contexto agêntico em larga escala.
+Test Debt Técnica (TDT) com catálogos de prevenção: Milanese et al. mediram test smells estáticos com efeito negligenciável; nossa abordagem vai além ao mapear TDT usando catálogos de estratégias de prevenção (ex.: Palomba et al., Bavota et al.) e cruzar isso com o contexto temporal do PR (fase do ciclo de desenvolvimento, tipo de tarefa).
+Modelagem de Performance: Absolutamente inexplorado no corpus MSR 2026. Scripts k6 e JMeter em commits do tipo perf representam um artefato de qualidade completamente ignorado.
+Padrões de feedback e revisão humana em artefatos de teste: RQ4 complementa e aprofunda o que Ferdous et al. tocaram superficialmente com "Confidence Trap", mas sob a lente da colaboração humano-agente especificamente no contexto de teste.
+
+
+
+
+4. Metodologia e Procedimentos
+4.1 Desenho Geral — Estratégia Sequencial Exploratória
+A pesquisa é organizada em três fases sequenciais, cada uma alimentando a próxima:
+Fase 1 — Mineração e Caracterização Quantitativa (corresponde a RQ1, RQ2, RQ3 parcialmente)
+Fase 2 — Análise Qualitativa e Qualitativo-Quantitativa Mista (corresponde a RQ2, RQ3, RQ4)
+Fase 3 — Síntese, Teorização e Framework Prescritivo (corresponde a RQ4 e à contribuição prática do estudo)
+Essa estrutura sequencial é o que distingue um journal paper de um paper de conferência: cada fase gera insights que refinam os instrumentos e perguntas das fases seguintes.
+
+4.2 Fase 1 — Mineração e Caracterização Quantitativa
+4.2.1 Seleção e Filtragem da Amostra
+Do dataset AIDev, extrairemos:
+Corpus de testes (RQ1 e RQ2): PRs de cinco agentes cujos commits contenham arquivos com sufixos test_*.py, *_test.py, test*.java, ou equivalentes. Aplicaremos os mesmos filtros de Yoshimoto et al. (commits que adicionam testes, não apenas os modificam), mas expandiremos para incluir também os que refatoram testes (relevante para RQ2). Estimativa inicial: 2.000–5.000 commits analisáveis, com base nas 2.232 instâncias de Yoshimoto et al.
+Corpus de performance (RQ3): PRs cujos títulos, labels ou diffs contenham termos como perf, performance, load, stress, k6, locust, jmeter, benchmark. Faremos validação manual de uma amostra aleatória estratificada para estimar recall do filtro.
+Grupo de controle humano: PRs de desenvolvedores humanos no mesmo conjunto de repositórios, correspondidos (matched) por linguagem, tamanho e tipo de tarefa. Seguiremos o protocolo de Milanese et al. de usar o campo author_type do AIDev para separação.
+4.2.2 Análise de Mutação (RQ1)
+A aplicação de testes de mutação em larga escala é o principal desafio técnico do estudo. Nossa abordagem:
+Ferramenta: PIT (Pitest) para Java, mutmut/Cosmic Ray para Python — escolha por linguagem, priorizando repositórios com setup de build reproduzível.
+Subconjunto executável: Não é viável aplicar mutação a todos os repositórios. Selecionaremos um subconjunto estratificado por agente (N = 200 PRs por agente, 5 agentes = 1.000 total) usando os seguintes critérios de elegibilidade: (a) repositório com CI configurado (presente em 75%+ dos repositórios do AIDev), (b) tests que passam no estado do PR, (c) build reproduzível em container Docker. Essa estratégia de sampling estratificado é metodologicamente superior ao sample de conveniência de 500 PRs de Hoseinpour et al.
+Métricas coletadas:
+MSI global por PR (mutantes mortos / mutantes gerados)
+MSI por categoria de mutante (mutation operator): boundary conditions, null checks, arithmetic operators, etc.
+Taxa de mutantes equivalentes (estimada por análise estática)
+Correlação entre MSI e: (i) número de assertions por teste, (ii) complexidade ciclomática, (iii) cobertura de linha
+Hipótese operacional (H1): Testes agênticos terão MSI inferior ao humano mesmo com cobertura de linha comparável, porque tendem a ter menor complexidade ciclomática (confirmado por Yoshimoto et al.) e portanto menos lógica de controle que revele mutantes em boundaries.
+4.2.3 Análise de Test Debt Técnica (RQ2)
+Catálogo de referência: Unificação de três catálogos: (a) 19 test smells de Palomba et al. / Spadini et al., detectáveis com tsDetect; (b) antipadrões de testabilidade de Bavota et al.; (c) categorias de TDT de Verdecchia et al.
+Inovação em relação a Milanese et al.: Em vez de analisar smells isoladamente (que resultou em effect sizes negligenciáveis), analisaremos:
+Co-ocorrência de smells — padrões compostos que podem ter efeito cumulativo mesmo quando individuais parecem inofensivos
+Evolução temporal da TDT — o smell aumenta, diminui ou persiste ao longo dos commits dentro de um PR?
+TDT residual pós-merge — a dívida introduzida pelos agentes persiste nas versões subsequentes do repositório?
+Métricas:
+Índice de TDT por PR = soma ponderada de smells com pesos do catálogo de Verdecchia
+Índice de Co-TDT = número médio de co-ocorrências de pares de smells por arquivo de teste
+Delta-TDT = variação do índice entre o primeiro commit e o último commit do PR
+4.2.4 Análise de Scripts de Performance (RQ3 — Fase Quantitativa)
+Para o corpus de commits perf, faremos análise estática dos scripts:
+Dimensões analisadas:
+Tipo de carga modelada: spike, ramp-up, steady-state, stress, soak
+Presença/ausência de: think time, variação de payload, cenários negativos, SLA assertions (thresholds)
+Complexidade do script: número de endpoints cobertos, virtual users configurados, duração do teste
+Uso de dados dinâmicos vs. dados hardcoded
+Protocolo de coding: Dois pesquisadores codificarão independentemente 100 scripts humanos e 100 scripts agênticos, com kappa de Cohen para concordância. As categorias emergirão de uma rodada inicial de open coding (Grounded Theory Light).
+
+4.3 Fase 2 — Análise Qualitativa e Mista
+4.3.1 Análise de Revisão de Código em Testes (RQ4)
+Corpus: Todos os comentários de revisão (PR review comments) em PRs que contenham artefatos de teste, extraídos via GitHub API a partir dos metadados do AIDev.
+Instrumento de análise: Taxonomia de comentários de revisão de Bacchelli & Bird (2013), adaptada para o contexto de artefatos de teste. Categorias a priori: (1) superficial (typo, estilo), (2) funcional (lógica incorreta), (3) cobertura (faltam casos), (4) manutenibilidade (smell, acoplamento), (5) confiança (questionamento da validade do teste).
+Codificação: Dois pesquisadores em treinamento cruzado com 20% de sobreposição, seguido de reconciliação. Cohen's kappa ≥ 0.7 como threshold de concordância.
+Análise quantitativa complementar: Regressão logística com variável dependente = merge do PR e variáveis independentes = número de comentários de revisão por categoria, MSI do PR (da Fase 1), índice de TDT, e variáveis de controle (tamanho do PR, agente, linguagem).
+4.3.2 Triangulação Quantitativa-Qualitativa (Todas as RQs)
+A triangulação é o elemento central da robustez multimétodo. Para cada finding quantitativo relevante, selecionaremos casos extremos para análise profunda:
+PRs com MSI alto E alto índice de TDT (contradição aparente)
+PRs com revisão intensa E merge recusado
+Scripts de performance com alta complexidade mas ausência de SLA thresholds
+Esses casos serão analisados qualitativamente para gerar explicações mecanísticas que os dados quantitativos por si só não permitem.
+
+4.4 Fase 3 — Síntese e Framework Prescritivo
+4.4.1 Test Quality Debt Scorecard (TQDS)
+O produto final prático será um scorecard multidimensional que integra as quatro dimensões investigadas: MSI, TDT, qualidade de modelagem de performance e padrões de revisão. O TQDS terá como objetivo ser aplicável por equipes de QA para avaliar PRs agênticos antes do merge.
+A validação do TQDS será feita por meio de um survey com profissionais de QA (n ≥ 30, recrutados via LinkedIn e comunidades de software engineering), avaliando utilidade percebida, clareza e aplicabilidade prática. Isso alinha o estudo com a dimensão prescritiva esperada por journals como ESE (Empirical Software Engineering) e IST (Information and Software Technology).
+4.4.2 Threat Assessment e Validade
+Validade interna: O principal ameaça é confundimento por linguagem e complexidade do projeto. Mitigamos com matching por linguagem (Python/Java segregados) e inclusão de complexidade ciclomática como covariável.
+Validade externa: O AIDev cobre cinco agentes em 61.000 repositórios — escala sem precedente na literatura. A limitação é que o dataset cobre apenas repositórios que optaram por usar agentes, possivelmente com viés de seleção (projetos mais tech-savvy). Reconheceremos isso explicitamente.
+Validade de construto: O MSI é uma métrica bem-estabelecida na engenharia de testes, mas dependemos da qualidade das ferramentas de mutação e da reprodutibilidade dos builds. Mitigamos com containerização (Docker) e logging detalhado de builds falhos.
+Confiabilidade: Todo o pipeline de análise será versionado em um repositório público de replicação, incluindo scripts Python, containers Docker e datasets derivados — seguindo o padrão estabelecido por Hoseinpour et al. (figshare) e Milanese et al.
+
+5. Diferenciais Científicos e Contribuições
+Esta pesquisa avança o estado da arte de três formas fundamentais:
+Contribuição técnica: Primeira aplicação sistemática e em larga escala de Mutation Testing ao contexto de código gerado por agentes autônomos de IA, preenchendo uma lacuna explicitamente apontada pelos papers do MSR 2026 (Yoshimoto et al. reconhecem que cobertura de linha é insuficiente, mas não aplicaram mutação).
+Contribuição metodológica: O design multimétodo sequencial — combinando mineração de repositórios, mutation testing automatizado, análise qualitativa de conteúdo e survey de profissionais — oferece um nível de triangulação e robustez inédito na área, adequado para o rigor exigido por um journal como ESE ou EMSE.
+Contribuição prática: O TQDS fornece às equipes de QA e DevOps um instrumento concreto e validado para tomar decisões de revisão e merge de PRs agênticos, respondendo à demanda crescente por governança de código gerado por IA.
+
+6. Cronograma Proposto
+Fase
+Atividade
+Duração estimada
+Fase 1
+Extração e filtragem do dataset, setup de infraestrutura Docker
+6 semanas
+Fase 1
+Execução de mutation testing (RQ1)
+8 semanas
+Fase 1
+Análise estática de TDT e scripts de performance (RQ2, RQ3)
+6 semanas
+Fase 2
+Codificação qualitativa de revisões (RQ4)
+6 semanas
+Fase 2
+Triangulação e análise de casos extremos
+4 semanas
+Fase 3
+Desenvolvimento e validação do TQDS
+6 semanas
+Fase 3
+Escrita, revisão interna e submissão
+8 semanas
+
+
+3. Metodologia e Procedimentos
+3.1 Visão Geral do Desenho de Pesquisa
+Este estudo adota uma Estratégia Sequencial Exploratória Multimétodo, organizada em três fases interdependentes. Na Fase 1, a mineração quantitativa do dataset AIDev gera métricas e padrões de base. Na Fase 2, análises qualitativas aprofundam e explicam os achados quantitativos que carecem de interpretação mecanística. Na Fase 3, os resultados das fases anteriores são sintetizados em um framework prescritivo validado com profissionais. A triangulação entre métodos é concorrente dentro de cada fase e sequencial entre fases — o que confere ao estudo tanto a profundidade de uma abordagem qualitativa quanto a generalização de uma abordagem quantitativa em larga escala.
+A Figura 1 (a ser incluída no artigo) ilustra o fluxo geral do protocolo, indicando as dependências entre fases, as fontes de dados, os instrumentos analíticos e as RQs respondidas por cada componente.
+
+3.2 Dataset e Corpus de Análise
+Fonte primária: AIDev Dataset (Li et al., MSR 2026), disponível no Hugging Face e Zenodo. O dataset cobre 456.000+ PRs de cinco agentes autônomos — OpenAI Codex, Devin, GitHub Copilot, Cursor e Claude Code — em 61.000 repositórios, com metadados de PR, authorship, review timelines, diffs de código, CI/CD outcomes e classificação por tipo de tarefa (pr_task_type.parquet).
+Corpus derivado por RQ:
+Para RQ1 e RQ2 (testes de mutação e test debt), o corpus de partida são todos os commits classificados como contendo adição ou modificação de testes. A identificação segue o critério de Yoshimoto et al. (MSR 2026): presença de arquivos com padrões test_*.py, *_test.py, Test*.java, *Test.java no diff. Desse universo, aplicamos filtros adicionais de elegibilidade para a execução de mutação (detalhados na Seção 3.4).
+Para RQ3 (performance), uma análise exploratória prévia no subconjunto AIDev-pop (N = 33.596 PRs) revelou que a busca restrita a scripts k6 retorna apenas 10 instâncias — corpus insuficiente para qualquer inferência estatística robusta (limiar mínimo adotado: N ≥ 50, conforme recomendação de Cuervo et al. para estudos comparativos em SE). Adotamos portanto um corpus expandido por duas vias complementares: (a) 340 PRs pré-classificados como tipo perf pelo pipeline de dois estágios (regex + LLM) presente no pr_task_type.parquet do AIDev; (b) 1.149 PRs com arquivos de performance identificados por padrão de nomenclatura nos diffs (benchmark, load-test, stress-test, *perf*, *performance*) em pr_commit_details.parquet. Após deduplicação por pr_id, o corpus consolidado de performance compreende aproximadamente 1.340 PRs únicos, distribuídos por agente conforme a Tabela 1 abaixo.
+Agente
+PRs perf estimados
+OpenAI Codex
+830
+GitHub Copilot
+168
+Devin
+109
+Claude Code
+22
+Cursor
+20
+Humanos (controle)
+~400 (amostra matched)
+
+A validade de construto dessa ampliação de escopo é documentada como ameaça explícita na Seção 3.7.
+Para RQ4 (revisão humana), o corpus são os comentários de code review (PR review comments e review thread replies) extraídos via GitHub API para todos os PRs com artefatos de teste nos corpora das RQs 1 e 2.
+
+3.3 Pilar A — Teste de Mutação para Eficácia Funcional (RQ1)
+3.3.1 Racional e Distinção em Relação à Literatura
+A cobertura de linha (métrica usada por Yoshimoto et al.) indica apenas que o código foi executado durante os testes, mas não que os testes detectariam uma falha lógica naquele código. O Mutation Testing supera essa limitação ao injetar defeitos sintéticos (mutantes) no código de produção e verificar quantos deles são detectados pelos testes existentes. O Mutation Score Indicator (MSI) é calculado como:
+MSI=Mutantes MortosTotal de Mutantes Gerados×100MSI = \frac{\text{Mutantes Mortos}}{\text{Total de Mutantes Gerados}} \times 100MSI=Total de Mutantes GeradosMutantes Mortos​×100
+Mutantes não detectados (sobreviventes) indicam lacunas na eficácia detectiva dos testes — mesmo quando estes têm alta cobertura de linha.
+3.3.2 Seleção do Subconjunto para Mutação
+A execução de mutation testing em larga escala exige builds reproduzíveis, o que não é garantido para todos os repositórios do AIDev. Adotaremos os seguintes critérios de elegibilidade, aplicados sequencialmente:
+O PR pertence a um repositório com configuração de CI detectável (arquivo .github/workflows/*.yml ou Jenkinsfile presente no commit)
+Os testes do PR estão em estado passing no último commit (verificado via CI run status no AIDev)
+O repositório é containerizável: existe Dockerfile, docker-compose.yml ou é possível construir um container com as dependências especificadas em requirements.txt / pom.xml / package.json
+A linguagem é JavaScript/TypeScript (Stryker Mutator) ou Python (mutmut / Cosmic Ray) — as duas linguagens com maior representação no corpus de testes do AIDev
+Dos repositórios elegíveis, faremos uma amostragem estratificada por agente e por tipo de tarefa (feat, fix, refactor), visando N = 200 PRs por agente × 5 agentes = 1.000 PRs agênticos + N = 400 PRs humanos de controle (matched por linguagem e tipo de tarefa). Esse tamanho amostral oferece poder estatístico > 0,80 para detectar uma diferença de efeito médio (d = 0,3) em MSI entre grupos, com α = 0,05, conforme análise de poder conduzida com G*Power 3.1.
+3.3.3 Ferramentas e Operacionalização
+JavaScript/TypeScript: Stryker Mutator v8+, com operadores de mutação padrão (ArithmeticOperator, BooleanLiteral, ConditionalExpression, EqualityOperator, LogicalOperator) e timeout por mutante de 30 segundos.
+Python: mutmut 2.x, operadores equivalentes. Para repositórios com suítes lentas, substituiremos por Cosmic Ray com paralelização via --worker pool.
+Containerização: Cada repositório será buildado em container Docker isolado; builds com falha serão registrados e excluídos do corpus, com análise das causas de exclusão reportada na seção de ameaças.
+3.3.4 Métricas e Análise Estatística
+Para cada PR do corpus elegível, coletaremos:
+MSI global
+MSI por operador de mutação (para identificar qual tipo de defeito os testes agênticos deixam escapar)
+Número de mutantes equivalentes estimados (identificados por análise estática de domínio)
+Correlação de Spearman entre MSI e: (i) número de assertions, (ii) complexidade ciclomática dos testes, (iii) cobertura de linha, (iv) LOC dos testes
+A comparação entre grupos (agêntico vs. humano) usará o teste de Mann-Whitney U (distribuição do MSI tipicamente não-normal) com o d de Cliff como medida de effect size. A comparação entre os cinco agentes usará o teste de Kruskal-Wallis seguido de comparações par a par com correção de Bonferroni.
+
+3.4 Pilar B — Test Debt Técnica e Test Smells (RQ2)
+3.4.1 Catálogo de Referência Unificado
+A análise de dívida técnica de testes utilizará um catálogo unificado construído a partir de três fontes complementares: (a) os 19 test smells de Palomba et al. detectáveis com tsDetect e pytest-smell; (b) os antipadrões de testabilidade de Bavota et al.; (c) as categorias de Test Technical Debt de Verdecchia et al. A unificação evita a dupla-contagem de smells que aparecem sob nomes distintos nos catálogos.
+Os smells com maior relevância para o contexto agêntico, baseados nos achados de Milanese et al. como ponto de partida, são: Assertion Roulette, Eager Test, Mystery Guest, Magic Number Test e Redundant Assertion. Estes serão analisados tanto isoladamente quanto em termos de co-ocorrência, que é a dimensão ausente na análise de Milanese et al.
+3.4.2 Inovações Metodológicas em Relação ao Estado da Arte
+Milanese et al. analisaram test smells de forma estática e pontual — uma fotografia no momento do PR. Este estudo introduz duas dimensões adicionais:
+Dimensão dinâmica (evolução intra-PR): Para cada PR com múltiplos commits, calcularemos o índice de TDT em cada commit e modelaremos a trajetória temporal. Um agente que introduz smells no primeiro commit e os remove após revisão tem perfil diferente de um que os introduz progressivamente. Essa trajetória é capturada pelo Delta-TDT:
+ΔTDT=TDTuˊltimo_commit−TDTprimeiro_commit\Delta\text{TDT} = \text{TDT}_{último\_commit} - \text{TDT}_{primeiro\_commit}ΔTDT=TDTuˊltimo_commit​−TDTprimeiro_commit​
+Dimensão de co-ocorrência (padrões compostos): Calcularemos matrizes de co-ocorrência de smells por arquivo de teste, identificando padrão-cluster de smells que co-ocorrem sistematicamente em testes agênticos. A hipótese é que a baixa significância prática encontrada por Milanese et al. (effect size negligenciável) se deve à análise de smells isolados; padrões compostos podem revelar diferenças estruturais mais marcantes.
+3.4.3 Análise Estatística
+O índice de TDT ponderado será calculado por PR e comparado entre grupos usando os mesmos testes não-paramétricos da RQ1. A análise de co-ocorrência usará o coeficiente phi (φ) para pares de smells e clusterização hierárquica (Ward's method) para identificar grupos de smells co-ocorrentes.
+
+3.5 Pilar C — Estratégias de Performance (RQ3)
+3.5.1 Construção da Taxonomia (Fase Qualitativa Indutiva)
+Dois pesquisadores realizarão análise qualitativa indutiva dos diffs dos 1.340 PRs do corpus de performance, seguindo o protocolo de open coding da Grounded Theory (Strauss & Corbin, 1998). Cada PR receberá uma ou mais tags de estratégia de otimização. As rodadas de coding são:
+Open coding individual: Cada pesquisador codifica independentemente uma amostra aleatória de 150 PRs (75 agênticos + 75 humanos) sem restrição de categorias a priori.
+Reconciliação e taxonomia provisória: Os dois pesquisadores comparam seus esquemas e chegam a um conjunto inicial de categorias. Calculamos Cohen's κ para avaliar concordância; critério de aceitação: κ ≥ 0,70.
+Axial coding: As categorias são organizadas em dimensões (ex.: tipo de recurso otimizado → CPU, memória, rede, I/O, banco de dados; estratégia primária → caching, algoritmo, query, paralelismo, redução de payload).
+Aplicação ao corpus completo: Dois codificadores (com 20% de sobreposição para cálculo final de κ) aplicam a taxonomia consolidada ao corpus total.
+3.5.2 Análise Comparativa Quantitativa
+Com a taxonomia estabelecida, a comparação IA vs. humanos usará:
+Teste qui-quadrado para diferença na distribuição de estratégias entre grupos
+Cliff's delta para comparação de métricas contínuas (ex.: número de endpoints cobertos, virtual users configurados, presença de SLA thresholds)
+Análise de correspondência múltipla (ACM) para visualizar a associação entre agente/humano e tipo de estratégia adotada
+3.5.3 Dimensões de Qualidade Avaliadas nos Scripts
+Para cada script de performance analisado, dois pesquisadores avaliarão independentemente, com escala ordinal (0–2), as seguintes dimensões baseadas em recomendações de engenharia de performance (Jain, 1991; Feitelson, 2015):
+Dimensão
+Descrição
+Score 0
+Score 1
+Score 2
+Tipo de carga
+Variedade de padrões modelados
+Apenas steady-state
+Ramp-up ou spike
+Combinação realista
+Think time
+Simulação de tempo entre ações
+Ausente
+Fixo
+Variável/distribuição
+Variação de payload
+Dados de entrada variados
+Hardcoded
+Parametrizado
+Dataset externo
+Cenários negativos
+Testes de erro e boundary
+Ausente
+Parcial
+Completo
+SLA assertions
+Thresholds de aceitação
+Ausente
+Parcial
+Vinculado a SLA real
+
+A média dos scores constitui o Performance Script Quality Index (PSQI), que será comparado entre grupos.
+
+3.6 Pilar D — Análise de Revisão Humana em Artefatos de Teste (RQ4)
+3.6.1 Extração do Corpus de Comentários
+Utilizaremos a GitHub API v3 (endpoint GET /repos/{owner}/{repo}/pulls/{pull_number}/comments) para extrair todos os comentários de revisão nos PRs dos corpora das RQs 1 e 2. Filtraremos para manter apenas comentários associados a arquivos de teste (pelo path do arquivo comentado). O corpus resultante será deduplificado e anonimizado (substituição de usernames por IDs sequenciais) para análise.
+3.6.2 Instrumento de Análise Temática
+A análise utilizará a taxonomia de comentários de revisão de Bacchelli & Bird (2013) como estrutura a priori, com categorias adaptadas ao contexto de artefatos de teste:
+Superficial: correções de estilo, nomenclatura, formatação
+Funcional: lógica incorreta do teste, asserção errada, setup/teardown inadequado
+Cobertura: sugestão de casos não cobertos, cenários de boundary ausentes
+Manutenibilidade: identificação de test smells, acoplamento excessivo, duplicação
+Confiança: questionamento da validade ou utilidade do teste ("esse teste realmente testa algo?")
+Processo: comentários sobre o fluxo do PR em si (timing, scope, etc.)
+As categorias emergentes que não se encaixem nessa estrutura serão registradas como novas categorias indutivas.
+3.6.3 Análise de Resolução e Desfecho
+Para cada thread de revisão, registraremos: (a) categoria do comentário; (b) se foi resolvido dentro do PR (código modificado em resposta); (c) se o PR foi aceito (merged) ou rejeitado. Isso permite modelar a relação entre tipo de feedback e desfecho do PR via regressão logística, com as variáveis de qualidade das RQs 1 e 2 como covariáveis.
+
+3.7 Ameaças à Validade
+Validade interna: A principal ameaça é o confundimento por variáveis de projeto (tamanho, domínio, senioridade dos revisores). Mitigamos com matching por linguagem, tipo de tarefa e tamanho aproximado do repositório. Para RQ1, a containerização isola o ambiente de build e reduz variação espúria no MSI.
+Validade externa: O AIDev cobre cinco agentes em 61.000 repositórios open-source — escala sem precedente. A limitação é que repositórios open-source que adotam agentes tendem a ser projetos mais tech-forward, potencialmente com práticas de QA mais maduras. Resultados podem não se generalizar para projetos privados ou legados.
+Validade de construto: (i) O MSI é sensível ao conjunto de operadores de mutação escolhidos; reportaremos resultados por operador além do MSI agregado. (ii) A ampliação do corpus de RQ3 de k6 para artefatos de performance genéricos é motivada por evidência empírica (N = 10 vs. N = 1.340), mas implica heterogeneidade maior no corpus — mitigada pela taxonomia qualitativa que distingue tipos de artefato. (iii) O PSQI é uma métrica nova, sem validação prévia; sua validade de face será verificada por dois revisores especialistas em performance engineering antes da aplicação.
+Confiabilidade: Todo o pipeline de análise (scripts Python, containers Docker, dataset derivado) será disponibilizado em repositório público no Zenodo com DOI registrado, seguindo o padrão estabelecido pelos papers do MSR 2026 sobre o mesmo dataset. O protocolo de codificação qualitativa será documentado em manual de codificação anexo ao pacote de replicação.
+
+3.8 Procedimento de Execução e Divisão de Responsabilidades
+Responsável
+Atividade Principal
+Ferramentas
+QA 1 (Data)
+Extração, filtragem e matching do corpus; GitHub API pipeline
+Python, pandas, PyArrow, GitHub REST API
+QA 2 (Dev)
+Containerização dos repositórios; execução de mutation testing; coleta de MSI
+Docker, Stryker Mutator, mutmut, G*Power
+QA 3 (Perf)
+Construção da taxonomia de performance; cálculo do PSQI; comparação estatística
+NVivo/ATLAS.ti, Python (scipy, statsmodels), ACM (FactoMineR)
+QA 4 (Quali)
+Análise temática de comentários de review; regressão logística de desfecho
+NVivo/ATLAS.ti, R (glm), LaTeX
+
+
+
+Referências
+ISO/IEC/IEEE. \textbf{ISO/IEC/IEEE 29119-4:2022: Software and systems engineering — Software testing — Part 4: Test techniques}. 2. ed. [S.l.]: ISO, 2022.
+MYERS, G. J.; SANDLER, C.; BADGETT, T. \textbf{The Art of Software Testing}. 3. ed. Hoboken, NJ: John Wiley \& Sons, 2012.
+Dittrich, Y., et al. (2007). For the Special issue on Qualitative Software Engineering Research. Information and Software Technology.
+Meszaros, G. (2007). xUnit Test Patterns: Refactoring Test Code. Addison-Wesley Professional.
+Seaman, C. B. (1999). Qualitative Methods in Empirical Studies of Software Engineering. IEEE Transactions on Software Engineering.
+Steinmacher, I. (2015). Entendendo o que os Desenvolvedores fazem: Métodos de Pesquisa Qualitativa em Engenharia de Software. Simpósio Brasileiro de Software.
+Strauss, A., & Corbin, J. (1998). Basics of qualitative research: techniques and procedures for developing grounded theory. Sage Publications.
+Van Deursen, A., et al. (2001). Refactoring test code. Proc. of the 2nd International Conference on Extreme Programming and Flexible Processes in Software Engineering (XP2001).
+Yoshimoto, S., et al. (2026). Testing with AI Agents: An Empirical Study of Test Generation Frequency, Quality, and Coverage. In 23rd International Conference on Mining Software Repositories (MSR '26). 
+de Oliveira, I. S., Alves, J. M., Alcântara, S., Santos, I. S., & Andrade, R. M. D. C. (2024, November). Quality of Big Data Systems: a Systematic Review of Practices Methods and Tools. In Proceedings of the XXIII Brazilian Symposium on Software Quality (pp. 22-31).
+SILVA, Levi Almeida; SANTOS, Ismayle Sousa. A Catalog of Prevention Strategies for Test Technical Debt. In: Proceedings of the XXIII Brazilian Symposium on Software Quality. 2024. p. 706-717.
+SILVA, Levi Almeida; SANTOS, Ismayle Sousa; ANDRADE, Rossana Maria de Castro. Use of an Approach for Preventing Test Debt in a Brazilian Fintech: An Experience Report. In: Proceedings of the XXIII Brazilian Symposium on Software Quality. 2024. p. 535-543.
+Andrade, R. M., Castro, W., Carneiro, L., Bayerlein, E., de Oliveira, I. S., Oliveira, P. A., ... & Oliveira, V. T. (2024, October). Migration from on-premises to cloud: challenges and opportunities. In International Conference on Applied Informatics (pp. 167-182). Cham: Springer Nature Switzerland.
+Cavalcante, A. K., de Oliveira, I. S., Oliveria, V. T., de Oliveira, P. A. M., Nogueira, T. P., Santos, I. S., & Andrade, R. M. (2025). Big Data Fortaleza Platform: Quality Improvement with Testing Process. In ICEIS (2) (pp. 227-236).
+de Oliveira, I. S., et al. (2025). Big Data Fortaleza Platform: Testing Process. Lecture Notes in Business Information Processing (LNBIP 2025).

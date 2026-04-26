@@ -2,10 +2,14 @@
 
 from __future__ import annotations
 
+import io
 import json
 import pathlib
+import re
+import zipfile
 from typing import Any
 
+import pandas as pd
 from scipy import stats
 
 from cliffs_delta import cliffs_delta
@@ -101,7 +105,7 @@ def read_json(filepath: str | pathlib.Path) -> Any:
         return json.load(f)
 
 
-def filter_pr_df(df: "pd.DataFrame", agent: str) -> "pd.DataFrame":
+def filter_pr_df(df: pd.DataFrame, agent: str) -> pd.DataFrame:
     """Return *df* after applying agent-specific PR filters."""
 
     agent_key = agent.lower()
@@ -121,3 +125,93 @@ def mannUandCliffdelta(dist1, dist2):
     u, p = stats.mannwhitneyu(dist1, dist2, alternative="two-sided")
     print(f"Mann-Whitney-U-test: u={u} p={p}")
     return u, p, d, size
+
+
+# ---------------------------------------------------------------------------
+# RQ2 — Test Technical Debt catalog and helpers
+# ---------------------------------------------------------------------------
+
+SMELL_CATALOG: dict[str, dict] = {
+    "AssertionRoulette":    {"weight": 0.10, "source": "Palomba"},
+    "EagerTest":            {"weight": 0.12, "source": "Palomba"},
+    "MagicNumberTest":      {"weight": 0.07, "source": "Palomba"},
+    "UnknownTest":          {"weight": 0.15, "source": "Palomba"},
+    "RedundantAssertion":   {"weight": 0.08, "source": "Palomba"},
+    "DuplicateAssert":      {"weight": 0.06, "source": "Palomba"},
+    "VerboseTest":          {"weight": 0.06, "source": "Bavota"},
+    "MissingExceptionTest": {"weight": 0.09, "source": "Bavota"},
+    "ResourceOptimism":     {"weight": 0.11, "source": "Verdecchia"},
+    "GeneralFixture":       {"weight": 0.08, "source": "Verdecchia"},
+}
+
+TEST_FILE_PATTERNS: re.Pattern = re.compile(
+    r"(test_[^/]+\.py$|[^/]+_test\.py$|tests/[^/]+\.py$"
+    r"|[^/]+\.test\.[jt]sx?$|[^/]+\.spec\.[jt]sx?$"
+    r"|Test[^/]+\.java$|[^/]+Test\.java$)",
+    re.IGNORECASE,
+)
+
+PHI_THRESHOLD: float = 0.20
+
+HF_BASE = "hf://datasets/hao-li/AIDev"
+
+
+def compute_tdt_index(smell_counts: dict) -> float:
+    """Return weighted TDT index from a dict of {smell_name: count}."""
+    return sum(
+        SMELL_CATALOG[s]["weight"] * smell_counts.get(s, 0)
+        for s in SMELL_CATALOG
+    )
+
+
+class ZipLoader:
+    """Read parquet files directly from a zip archive without full extraction."""
+
+    def __init__(self, zip_path: pathlib.Path) -> None:
+        self._zip_path = zip_path
+        self._zf: zipfile.ZipFile | None = None
+        self._names: list[str] = []
+
+    def open(self) -> None:
+        self._zf = zipfile.ZipFile(self._zip_path, "r")
+        self._names = [m.filename for m in self._zf.infolist()]
+
+    def close(self) -> None:
+        if self._zf:
+            self._zf.close()
+
+    def __enter__(self) -> "ZipLoader":
+        self.open()
+        return self
+
+    def __exit__(self, *_: Any) -> None:
+        self.close()
+
+    def read_parquet(
+        self,
+        basename: str,
+        columns: list[str] | None = None,
+    ) -> pd.DataFrame:
+        matches = [n for n in self._names if n.endswith(basename)]
+        if not matches:
+            raise FileNotFoundError(f"{basename} not found in ZIP")
+        data = self._zf.read(matches[0])  # type: ignore[union-attr]
+        return pd.read_parquet(io.BytesIO(data), columns=columns)
+
+
+def load_parquet(
+    filename: str,
+    offline: bool,
+    loader: ZipLoader | None,
+    columns: list[str] | None = None,
+) -> pd.DataFrame:
+    """Load a parquet file from the ZIP (offline) or HuggingFace."""
+    if offline and loader:
+        return loader.read_parquet(filename, columns=columns)
+    try:
+        return pd.read_parquet(f"{HF_BASE}/{filename}", columns=columns)
+    except Exception as exc:
+        if loader:
+            print(f"  [fallback ZIP] {exc}")
+            return loader.read_parquet(filename, columns=columns)
+        raise
