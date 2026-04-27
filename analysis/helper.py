@@ -215,3 +215,25 @@ def load_parquet(
             print(f"  [fallback ZIP] {exc}")
             return loader.read_parquet(filename, columns=columns)
         raise
+
+
+# ---------------------------------------------------------------------------
+# RQ3 — Performance Script Quality Index catalog
+# ---------------------------------------------------------------------------
+
+PSQI_DIMENSIONS: list[str] = [
+    "dim_load_type",
+    "dim_think_time",
+    "dim_payload",
+    "dim_negative",
+    "dim_sla",
+]
+
+PERF_TOOL_ORDER: list[str] = [
+    "k6",
+    "locust",
+    "jmeter",
+    "gatling",
+    "pytest_benchmark",
+    "generic_perf",
+]
