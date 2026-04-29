@@ -31,7 +31,7 @@ Usage
 -----
   python rq1_01_expand_python_sample.py
   python rq1_01_expand_python_sample.py --offline   # usa ZIP local
-  python rq1_01_expand_python_sample.py --limit 500 # apenas N novas linhas (teste)
+  python rq1_01_expand_python_sample.py --limit 500  # N novas linhas (teste)
 """
 
 from __future__ import annotations
@@ -60,7 +60,7 @@ SAMPLE_CSV = OUT_DIR / "rq1_sample.csv"
 DEFAULT_ZIP = ROOT_DIR / "OFFICIALDATASET.zip"
 HF_BASE = "hf://datasets/hao-li/AIDev"
 
-# Regex para arquivos de teste Python (protocolo: critérios de Yoshimoto et al.)
+# Regex para arquivos de teste Python
 PYTHON_TEST_RE = re.compile(
     r"(test_[^/]+\.py|[^/]+_test\.py|[^/]+test[^/]*\.py)$",
     re.IGNORECASE,
@@ -73,7 +73,6 @@ from rq1_sample_selection import (  # noqa: E402
     NAME_MAP,
     load_last_commit_sha,
     full_name_from_html_url,
-    normalise_agent,
 )
 
 
@@ -98,7 +97,9 @@ class _ZipLoader:
         if self._zf:
             self._zf.close()
 
-    def read_parquet(self, basename: str, columns: list[str] | None = None) -> pd.DataFrame:
+    def read_parquet(
+        self, basename: str, columns: list[str] | None = None
+    ) -> pd.DataFrame:
         matches = [n for n in self._names if n.endswith(basename)]
         if not matches:
             raise FileNotFoundError(f"{basename} não encontrado no ZIP")
@@ -139,10 +140,12 @@ def find_python_test_pr_ids(
       - set de pr_ids elegíveis
     """
     print("  Carregando pr_commit_details.parquet ...")
-    details = _load("pr_commit_details.parquet", offline, loader, columns=["pr_id", "filename"])
+    details = _load("pr_commit_details.parquet", offline,
+                    loader, columns=["pr_id", "filename"])
 
     mask = details["filename"].apply(
-        lambda f: bool(PYTHON_TEST_RE.search(f)) if isinstance(f, str) else False
+        lambda f: bool(PYTHON_TEST_RE.search(
+            f)) if isinstance(f, str) else False
     )
     py_test_details = details[mask]
 
@@ -151,7 +154,9 @@ def find_python_test_pr_ids(
         .apply(list)
         .to_dict()
     )
-    print(f"  PRs com arquivos de teste Python detectados: {len(pr_test_files):,}")
+    print(
+        f"  PRs com arquivos de teste Python: {len(pr_test_files):,}"
+    )
     return pr_test_files, set(pr_test_files.keys())
 
 
@@ -174,10 +179,14 @@ def load_ai_python_prs(
     pr_df["repo_full_name"] = pr_df["html_url"].apply(full_name_from_html_url)
 
     print("  Carregando repository.parquet ...")
-    repo_df = _load("repository.parquet", offline, loader, columns=["full_name", "language"])
+    repo_df = _load("repository.parquet", offline, loader,
+                    columns=["full_name", "language"])
 
-    # Join PR → repositório
-    merged = pr_df.merge(repo_df, left_on="repo_full_name", right_on="full_name", how="left")
+    # Join PR → repositório; dropar full_name duplicado após merge
+    merged = pr_df.merge(repo_df, left_on="repo_full_name",
+                         right_on="full_name", how="left")
+    if "full_name" in merged.columns:
+        merged = merged.drop(columns=["full_name"])
 
     # Filtros: Python, merged, com arquivos de teste detectados
     python_mask = merged["language"].str.lower() == "python"
@@ -203,20 +212,26 @@ def load_human_python_prs(
     h_pr["repo_full_name"] = h_pr["html_url"].apply(full_name_from_html_url)
 
     print("  Carregando human_pr_task_type.parquet ...")
-    h_task = _load("human_pr_task_type.parquet", offline, loader, columns=["id", "type"])
+    h_task = _load("human_pr_task_type.parquet", offline,
+                   loader, columns=["id", "type"])
 
     merged = h_pr.merge(h_task, on="id", how="inner")
 
     print("  Carregando repository.parquet ...")
-    repo_df = _load("repository.parquet", offline, loader, columns=["full_name", "language"])
-    merged = merged.merge(repo_df, left_on="repo_full_name", right_on="full_name", how="left")
+    repo_df = _load("repository.parquet", offline, loader,
+                    columns=["full_name", "language"])
+    merged = merged.merge(repo_df, left_on="repo_full_name",
+                          right_on="full_name", how="left")
+    if "full_name" in merged.columns:
+        merged = merged.drop(columns=["full_name"])
 
     python_mask = merged["language"].str.lower() == "python"
     merged_mask = merged["merged_at"].notna()
     test_mask = merged["type"].isin(["test", "feat", "fix", "refactor"])
 
     result = merged[python_mask & merged_mask & test_mask].copy()
-    print(f"  PRs humanas Python (type=test/feat/fix/refactor): {len(result):,}")
+    print(
+        f"  PRs humanas Python (type=test/feat/fix/refactor): {len(result):,}")
     return result
 
 
@@ -227,7 +242,8 @@ def load_task_types(
 ) -> dict[int, str]:
     """Carrega task_type das PRs de IA (pr_task_type.parquet)."""
     print("  Carregando pr_task_type.parquet ...")
-    task_df = _load("pr_task_type.parquet", offline, loader, columns=["id", "type"])
+    task_df = _load("pr_task_type.parquet", offline,
+                    loader, columns=["id", "type"])
     filtered = task_df[task_df["id"].isin(pr_ids)]
     return dict(zip(filtered["id"], filtered["type"]))
 
@@ -289,10 +305,14 @@ def build_python_rows(
 # ---------------------------------------------------------------------------
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Expande rq1_sample.csv com PRs Python")
-    parser.add_argument("--offline", action="store_true", help="Usar ZIP offline")
-    parser.add_argument("--zip", default=str(DEFAULT_ZIP), help="Caminho do ZIP")
-    parser.add_argument("--limit", type=int, default=0, help="Limitar N novas linhas (teste)")
+    parser = argparse.ArgumentParser(
+        description="Expande rq1_sample.csv com PRs Python")
+    parser.add_argument("--offline", action="store_true",
+                        help="Usar ZIP offline")
+    parser.add_argument("--zip", default=str(DEFAULT_ZIP),
+                        help="Caminho do ZIP")
+    parser.add_argument("--limit", type=int, default=0,
+                        help="Limitar N novas linhas (teste)")
     args = parser.parse_args()
 
     print("=" * 65)
@@ -304,20 +324,30 @@ def main() -> None:
     if SAMPLE_CSV.exists():
         existing_df = pd.read_csv(SAMPLE_CSV)
         existing_ids = set(existing_df["pr_id"].astype(int))
-        print(f"\n[checkpoint] {len(existing_ids)} pr_ids já no rq1_sample.csv")
+        print(
+            f"\n[checkpoint] {len(existing_ids)} pr_ids já no rq1_sample.csv")
 
         # Backfill mutation_tool se a coluna não existir
         if "mutation_tool" not in existing_df.columns:
             existing_df["mutation_tool"] = "stryker"
             existing_df.to_csv(SAMPLE_CSV, index=False)
-            print("  [backfill] Adicionada coluna mutation_tool='stryker' nas linhas existentes")
+            print(
+                "  [backfill] Adicionada coluna "
+                "mutation_tool='stryker' nas linhas existentes"
+            )
 
         if "task_type" not in existing_df.columns:
             existing_df["task_type"] = "unknown"
             existing_df.to_csv(SAMPLE_CSV, index=False)
-            print("  [backfill] Adicionada coluna task_type='unknown' nas linhas existentes")
+            print(
+                "  [backfill] Adicionada coluna "
+                "task_type='unknown' nas linhas existentes"
+            )
     else:
-        print("\n[aviso] rq1_sample.csv não encontrado — execute rq1_sample_selection.py primeiro.")
+        print(
+            "\n[aviso] rq1_sample.csv não encontrado — "
+            "execute rq1_sample_selection.py primeiro."
+        )
         print("        Criando arquivo novo com apenas as linhas Python.")
 
     # ── Inicializar loader offline se necessário ───────────────────────────
@@ -334,7 +364,8 @@ def main() -> None:
     try:
         # ── 1. Detectar PRs Python com arquivos de teste ───────────────────
         print("\n[1/5] Detectando arquivos de teste Python nos diffs ...")
-        pr_test_files, python_test_pr_ids = find_python_test_pr_ids(args.offline, loader)
+        pr_test_files, python_test_pr_ids = find_python_test_pr_ids(
+            args.offline, loader)
 
         # Remover pr_ids já no sample
         new_ids = python_test_pr_ids - existing_ids
@@ -363,14 +394,18 @@ def main() -> None:
         print("\n[4/5] Carregando SHAs e tipos de tarefa ...")
         sha_df = load_last_commit_sha(all_new_ids)
 
-        ai_task_map = load_task_types(set(ai_python["id"]), args.offline, loader)
+        ai_task_map = load_task_types(
+            set(ai_python["id"]), args.offline, loader)
         # Para humanas usa a coluna 'type' já carregada
-        human_task_map = dict(zip(human_python["id"], human_python.get("type", pd.Series(dtype=str))))
+        h_types = human_python.get("type", pd.Series(dtype=str))
+        human_task_map = dict(zip(human_python["id"], h_types))
 
         # ── 5. Construção das novas linhas ─────────────────────────────────
         print("\n[5/5] Construindo novas linhas ...")
-        ai_rows = build_python_rows(ai_python, pr_test_files, sha_df, False, ai_task_map)
-        human_rows = build_python_rows(human_python, pr_test_files, sha_df, True, human_task_map)
+        ai_rows = build_python_rows(
+            ai_python, pr_test_files, sha_df, False, ai_task_map)
+        human_rows = build_python_rows(
+            human_python, pr_test_files, sha_df, True, human_task_map)
 
         new_rows = pd.concat([ai_rows, human_rows], ignore_index=True)
 
@@ -378,12 +413,23 @@ def main() -> None:
             new_rows = new_rows.head(args.limit)
             print(f"  [limite] Truncando para {args.limit} linhas")
 
-        print(f"\n  Novas linhas Python (IA):     {len(new_rows[~new_rows['is_human']]):,}")
-        print(f"  Novas linhas Python (humanas): {len(new_rows[new_rows['is_human']]):,}")
+        n_ai = len(new_rows[~new_rows["is_human"]])
+        n_human = len(new_rows[new_rows["is_human"]])
+        print(f"\n  Novas linhas Python (IA):     {n_ai:,}")
+        print(f"  Novas linhas Python (humanas): {n_human:,}")
 
         # ── Append ao CSV ──────────────────────────────────────────────────
         write_header = not SAMPLE_CSV.exists()
-        new_rows.to_csv(SAMPLE_CSV, mode="a", header=write_header, index=False)
+        if not write_header:
+            # Align column order to existing CSV to avoid positional mismatch
+            csv_cols = pd.read_csv(SAMPLE_CSV, nrows=0).columns.tolist()
+            for col in csv_cols:
+                if col not in new_rows.columns:
+                    new_rows[col] = None
+            new_rows = new_rows[csv_cols]
+        new_rows.to_csv(
+            SAMPLE_CSV, mode="a", header=write_header, index=False
+        )
         print(f"\n  Append concluído em: {SAMPLE_CSV}")
 
         # ── Resumo final ───────────────────────────────────────────────────
@@ -393,17 +439,19 @@ def main() -> None:
         print(f"{'='*65}")
         print(f"  Total de linhas: {len(final_df):,}")
         print(f"  PRs únicas:      {final_df['pr_id'].nunique():,}")
-        print(f"\n  Por ferramenta de mutação:")
+        print("\n  Por ferramenta de mutação:")
         if "mutation_tool" in final_df.columns:
-            print(final_df.groupby("mutation_tool")["pr_id"].count().to_string())
-        print(f"\n  Por agente:")
+            print(final_df.groupby("mutation_tool")
+                  ["pr_id"].count().to_string())
+        print("\n  Por agente:")
         print(final_df.groupby("agent")["pr_id"].count().to_string())
 
         dups = final_df.duplicated(subset=["pr_id"]).sum()
         if dups > 0:
-            print(f"\n  [AVISO] {dups} linhas duplicadas por pr_id detectadas!")
+            print(
+                f"\n  [AVISO] {dups} linhas duplicadas por pr_id detectadas!")
         else:
-            print(f"\n  [OK] Sem pr_ids duplicados.")
+            print("\n  [OK] Sem pr_ids duplicados.")
 
     finally:
         if loader:

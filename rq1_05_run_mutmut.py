@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """
-RQ1 — Script 05: Execução do mutmut e Coleta de MSI (Python)
-=============================================================
-Para cada worktree Python elegível (clonado via rq1_clone_repos.py),
-cria venv isolado, instala dependências, executa mutmut 2.x,
-parseia resultados e salva MSI por PR.
+RQ1 — Script 05: Execução cosmic-ray (Python, Windows-compatible)
+==================================================================
+mutmut não suporta Windows nativamente (requer WSL).
+Este script usa cosmic-ray 8.x que roda em qualquer SO.
 
-Schema de output (mesmo de stryker_results.csv + mutation_tool_used)
---------------------------------------------------------------------
+Schema de output (mesmo schema de stryker_results.csv)
+------------------------------------------------------
   pr_id, agent, repo_full_name,
   total_mutants, killed, survived, timeout_mutants, no_coverage,
   msi_global, msi_by_operator (JSON),
@@ -29,8 +28,8 @@ from __future__ import annotations
 import argparse
 import csv
 import json
-import re
 import shutil
+import sqlite3
 import subprocess
 import sys
 import time
@@ -52,8 +51,9 @@ RESULTS_CSV = OUT_DIR / "mutmut_results.csv"
 
 VENV_NAME = ".venv_mutmut"
 PIP_TIMEOUT = 180
-MUTMUT_TIMEOUT = 3_600   # 1h por PR
-MUTANT_TIMEOUT_THRESHOLD = 300  # s por mutante para ativar Cosmic Ray
+CR_INIT_TIMEOUT = 300
+CR_EXEC_TIMEOUT = 600   # 10 min por PR
+CR_PER_MUTANT_TIMEOUT = 10.0  # s por mutante
 
 load_dotenv(ROOT_DIR / ".env")
 
@@ -64,37 +64,31 @@ RESULT_COLS = [
     "status", "error_msg", "duration_seconds", "mutation_tool_used",
 ]
 
-# Regex para classificar operadores de mutação a partir do diff do mutante
-OP_PATTERNS = [
-    ("ArithmeticOperator", re.compile(r"[+\-*/] ?→ ?[+\-*/]|(?<![=!<>])[+\-][^=]")),
-    ("ComparisonOperator", re.compile(r"==|!=|>=|<=|>|<")),
-    ("BooleanLiteral",     re.compile(r"\bTrue\b|\bFalse\b")),
-    ("StringLiteral",      re.compile(r'["\'].*["\']')),
-    ("LogicalOperator",    re.compile(r"\band\b|\bor\b|\bnot\b")),
-]
-
-
-def classify_operator(diff_snippet: str) -> str:
-    for name, pattern in OP_PATTERNS:
-        if pattern.search(diff_snippet):
-            return name
-    return "Other"
+# Exclusões padrão para detecção de módulo fonte
+_DIR_EXCLUSIONS = {
+    "tests", "test", "testing", ".git", ".venv_mutmut", "__pycache__",
+    "docs", "doc", "examples", "example", "migrations", "scripts",
+    "script", "benchmark", "benchmarks", "data", "fixtures",
+}
 
 
 # ---------------------------------------------------------------------------
 # Helpers de execução
 # ---------------------------------------------------------------------------
 
-def _run(cmd: list[str], cwd: Path, timeout: int, env: dict | None = None) -> tuple[bool, str, str]:
+def _run(
+    cmd: list[str], cwd: Path, timeout: int, env: dict | None = None,
+) -> tuple[bool, str, str]:
     """Retorna (ok, stdout, stderr)."""
     import os
     run_env = os.environ.copy()
+    run_env["PYTHONIOENCODING"] = "utf-8"
     if env:
         run_env.update(env)
     try:
         r = subprocess.run(
             cmd, cwd=str(cwd), capture_output=True, text=True,
-            timeout=timeout, env=run_env,
+            timeout=timeout, env=run_env, encoding="utf-8", errors="replace",
         )
         return r.returncode == 0, r.stdout, r.stderr
     except subprocess.TimeoutExpired:
@@ -104,7 +98,6 @@ def _run(cmd: list[str], cwd: Path, timeout: int, env: dict | None = None) -> tu
 
 
 def _python_exe(wt: Path) -> Path:
-    """Retorna caminho do Python no venv (Windows ou Unix)."""
     scripts = wt / VENV_NAME / "Scripts"
     if scripts.exists():
         return scripts / "python.exe"
@@ -118,54 +111,135 @@ def _pip_exe(wt: Path) -> Path:
     return wt / VENV_NAME / "bin" / "pip"
 
 
-def _mutmut_exe(wt: Path) -> Path:
+def _cr_exe(wt: Path) -> Path:
     scripts = wt / VENV_NAME / "Scripts"
     if scripts.exists():
-        return scripts / "mutmut.exe"
-    return wt / VENV_NAME / "bin" / "mutmut"
+        return scripts / "cosmic-ray.exe"
+    return wt / VENV_NAME / "bin" / "cosmic-ray"
 
 
 # ---------------------------------------------------------------------------
-# Inferência do diretório fonte a partir dos arquivos de teste
+# Detecção do módulo fonte para cosmic-ray
 # ---------------------------------------------------------------------------
 
-def infer_src_paths(test_files: list[str], wt: Path) -> list[str]:
-    """Heurística para descobrir o diretório de código fonte."""
-    candidates: list[str] = []
+def _test_to_source_path(test_file: str, wt: Path) -> str | None:
+    """
+    Derive the source file path (POSIX, relative to wt) from a test file.
+    cosmic-ray accepts file paths in module-path.
 
+    Strategy: strip leading 'tests/'/'test/', strip 'test_' prefix,
+    check if that reconstructed path exists; fall back to rglob.
+    """
+    parts = list(Path(test_file).parts)
+    if not parts:
+        return None
+
+    if parts[0].lower() in ("tests", "test", "testing"):
+        parts = parts[1:]
+    if not parts:
+        return None
+
+    fname = parts[-1]
+    # Exclude pytest infrastructure files — they have no source counterpart
+    if fname in ("conftest.py", "pytest.ini", "setup.cfg"):
+        return None
+
+    if fname.startswith("test_"):
+        src_fname = fname[5:]
+    elif fname.endswith("_test.py"):
+        src_fname = fname[:-8] + ".py"
+    else:
+        src_fname = fname
+
+    # Direct reconstruction: tests/pkg/sub/test_foo.py → pkg/sub/foo.py
+    candidate = wt.joinpath(*(parts[:-1] + [src_fname]))
+    if candidate.is_file():
+        return candidate.relative_to(wt).as_posix()
+
+    # rglob fallback (outside test/venv dirs)
+    for hit in sorted(wt.rglob(src_fname)):
+        hit_str = hit.as_posix()
+        if (
+            "test" not in hit_str.lower()
+            and ".venv" not in hit_str
+            and "__pycache__" not in hit_str
+        ):
+            return hit.relative_to(wt).as_posix()
+
+    return None
+
+
+def find_module_for_cosmic_ray(
+    test_files: list[str],
+    wt: Path,
+) -> tuple[str | None, dict[str, str]]:
+    """
+    Retorna (module_path_str, extra_env) para a config do cosmic-ray.
+    module_path_str é um caminho POSIX relativo ao worktree ou nome de
+    módulo importável. Prefere arquivos específicos inferidos dos test_files.
+    """
+    # 1. Tentar derivar arquivo fonte específico de cada test file
     for tf in test_files:
-        parts = Path(tf).parts
-        # test_foo.py → mesmo diretório
-        # tests/test_foo.py → diretório pai (src/ ou package name)
-        if "tests" in parts or "test" in parts:
-            pkg_dirs = [p for p in (wt / d for d in ("src", "lib", "app")) if p.is_dir()]
-            if pkg_dirs:
-                candidates.extend(str(d.relative_to(wt)) for d in pkg_dirs)
-                continue
-            # Tentar encontrar pacote Python pela presença de __init__.py
-            for d in wt.iterdir():
-                if d.is_dir() and (d / "__init__.py").exists() and d.name not in ("tests", "test"):
-                    candidates.append(d.name)
-        else:
-            parent = Path(tf).parent
-            if parent != Path("."):
-                candidates.append(str(parent))
+        src = _test_to_source_path(tf, wt)
+        if src:
+            return src, {"PYTHONPATH": str(wt)}
 
-    # Deduplicar e verificar existência
-    seen: set[str] = set()
-    valid: list[str] = []
-    for c in candidates:
-        if c not in seen and (wt / c).is_dir():
-            seen.add(c)
-            valid.append(c)
+    # 2. Fallback: pacotes de nível superior com __init__.py
+    top_pkgs = [
+        d.name for d in sorted(wt.iterdir())
+        if d.is_dir()
+        and (d / "__init__.py").exists()
+        and d.name.lower() not in _DIR_EXCLUSIONS
+        and not d.name.startswith(".")
+    ]
+    if top_pkgs:
+        return top_pkgs[0], {"PYTHONPATH": str(wt)}
 
-    if not valid:
-        # Fallback: qualquer subdir com __init__.py (exceto tests)
-        for d in wt.iterdir():
-            if d.is_dir() and (d / "__init__.py").exists() and "test" not in d.name.lower():
-                valid.append(d.name)
+    # 3. Layout src/ ou lib/
+    for srcdir in ("src", "lib"):
+        src = wt / srcdir
+        if src.is_dir():
+            pkgs = [
+                d.name for d in sorted(src.iterdir())
+                if d.is_dir()
+                and (d / "__init__.py").exists()
+                and d.name.lower() not in _DIR_EXCLUSIONS
+            ]
+            if pkgs:
+                return pkgs[0], {"PYTHONPATH": str(src)}
 
-    return valid or ["."]
+    # 4. Módulo simples (arquivo .py de nível superior)
+    simple = [
+        f.stem for f in sorted(wt.glob("*.py"))
+        if f.stem not in ("setup", "conftest", "conf")
+        and not f.stem.startswith("test_")
+    ]
+    if simple:
+        return simple[0], {"PYTHONPATH": str(wt)}
+
+    return None, {}
+
+
+def infer_test_command(test_files: list[str], wt: Path) -> str:
+    """
+    Retorna comando pytest para a PR usando o caminho absoluto do
+    Python do venv (forward slashes para compatibilidade com TOML).
+    """
+    py = str(_python_exe(wt)).replace("\\", "/")
+    to = int(CR_PER_MUTANT_TIMEOUT * 2)
+
+    existing = [tf for tf in test_files if (wt / tf).exists()]
+    if existing:
+        files_str = " ".join(
+            tf.replace("\\", "/") for tf in existing[:5]
+        )
+        return f"{py} -m pytest {files_str} -x -q --tb=no --timeout={to}"
+
+    for test_dir in ("tests", "test", "testing"):
+        if (wt / test_dir).is_dir():
+            return f"{py} -m pytest {test_dir} -x -q --tb=no --timeout={to}"
+
+    return f"{py} -m pytest . -x -q --tb=no --timeout={to}"
 
 
 # ---------------------------------------------------------------------------
@@ -173,106 +247,134 @@ def infer_src_paths(test_files: list[str], wt: Path) -> list[str]:
 # ---------------------------------------------------------------------------
 
 def setup_venv(wt: Path) -> tuple[bool, str]:
-    py = sys.executable
-    ok, _, err = _run([py, "-m", "venv", VENV_NAME], wt, 60)
-    if not ok:
-        return False, f"venv: {err}"
+    cr_exe = _cr_exe(wt)
 
+    if not cr_exe.exists():
+        # Create fresh venv
+        py = sys.executable
+        ok, _, err = _run([py, "-m", "venv", VENV_NAME], wt, 60)
+        if not ok:
+            return False, f"venv: {err}"
+
+        # Evaluate pip AFTER venv creation so Scripts/ exists on Windows
+        pip = str(_pip_exe(wt))
+
+        # Install ALL requirement files found (not just the first one)
+        req_files = (
+            "requirements.txt", "requirements-dev.txt",
+            "requirements_test.txt", "requirements-test.txt",
+        )
+        found_any_req = False
+        for req_file in req_files:
+            req_path = wt / req_file
+            if req_path.exists():
+                found_any_req = True
+                ok2, _, e2 = _run(
+                    [pip, "install", "-r", str(req_path)], wt, PIP_TIMEOUT
+                )
+                if not ok2:
+                    print(
+                        f"      [aviso] pip install -r {req_file} falhou: "
+                        f"{e2[:80]}"
+                    )
+
+        if not found_any_req:
+            has_setup = (
+                (wt / "pyproject.toml").exists()
+                or (wt / "setup.py").exists()
+            )
+            if has_setup:
+                ok2, _, _ = _run(
+                    [pip, "install", "-e", ".[test]"], wt, PIP_TIMEOUT
+                )
+                if not ok2:
+                    _run([pip, "install", "-e", "."], wt, PIP_TIMEOUT)
+
+    # Always ensure essential test tools — re-evaluate pip so path is correct
+    # even when the venv already existed (cr_exe.exists() was True above).
     pip = str(_pip_exe(wt))
-
-    # Instalar dependências do projeto
-    for req_file in ["requirements.txt", "requirements-dev.txt", "requirements_test.txt"]:
-        req_path = wt / req_file
-        if req_path.exists():
-            ok, _, err = _run([pip, "install", "-r", str(req_path)], wt, PIP_TIMEOUT)
-            if not ok:
-                print(f"      [aviso] pip install -r {req_file} falhou: {err[:100]}")
-            break
-    else:
-        # Sem requirements.txt — tentar setup.py / pyproject.toml
-        if (wt / "pyproject.toml").exists() or (wt / "setup.py").exists():
-            ok, _, err = _run([pip, "install", "-e", ".[test]"], wt, PIP_TIMEOUT)
-            if not ok:
-                _run([pip, "install", "-e", "."], wt, PIP_TIMEOUT)
-
-    # Garantir pytest e mutmut
-    _run([pip, "install", "pytest", "mutmut"], wt, PIP_TIMEOUT)
+    ok_ens, _, err_ens = _run(
+        [pip, "install", "--quiet",
+         "pytest", "pytest-timeout", "pytest-asyncio", "anyio",
+         "cosmic-ray"],
+        wt, PIP_TIMEOUT,
+    )
+    if not ok_ens:
+        print(f"      [aviso] ensure-install falhou: {err_ens[:120]}")
     return True, ""
 
 
 # ---------------------------------------------------------------------------
-# Execução e parsing mutmut
+# Execução cosmic-ray e parsing
 # ---------------------------------------------------------------------------
 
-def _get_mutant_ids_by_status(mutmut_exe: str, wt: Path, status: str) -> list[int]:
-    """Retorna lista de IDs de mutantes com dado status."""
-    ok, stdout, _ = _run([mutmut_exe, "results"], wt, 60)
-    if not ok:
-        return []
-    ids = []
-    in_section = False
-    for line in stdout.splitlines():
-        line = line.strip()
-        if line.startswith(f"--- {status}"):
-            in_section = True
-            continue
-        if line.startswith("---"):
-            in_section = False
-        if in_section and line.startswith("mutmut #"):
-            try:
-                ids.append(int(line.split("#")[1].strip()))
-            except (IndexError, ValueError):
-                pass
-    return ids
+def _write_cr_config(
+    wt: Path,
+    module_name: str,
+    test_cmd: str,
+    config_file: Path,
+) -> None:
+    # Use explicit \n to avoid Windows \r\n breaking TOML parsers
+    content = (
+        f'[cosmic-ray]\n'
+        f'module-path = "{module_name}"\n'
+        f'timeout = {CR_PER_MUTANT_TIMEOUT}\n'
+        f'test-command = "{test_cmd}"\n'
+        f'\n'
+        f'[cosmic-ray.distributor]\n'
+        f'name = "local"\n'
+    )
+    with open(config_file, "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(content)
 
 
-def parse_mutmut_results(mutmut_exe: str, wt: Path) -> dict:
-    """Parseia resultados do mutmut e retorna métricas."""
-    ok, stdout, err = _run([mutmut_exe, "results"], wt, 60)
-    if not ok:
-        return {"status": "parse_error", "error_msg": err[:300]}
+def parse_cosmic_ray_results(session_db: Path) -> dict:
+    """Parseia resultados do cosmic-ray via SQLite."""
+    if not session_db.exists():
+        return {"status": "parse_error", "error_msg": "session db missing"}
 
-    # Parsing da linha de sumário: "xx survived, yy killed, ..."
+    conn = sqlite3.connect(str(session_db))
+    try:
+        rows = conn.execute("""
+            SELECT ms.operator_name,
+                   wr.worker_outcome,
+                   wr.test_outcome
+            FROM work_items wi
+            JOIN mutation_specs ms ON wi.job_id = ms.job_id
+            LEFT JOIN work_results wr ON wi.job_id = wr.job_id
+        """).fetchall()
+    except Exception as exc:
+        conn.close()
+        return {"status": "parse_error", "error_msg": str(exc)[:200]}
+    conn.close()
+
     total = killed = survived = timeout_count = 0
+    by_op: dict[str, dict[str, int]] = defaultdict(
+        lambda: {"killed": 0, "total": 0}
+    )
 
-    survived_re = re.compile(r"(\d+) survived")
-    killed_re = re.compile(r"(\d+) killed")
-    timeout_re = re.compile(r"(\d+) timeout")
-    suspicious_re = re.compile(r"(\d+) suspicious")
+    for op_name, worker_outcome, test_outcome in rows:
+        if worker_outcome is None:
+            continue  # não executado (pr timeout antes de terminar)
 
-    for line in stdout.splitlines():
-        m = survived_re.search(line)
-        if m:
-            survived = int(m.group(1))
-        m = killed_re.search(line)
-        if m:
-            killed = int(m.group(1))
-        m = timeout_re.search(line)
-        if m:
-            timeout_count = int(m.group(1))
-        m = suspicious_re.search(line)
-        if m:
-            survived += int(m.group(1))  # suspicious = survived para MSI
+        op_short = op_name.split("/")[-1] if op_name else "Unknown"
+        wo = worker_outcome.upper() if worker_outcome else ""
+        to = test_outcome.upper() if test_outcome else ""
 
-    total = killed + survived + timeout_count
+        if wo == "TIMEOUT":
+            timeout_count += 1
+            total += 1
+        elif wo == "NORMAL":
+            total += 1
+            by_op[op_short]["total"] += 1
+            if to == "KILLED":
+                killed += 1
+                by_op[op_short]["killed"] += 1
+            elif to == "SURVIVED":
+                survived += 1
+        # "EXCEPTION" → mutante incompetente, ignorar no MSI
+
     msi_global = round(killed / total * 100, 2) if total > 0 else None
-
-    # Classificação de operadores via diff dos mutantes sobreviventes (sample)
-    by_op: dict[str, dict[str, int]] = defaultdict(lambda: {"killed": 0, "total": 0})
-    survived_ids = _get_mutant_ids_by_status(mutmut_exe, wt, "SURVIVED")
-    killed_ids = _get_mutant_ids_by_status(mutmut_exe, wt, "KILLED")
-
-    for mid in survived_ids[:50]:  # limitar para evitar chamadas excessivas
-        ok2, diff, _ = _run([mutmut_exe, "show", str(mid)], wt, 10)
-        op = classify_operator(diff) if ok2 else "Other"
-        by_op[op]["total"] += 1
-
-    for mid in killed_ids[:50]:
-        ok2, diff, _ = _run([mutmut_exe, "show", str(mid)], wt, 10)
-        op = classify_operator(diff) if ok2 else "Other"
-        by_op[op]["total"] += 1
-        by_op[op]["killed"] += 1
-
     msi_by_op = {
         op: round(v["killed"] / v["total"] * 100, 2)
         for op, v in by_op.items()
@@ -287,17 +389,16 @@ def parse_mutmut_results(mutmut_exe: str, wt: Path) -> dict:
         "no_coverage": 0,
         "msi_global": msi_global,
         "msi_by_operator": json.dumps(msi_by_op),
-        "mutation_tool_used": "mutmut",
+        "mutation_tool_used": "cosmic-ray",
     }
 
 
-# ---------------------------------------------------------------------------
-# Execução de um único worktree
-# ---------------------------------------------------------------------------
-
-def run_mutmut_on_worktree(
-    pr_id: int, agent: str, repo_full_name: str,
-    worktree_path: str, test_files_json: str,
+def run_cr_on_worktree(
+    pr_id: int,
+    agent: str,
+    repo_full_name: str,
+    worktree_path: str,
+    test_files_json: str,
     keep_venv: bool = False,
 ) -> dict:
     wt = Path(worktree_path)
@@ -309,13 +410,13 @@ def run_mutmut_on_worktree(
         "timeout_mutants": None, "no_coverage": None,
         "msi_global": None, "msi_by_operator": "{}",
         "status": "", "error_msg": "", "duration_seconds": 0,
-        "mutation_tool_used": "mutmut",
+        "mutation_tool_used": "cosmic-ray",
     }
 
     if not wt.exists():
         return {**base, "status": "worktree_missing"}
 
-    # Setup venv
+    # ── 1. Setup venv ─────────────────────────────────────────────────────
     print("    setup venv ...", end=" ", flush=True)
     ok, err = setup_venv(wt)
     if not ok:
@@ -323,47 +424,120 @@ def run_mutmut_on_worktree(
         return {**base, "status": "venv_error", "error_msg": err}
     print("OK")
 
-    mutmut = str(_mutmut_exe(wt))
-    src_paths = infer_src_paths(test_files, wt)
-    paths_arg = ",".join(src_paths[:3])  # mutmut aceita múltiplos com vírgula
+    # ── 2. Detectar módulo fonte ───────────────────────────────────────────
+    module_name, extra_env = find_module_for_cosmic_ray(test_files, wt)
+    if not module_name:
+        return {
+            **base,
+            "status": "no_module",
+            "error_msg": "nenhum módulo Python encontrado",
+        }
 
-    print(f"    mutmut run (src={paths_arg}) ...", end=" ", flush=True)
+    test_cmd = infer_test_command(test_files, wt)
+    cr_exe = str(_cr_exe(wt))
+    config_file = wt / "cr_rq1.toml"
+    session_db = wt / "cr_rq1.sqlite"
+
+    # Inject venv Scripts/bin into PATH so "python" in test-command
+    # resolves to the worktree's venv Python, not the system Python.
+    import os as _os
+    venv_scripts = wt / VENV_NAME / "Scripts"
+    if not venv_scripts.exists():
+        venv_scripts = wt / VENV_NAME / "bin"
+    extra_env["PATH"] = (
+        str(venv_scripts) + _os.pathsep + _os.environ.get("PATH", "")
+    )
+
+    # Limpar sessão anterior se existir; se bloqueada, usar nome único
+    if session_db.exists():
+        try:
+            session_db.unlink()
+        except PermissionError:
+            import time as _time
+            session_db = wt / f"cr_rq1_{int(_time.time())}.sqlite"
+
+    _write_cr_config(wt, module_name, test_cmd, config_file)
+
+    print(
+        f"    cosmic-ray (module={module_name}) ...",
+        end=" ", flush=True,
+    )
     t0 = time.time()
 
-    ok, stdout, stderr = _run(
-        [mutmut, "run", f"--paths-to-mutate={paths_arg}",
-         "--test-time-multiplier=2.0"],
-        wt, MUTMUT_TIMEOUT,
+    # ── 3. cosmic-ray init ─────────────────────────────────────────────────
+    ok_init, _, err_init = _run(
+        [cr_exe, "init", str(config_file), str(session_db)],
+        wt, CR_INIT_TIMEOUT, env=extra_env,
+    )
+    if not ok_init:
+        print(f"init ERRO ({round(time.time()-t0, 1)}s)")
+        return {
+            **base, "status": "cr_init_error",
+            "error_msg": err_init[:200],
+            "duration_seconds": round(time.time() - t0, 1),
+        }
+
+    # ── 4. cosmic-ray baseline ────────────────────────────────────────────
+    ok_base, out_base, err_base = _run(
+        [cr_exe, "baseline", str(config_file)],
+        wt, 120, env=extra_env,
+    )
+    if not ok_base:
+        print(f"baseline FALHOU ({round(time.time()-t0, 1)}s)")
+        combined = (err_base + "\n" + out_base).strip()[:300]
+        return {
+            **base, "status": "baseline_fail",
+            "error_msg": combined,
+            "duration_seconds": round(time.time() - t0, 1),
+        }
+
+    # ── 5. cosmic-ray exec ─────────────────────────────────────────────────
+    ok_exec, out_exec, err_exec = _run(
+        [cr_exe, "exec", str(config_file), str(session_db)],
+        wt, CR_EXEC_TIMEOUT, env=extra_env,
     )
     duration = round(time.time() - t0, 1)
 
-    if "timeout" in stderr.lower() and not ok:
+    if not ok_exec and "timeout" in err_exec.lower():
         print(f"TIMEOUT ({duration}s)")
-        return {**base, "status": "timeout_no_report", "duration_seconds": duration}
+        status_str = "partial"
+    else:
+        if err_exec.strip():
+            print(f"\n    [exec stderr]: {err_exec[:200]}", flush=True)
+        print(f"{'OK' if ok_exec else 'done'} ({duration}s)")
+        status_str = "ok" if ok_exec else "partial"
 
-    print(f"{'OK' if ok else 'done'} ({duration}s)")
-
-    # Parsear resultados
-    metrics = parse_mutmut_results(mutmut, wt)
+    # ── 6. Parsear resultados ──────────────────────────────────────────────
+    metrics = parse_cosmic_ray_results(session_db)
     if metrics.get("status") == "parse_error":
-        return {**base, **metrics, "duration_seconds": duration}
+        return {
+            **base, **metrics,
+            "duration_seconds": duration,
+        }
 
-    # Limpar venv para economizar disco
+    # ── 7. Limpar artefatos ────────────────────────────────────────────────
+    for artifact in (config_file, session_db):
+        if artifact.exists():
+            artifact.unlink(missing_ok=True)
+
     if not keep_venv:
         venv_dir = wt / VENV_NAME
         if venv_dir.exists():
             shutil.rmtree(venv_dir, ignore_errors=True)
 
-    status = "ok" if ok else "partial"
-    return {**base, **metrics, "status": status, "duration_seconds": duration}
+    return {
+        **base, **metrics,
+        "status": status_str,
+        "duration_seconds": duration,
+    }
 
 
 # ---------------------------------------------------------------------------
-# Checkpoint logger (idêntico ao Script 04)
+# Checkpoint logger
 # ---------------------------------------------------------------------------
 
 class ResultLogger:
-    DONE_STATUSES = {"ok", "partial"}
+    DONE_STATUSES = {"ok", "partial", "baseline_fail", "no_module", "venv_error"}
 
     def __init__(self, log_path: Path) -> None:
         self._path = log_path
@@ -372,11 +546,19 @@ class ResultLogger:
         self._writer = None
 
     def load(self) -> None:
-        if self._path.exists():
-            df = pd.read_csv(self._path)
-            self._done = set(df[df["status"].isin(self.DONE_STATUSES)]["pr_id"].astype(int))
-            print(f"  [checkpoint] {len(self._done)} PRs já processadas")
-        write_header = not self._path.exists() or self._path.stat().st_size == 0
+        if self._path.exists() and self._path.stat().st_size > 0:
+            try:
+                df = pd.read_csv(self._path)
+                mask = df["status"].isin(self.DONE_STATUSES)
+                self._done = set(df[mask]["pr_id"].astype(int))
+                print(
+                    f"  [checkpoint] {len(self._done)} PRs já processadas"
+                )
+            except Exception:
+                print("  [checkpoint] CSV corrompido, iniciando do zero")
+        write_header = (
+            not self._path.exists() or self._path.stat().st_size == 0
+        )
         self._fh = open(self._path, "a", newline="", encoding="utf-8")
         self._writer = csv.DictWriter(self._fh, fieldnames=RESULT_COLS)
         if write_header:
@@ -399,13 +581,15 @@ class ResultLogger:
 # ---------------------------------------------------------------------------
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="RQ1 Script 05 — mutmut (Python)")
+    parser = argparse.ArgumentParser(
+        description="RQ1 Script 05 — cosmic-ray (Python)"
+    )
     parser.add_argument("--limit", type=int)
     parser.add_argument("--keep-venv", action="store_true")
     args = parser.parse_args()
 
     print("=" * 65)
-    print(" RQ1 — Script 05: Execução mutmut (Python)")
+    print(" RQ1 — Script 05: Execução cosmic-ray (Python)")
     print("=" * 65)
 
     for required in [ELIGIBLE_CSV, CLONE_LOG_CSV]:
@@ -416,11 +600,14 @@ def main() -> None:
     eligible = pd.read_csv(ELIGIBLE_CSV)
     clone_log = pd.read_csv(CLONE_LOG_CSV)
 
-    cloned = clone_log[clone_log["status"] == "ok"][["pr_id", "worktree_path"]].copy()
+    cloned = clone_log[clone_log["status"] == "ok"][
+        ["pr_id", "worktree_path"]
+    ].copy()
     cloned["pr_id"] = cloned["pr_id"].astype(int)
 
-    py_eligible = eligible[eligible.get("mutation_tool", pd.Series(dtype=str)) == "mutmut"].copy()
-    if "mutation_tool" not in eligible.columns:
+    if "mutation_tool" in eligible.columns:
+        py_eligible = eligible[eligible["mutation_tool"] == "mutmut"].copy()
+    else:
         print("[AVISO] Coluna mutation_tool ausente — usando todas as PRs")
         py_eligible = eligible.copy()
     py_eligible["pr_id"] = py_eligible["pr_id"].astype(int)
@@ -443,9 +630,12 @@ def main() -> None:
         if logger.already_done(pr_id):
             continue
 
-        print(f"\n[{i}/{total}] {row.get('repo_full_name', '?')} PR#{pr_id} [{row.get('agent', '?')}]")
+        print(
+            f"\n[{i}/{total}] {row.get('repo_full_name', '?')} "
+            f"PR#{pr_id} [{row.get('agent', '?')}]"
+        )
 
-        result = run_mutmut_on_worktree(
+        result = run_cr_on_worktree(
             pr_id=pr_id,
             agent=str(row.get("agent", "")),
             repo_full_name=str(row.get("repo_full_name", "")),
@@ -458,10 +648,16 @@ def main() -> None:
         s = result["status"]
         if s in ("ok", "partial"):
             ok_count += 1
-            print(f"  MSI={result['msi_global']}% | mutants={result['total_mutants']}")
+            print(
+                f"  MSI={result['msi_global']}% "
+                f"| mutants={result['total_mutants']}"
+            )
         else:
             err_count += 1
-            print(f"  [ERRO] {s}: {str(result.get('error_msg', ''))[:120]}")
+            print(
+                f"  [ERRO] {s}: "
+                f"{str(result.get('error_msg', ''))[:120]}"
+            )
 
     logger.close()
 

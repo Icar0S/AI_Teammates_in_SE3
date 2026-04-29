@@ -1,3 +1,5 @@
 .venv
 .env
 OFFICIALDATASET.zip
+
+/__pycache__

@@ -1,0 +1,19 @@
+filename,size_mb,columns,hf_equivalent,schema_diff
+pull_request.parquet,16.07,"[""id"", ""number"", ""title"", ""body"", ""agent"", ""user_id"", ""user"", ""state"", ""created_at"", ""closed_at"", ""merged_at"", ""repo_id"", ""repo_url"", ""html_url""]",pull_request.parquet,hf_unavailable
+pr_review_comments.parquet,14.05,"[""id"", ""pull_request_review_id"", ""user"", ""user_type"", ""diff_hunk"", ""path"", ""position"", ""original_position"", ""commit_id"", ""original_commit_id"", ""body"", ""pull_request_url"", ""created_at"", ""updated_at"", ""in_reply_to_id""]",unknown,hf_unavailable
+pr_reviews.parquet,7.17,"[""id"", ""pr_id"", ""user"", ""user_type"", ""state"", ""submitted_at"", ""body""]",pr_reviews.parquet,hf_unavailable
+pr_comments.parquet,24.66,"[""id"", ""pr_id"", ""user"", ""user_id"", ""user_type"", ""created_at"", ""body""]",pr_comments.parquet,hf_unavailable
+human_pull_request.parquet,4.18,"[""id"", ""number"", ""title"", ""user"", ""user_id"", ""state"", ""created_at"", ""closed_at"", ""merged_at"", ""repo_url"", ""html_url"", ""body"", ""agent""]",human_pull_request.parquet,hf_unavailable
+pr_review_comments_v2.parquet,20.15,"[""id"", ""pull_request_review_id"", ""user"", ""user_type"", ""diff_hunk"", ""path"", ""position"", ""original_position"", ""commit_id"", ""original_commit_id"", ""body"", ""pull_request_url"", ""created_at"", ""updated_at"", ""in_reply_to_id""]",pr_review_comments_v2.parquet,hf_unavailable
+related_issue.parquet,0.07,"[""pr_id"", ""issue_id"", ""source""]",related_issue.parquet,hf_unavailable
+all_pull_request.parquet,315.84,"[""id"", ""number"", ""title"", ""body"", ""agent"", ""user_id"", ""user"", ""state"", ""created_at"", ""closed_at"", ""merged_at"", ""repo_id"", ""repo_url"", ""html_url""]",all_pull_request.parquet,hf_unavailable
+pr_task_type.parquet,2.85,"[""agent"", ""id"", ""title"", ""reason"", ""type"", ""confidence""]",pr_task_type.parquet,hf_unavailable
+pr_commits.parquet,7.93,"[""sha"", ""pr_id"", ""author"", ""committer"", ""message""]",pr_commits.parquet,hf_unavailable
+issue.parquet,3.07,"[""id"", ""number"", ""title"", ""body"", ""user"", ""state"", ""created_at"", ""closed_at"", ""html_url""]",issue.parquet,hf_unavailable
+repository.parquet,0.16,"[""id"", ""url"", ""license"", ""full_name"", ""language"", ""forks"", ""stars""]",repository.parquet,hf_unavailable
+user.parquet,0.07,"[""id"", ""login"", ""followers"", ""following"", ""created_at""]",user.parquet,hf_unavailable
+pr_commit_details.parquet,462.74,"[""sha"", ""pr_id"", ""author"", ""committer"", ""message"", ""commit_stats_total"", ""commit_stats_additions"", ""commit_stats_deletions"", ""filename"", ""status"", ""additions"", ""deletions"", ""changes"", ""patch""]",pr_commit_details.parquet,hf_unavailable
+pr_timeline.parquet,32.53,"[""pr_id"", ""event"", ""commit_id"", ""created_at"", ""actor"", ""assignee"", ""label"", ""message""]",pr_timeline.parquet,hf_unavailable
+all_repository.parquet,5.85,"[""id"", ""url"", ""license"", ""full_name"", ""language"", ""forks"", ""stars""]",all_repository.parquet,hf_unavailable
+all_user.parquet,2.4,"[""id"", ""login"", ""followers"", ""following"", ""created_at""]",all_user.parquet,hf_unavailable
+human_pr_task_type.parquet,0.68,"[""agent"", ""id"", ""title"", ""reason"", ""type"", ""confidence""]",human_pr_task_type.parquet,hf_unavailable

@@ -1,0 +1,17 @@
+test,group1,group2,n1,n2,U,p_value,cliffs_d,effect_size,description,groups,n_groups,H,p_bonferroni,significant_bonferroni,task_type
+Mann-Whitney-U,AI,Human,36.0,0.0,,,,insufficient_data,AI (all agents) vs Human,,,,,,
+Mann-Whitney-U,Claude Code,Human,1.0,0.0,,,,insufficient_data,Claude Code vs Human,,,,,,
+Mann-Whitney-U,GitHub Copilot,Human,8.0,0.0,,,,insufficient_data,GitHub Copilot vs Human,,,,,,
+Mann-Whitney-U,OpenAI Codex,Human,27.0,0.0,,,,insufficient_data,OpenAI Codex vs Human,,,,,,
+Kruskal-Wallis,,,,,,0.001409,,,Kruskal-Wallis across AI agents,"['GitHub Copilot', 'OpenAI Codex']",2.0,10.1941,,,
+Mann-Whitney-U,Claude Code,GitHub Copilot,1.0,8.0,,,,insufficient_data,post-hoc: Claude Code vs GitHub Copilot,,,,,False,
+Mann-Whitney-U,Claude Code,OpenAI Codex,1.0,27.0,,,,insufficient_data,post-hoc: Claude Code vs OpenAI Codex,,,,,False,
+Mann-Whitney-U,GitHub Copilot,OpenAI Codex,8.0,27.0,186.0,0.001512,0.7222,large,post-hoc: GitHub Copilot vs OpenAI Codex,,,,0.004536,True,
+Mann-Whitney-U,Claude Code,Human,1.0,0.0,,,,insufficient_data,Claude Code vs Human | task=feat,,,,,,feat
+Mann-Whitney-U,GitHub Copilot,Human,4.0,0.0,,,,insufficient_data,GitHub Copilot vs Human | task=feat,,,,,,feat
+Mann-Whitney-U,OpenAI Codex,Human,14.0,0.0,,,,insufficient_data,OpenAI Codex vs Human | task=feat,,,,,,feat
+Mann-Whitney-U,GitHub Copilot,Human,1.0,0.0,,,,insufficient_data,GitHub Copilot vs Human | task=fix,,,,,,fix
+Mann-Whitney-U,OpenAI Codex,Human,6.0,0.0,,,,insufficient_data,OpenAI Codex vs Human | task=fix,,,,,,fix
+Mann-Whitney-U,GitHub Copilot,Human,3.0,0.0,,,,insufficient_data,GitHub Copilot vs Human | task=refactor,,,,,,refactor
+Mann-Whitney-U,OpenAI Codex,Human,2.0,0.0,,,,insufficient_data,OpenAI Codex vs Human | task=refactor,,,,,,refactor
+Mann-Whitney-U,OpenAI Codex,Human,5.0,0.0,,,,insufficient_data,OpenAI Codex vs Human | task=test,,,,,,test

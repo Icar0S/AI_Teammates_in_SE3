@@ -1,0 +1,13 @@
+scope,metric,n,spearman_r,p_value,significant
+global,assertion_count,36,0.5607,0.000375,True
+global,test_loc,36,0.592,0.000143,True
+global,cyclomatic_complexity,36,-0.0104,0.951965,False
+GitHub Copilot,assertion_count,8,0.3172,0.443989,False
+GitHub Copilot,test_loc,8,0.3416,0.407634,False
+GitHub Copilot,cyclomatic_complexity,8,0.2684,0.520441,False
+OpenAI Codex,assertion_count,27,0.3317,0.090944,False
+OpenAI Codex,test_loc,27,0.3006,0.127611,False
+OpenAI Codex,cyclomatic_complexity,27,-0.1023,0.611666,False
+AI,assertion_count,36,0.5607,0.000375,True
+AI,test_loc,36,0.592,0.000143,True
+AI,cyclomatic_complexity,36,-0.0104,0.951965,False
