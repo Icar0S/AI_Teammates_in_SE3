@@ -62,7 +62,9 @@ PRIMARY_LANGS = {"JavaScript", "TypeScript", "Python"}
 # Helpers
 # ---------------------------------------------------------------------------
 
-def _is_test_file(filename: str) -> bool:
+def _is_test_file(filename) -> bool:
+    if not isinstance(filename, str):
+        return False
     return bool(TEST_FILE_PATTERNS.search(filename))
 
 
@@ -93,8 +95,9 @@ def build_test_commit_index(
         "pr_commit_details.parquet",
         offline,
         loader,
-        columns=["pr_id", "commit_sha", "filename"],
+        columns=["pr_id", "sha", "filename"],
     )
+    details = details.rename(columns={"sha": "commit_sha"})
     if limit:
         details = details.head(limit)
     print(f"  Loaded {len(details):,} rows.")
@@ -117,14 +120,19 @@ def attach_commit_order(
     offline: bool,
     loader: ZipLoader | None,
 ) -> pd.DataFrame:
-    """Join with pr_commits to attach commit_order and created_at."""
+    """Join with pr_commits to attach commit_order (derived from row position)."""
     print("Loading pr_commits...")
     commits = load_parquet(
         "pr_commits.parquet",
         offline,
         loader,
-        columns=["pr_id", "commit_sha", "commit_order", "created_at"],
+        columns=["pr_id", "sha"],
     )
+    commits = commits.rename(columns={"sha": "commit_sha"})
+    commits["commit_order"] = (
+        commits.groupby("pr_id").cumcount() + 1
+    )
+    commits["created_at"] = pd.NaT
     merged = index.merge(commits, on=["pr_id", "commit_sha"], how="left")
     missing = merged["commit_order"].isna().sum()
     if missing:
@@ -161,8 +169,9 @@ def attach_agentic_metadata(
         "pr_task_type.parquet",
         offline,
         loader,
-        columns=["pr_id", "task_type"],
+        columns=["id", "type"],
     )
+    task = task.rename(columns={"id": "pr_id", "type": "task_type"})
 
     pr_repo = pr.merge(repo, on="repo_id", how="left")
     pr_repo = pr_repo.merge(task, on="pr_id", how="left")
@@ -187,7 +196,7 @@ def attach_human_metadata(
         "human_pull_request.parquet",
         offline,
         loader,
-        columns=["id", "repo_id"],
+        columns=["id", "repo_url"],
     ).rename(columns={"id": "pr_id"})
 
     print("Loading repository (for human PRs)...")
@@ -195,25 +204,26 @@ def attach_human_metadata(
         "repository.parquet",
         offline,
         loader,
-        columns=["id", "language"],
-    ).rename(columns={"id": "repo_id"})
+        columns=["url", "language"],
+    ).rename(columns={"url": "repo_url"})
 
     print("Loading human_pr_task_type...")
     htask = load_parquet(
         "human_pr_task_type.parquet",
         offline,
         loader,
-        columns=["pr_id", "task_type"],
+        columns=["id", "type"],
     )
+    htask = htask.rename(columns={"id": "pr_id", "type": "task_type"})
 
     human_pr_ids = set(hpr["pr_id"].unique())
 
     human_df = df[df["pr_id"].isin(human_pr_ids)].copy()
     if human_df.empty:
-        print("  No human PRs found in commit index (separate dataset — building from scratch).")
+        print("  No human PRs found in commit index (patch data not available for human PRs).")
         return pd.DataFrame(columns=df.columns)
 
-    hpr_meta = hpr.merge(repo, on="repo_id", how="left")
+    hpr_meta = hpr.merge(repo, on="repo_url", how="left")
     hpr_meta = hpr_meta.merge(htask, on="pr_id", how="left")
     hpr_meta["agent"] = "Human"
     hpr_meta["is_human"] = True

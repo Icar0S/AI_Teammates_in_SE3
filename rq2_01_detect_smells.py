@@ -361,8 +361,9 @@ def process_corpus(
         "pr_commit_details.parquet",
         offline,
         loader,
-        columns=["pr_id", "commit_sha", "filename", "patch"],
+        columns=["pr_id", "sha", "filename", "patch"],
     )
+    details = details.rename(columns={"sha": "commit_sha"})
     if limit:
         details = details.head(limit)
 

@@ -149,7 +149,9 @@ def phi_to_square_matrix(phi_df: pd.DataFrame) -> pd.DataFrame:
     for _, row in phi_df.iterrows():
         mat.loc[row["smell_a"], row["smell_b"]] = row["phi"]
         mat.loc[row["smell_b"], row["smell_a"]] = row["phi"]
-    np.fill_diagonal(mat.values, 1.0)
+    arr = mat.values.copy()
+    np.fill_diagonal(arr, 1.0)
+    mat = pd.DataFrame(arr, index=mat.index, columns=mat.columns)
     return mat
 
 

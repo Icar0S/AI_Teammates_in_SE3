@@ -1,0 +1,11 @@
+smell_name,cluster_id,cluster_label
+AssertionRoulette,3,3
+EagerTest,2,2
+MagicNumberTest,3,3
+UnknownTest,2,2
+RedundantAssertion,1,1
+DuplicateAssert,3,3
+VerboseTest,2,2
+MissingExceptionTest,1,1
+ResourceOptimism,3,3
+GeneralFixture,1,1

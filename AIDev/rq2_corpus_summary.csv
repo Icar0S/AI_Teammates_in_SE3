@@ -1,0 +1,71 @@
+agent,repo_language,n_commit_pairs,n_prs,temporal_prs
+Claude Code,Python,249,58,225
+Claude Code,TypeScript,149,46,132
+Claude Code,Java,34,12,31
+Claude Code,JavaScript,25,5,24
+Claude Code,Go,17,3,17
+Claude Code,Rust,7,2,7
+Claude Code,Zig,7,2,7
+Claude Code,C++,2,1,2
+Claude Code,PHP,1,1,0
+Claude Code,Scala,2,1,2
+Cursor,TypeScript,318,136,252
+Cursor,Python,346,113,300
+Cursor,Zig,87,22,85
+Cursor,Shell,29,12,27
+Cursor,Rust,19,9,14
+Cursor,Solidity,6,5,2
+Cursor,Java,6,4,4
+Cursor,Jupyter Notebook,10,4,9
+Cursor,C++,4,3,2
+Cursor,JavaScript,2,2,0
+Cursor,JetBrains MPS,2,2,0
+Cursor,Vue,2,1,2
+Devin,TypeScript,2136,774,1780
+Devin,Python,1712,536,1570
+Devin,Ruby,340,80,319
+Devin,JavaScript,167,55,138
+Devin,Rust,16,10,9
+Devin,PHP,3,3,0
+Devin,Go,1,1,0
+Devin,Java,5,1,5
+GitHub Copilot,TypeScript,1211,485,1007
+GitHub Copilot,Python,802,231,714
+GitHub Copilot,Java,361,118,318
+GitHub Copilot,C#,43,29,23
+GitHub Copilot,C++,58,27,48
+GitHub Copilot,JavaScript,30,14,23
+GitHub Copilot,Jupyter Notebook,32,11,31
+GitHub Copilot,Rust,16,8,11
+GitHub Copilot,Go,14,5,11
+GitHub Copilot,HTML,13,5,11
+GitHub Copilot,Bicep,3,2,2
+GitHub Copilot,Makefile,5,2,5
+GitHub Copilot,PHP,2,2,0
+GitHub Copilot,TypeSpec,4,2,3
+GitHub Copilot,Vue,2,2,0
+GitHub Copilot,C,1,1,0
+GitHub Copilot,Dockerfile,1,1,0
+GitHub Copilot,Shell,1,1,0
+GitHub Copilot,TeX,1,1,0
+OpenAI Codex,Python,1988,1598,562
+OpenAI Codex,TypeScript,708,449,376
+OpenAI Codex,Java,474,379,180
+OpenAI Codex,JavaScript,111,94,25
+OpenAI Codex,Go,84,68,23
+OpenAI Codex,Zig,82,30,73
+OpenAI Codex,HTML,44,28,23
+OpenAI Codex,Circom,63,20,60
+OpenAI Codex,C,22,16,9
+OpenAI Codex,Rust,38,14,31
+OpenAI Codex,C++,35,12,29
+OpenAI Codex,MDX,22,9,17
+OpenAI Codex,Jupyter Notebook,8,7,2
+OpenAI Codex,Vue,8,5,4
+OpenAI Codex,Solidity,3,3,0
+OpenAI Codex,Vim Script,3,2,2
+OpenAI Codex,AppleScript,1,1,0
+OpenAI Codex,Astro,2,1,2
+OpenAI Codex,C#,2,1,2
+OpenAI Codex,Nim,3,1,3
+OpenAI Codex,Svelte,1,1,0
