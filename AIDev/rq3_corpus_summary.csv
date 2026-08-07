@@ -1,0 +1,122 @@
+agent,corpus_source,repo_language,n_prs
+Claude Code,filename,Python,7
+Claude Code,filename,TypeScript,5
+Claude Code,filename,Ruby,2
+Claude Code,filename,Rust,2
+Claude Code,task_type,Julia,2
+Claude Code,both,Python,1
+Claude Code,filename,Go,1
+Claude Code,filename,Java,1
+Claude Code,filename,PHP,1
+Cursor,task_type,TypeScript,9
+Cursor,filename,Python,6
+Cursor,filename,Jupyter Notebook,3
+Cursor,filename,TypeScript,3
+Cursor,task_type,Kotlin,3
+Cursor,task_type,Python,3
+Cursor,filename,C++,2
+Cursor,task_type,Rust,2
+Cursor,both,C++,1
+Cursor,filename,Dart,1
+Cursor,filename,Go,1
+Cursor,filename,JetBrains MPS,1
+Cursor,filename,Rust,1
+Cursor,filename,Zig,1
+Cursor,task_type,C++,1
+Cursor,task_type,Java,1
+Cursor,task_type,Jupyter Notebook,1
+Cursor,task_type,Solidity,1
+Cursor,task_type,Vue,1
+Devin,task_type,TypeScript,39
+Devin,filename,Python,29
+Devin,filename,TypeScript,29
+Devin,filename,Rust,23
+Devin,filename,Go,12
+Devin,task_type,Python,8
+Devin,filename,JavaScript,7
+Devin,task_type,Rust,3
+Devin,both,Python,2
+Devin,both,TypeScript,2
+Devin,filename,C,2
+Devin,task_type,Go,2
+Devin,task_type,JavaScript,2
+Devin,both,Rust,1
+Devin,task_type,C,1
+Devin,task_type,C#,1
+Devin,task_type,Solidity,1
+GitHub Copilot,filename,C#,36
+GitHub Copilot,filename,TypeScript,34
+GitHub Copilot,filename,Java,19
+GitHub Copilot,filename,Go,18
+GitHub Copilot,filename,Python,15
+GitHub Copilot,task_type,C#,11
+GitHub Copilot,task_type,TypeScript,9
+GitHub Copilot,filename,Rust,7
+GitHub Copilot,filename,F#,6
+GitHub Copilot,filename,C,5
+GitHub Copilot,task_type,Python,5
+GitHub Copilot,task_type,Rust,5
+GitHub Copilot,filename,Gherkin,4
+GitHub Copilot,filename,PowerShell,4
+GitHub Copilot,task_type,C++,4
+GitHub Copilot,task_type,Java,4
+GitHub Copilot,filename,C++,3
+GitHub Copilot,filename,Kotlin,3
+GitHub Copilot,filename,Ruby,3
+GitHub Copilot,filename,JavaScript,2
+GitHub Copilot,filename,TypeSpec,2
+GitHub Copilot,both,C++,1
+GitHub Copilot,both,Go,1
+GitHub Copilot,filename,Jupyter Notebook,1
+GitHub Copilot,filename,PHP,1
+GitHub Copilot,task_type,ActionScript,1
+GitHub Copilot,task_type,Dart,1
+GitHub Copilot,task_type,Go,1
+GitHub Copilot,task_type,HTML,1
+Human,task_type,Python,22
+Human,task_type,TypeScript,21
+Human,task_type,Rust,9
+Human,task_type,Go,7
+Human,task_type,Ruby,6
+Human,task_type,C#,5
+Human,task_type,Java,4
+Human,task_type,Zig,3
+Human,task_type,F#,2
+Human,task_type,HTML,2
+Human,task_type,C,1
+Human,task_type,C++,1
+Human,task_type,Dart,1
+Human,task_type,JavaScript,1
+Human,task_type,Lua,1
+Human,task_type,Mojo,1
+OpenAI Codex,filename,Go,651
+OpenAI Codex,task_type,Go,94
+OpenAI Codex,filename,Python,85
+OpenAI Codex,filename,TypeScript,28
+OpenAI Codex,both,Go,22
+OpenAI Codex,task_type,Python,19
+OpenAI Codex,task_type,C#,12
+OpenAI Codex,task_type,JavaScript,11
+OpenAI Codex,filename,Java,9
+OpenAI Codex,filename,C++,8
+OpenAI Codex,task_type,Java,8
+OpenAI Codex,task_type,TypeScript,8
+OpenAI Codex,filename,Julia,6
+OpenAI Codex,task_type,MoonBit,6
+OpenAI Codex,filename,HTML,5
+OpenAI Codex,task_type,Kotlin,5
+OpenAI Codex,both,TypeScript,4
+OpenAI Codex,both,Python,3
+OpenAI Codex,filename,C#,3
+OpenAI Codex,task_type,HTML,3
+OpenAI Codex,task_type,PHP,3
+OpenAI Codex,task_type,QML,3
+OpenAI Codex,filename,JavaScript,2
+OpenAI Codex,task_type,Shell,2
+OpenAI Codex,filename,C,1
+OpenAI Codex,filename,Mojo,1
+OpenAI Codex,filename,Zig,1
+OpenAI Codex,task_type,C,1
+OpenAI Codex,task_type,Common Lisp,1
+OpenAI Codex,task_type,Logos,1
+OpenAI Codex,task_type,Rust,1

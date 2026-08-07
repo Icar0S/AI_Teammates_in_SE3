@@ -183,12 +183,21 @@ def _build_human_corpus(
     loader: ZipLoader | None,
 ) -> pd.DataFrame:
     print("\n[Human] Loading human_pull_request.parquet...")
+    # human_pull_request has no repo_id column (only repo_url); derive repo_id
+    # by joining with repository.parquet on url, mirroring rq2_00.
     hpr = load_parquet(
         "human_pull_request.parquet",
         offline,
         loader,
-        columns=["id", "repo_id", "html_url"],
+        columns=["id", "repo_url", "html_url"],
     ).rename(columns={"id": "pr_id"})
+    repo_ids = load_parquet(
+        "repository.parquet",
+        offline,
+        loader,
+        columns=["id", "url"],
+    ).rename(columns={"id": "repo_id", "url": "repo_url"})
+    hpr = hpr.merge(repo_ids, on="repo_url", how="left").drop(columns=["repo_url"])
     print(f"  Human PRs: {len(hpr):,}")
 
     print("[Human] Loading human_pr_task_type.parquet (Signal A)...")

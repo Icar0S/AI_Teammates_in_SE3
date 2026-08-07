@@ -1,0 +1,8 @@
+agent,primary_tool,count
+Claude Code,generic_perf,18
+Cursor,generic_perf,21
+Devin,generic_perf,104
+Devin,k6,3
+GitHub Copilot,generic_perf,162
+OpenAI Codex,generic_perf,801
+OpenAI Codex,pytest_benchmark,2

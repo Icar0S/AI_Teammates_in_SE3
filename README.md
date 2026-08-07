@@ -174,6 +174,69 @@ python rq2_01_detect_smells.py --offline --limit 1000 --resume
 
 ---
 
+### RQ3 — Performance Modelling Strategies (PSQI)
+
+> *Quais estratégias de modelagem e otimização de performance os agentes de IA adotam em commits do tipo `perf`,
+> e como diferem das adotadas por desenvolvedores humanos?*
+
+Detection is **patch-based** (no repo cloning). Introduces the **Performance Script Quality Index (PSQI)** —
+five ordinal dimensions (0–2) derived from performance-engineering recommendations (Jain, 1991; Feitelson, 2015),
+aggregated per PR and normalised to 0–10.
+
+| Script | Purpose |
+|--------|---------|
+| `rq3_perf_exploration.py` | Feasibility probe — measures how many k6-specific PRs exist (produced `rq3_decision.txt`) |
+| `rq3_00_build_corpus.py` | Build perf PR corpus from two signals: `task_type == perf` (A) ∪ perf filename patterns (B) |
+| `rq3_01_extract_features.py` | Score the 5 PSQI dimensions from `+` lines of unified diffs; classify tool (k6/locust/jmeter/gatling/pytest-benchmark/generic) |
+| `rq3_02_aggregate_psqi.py` | Aggregate file-level scores to PR level, compute PSQI (0–10), tool distribution |
+| `rq3_03_stats_analysis.py` | Mann-Whitney U, Cliff's delta, Kruskal-Wallis + Bonferroni post-hoc, chi-square/Cramér's V + 4 figures |
+
+**Execution order:**
+
+```bash
+python rq3_00_build_corpus.py --offline           # ~2 min
+python rq3_01_extract_features.py --offline       # longest step — supports --resume
+python rq3_02_aggregate_psqi.py
+python rq3_03_stats_analysis.py
+```
+
+**Outputs:** `AIDev/rq3_*.{parquet,csv}`, `figs/rq3/rq3_*.png`
+
+**PSQI dimensions (0–2 each; protocol §3.5.3):**
+
+| Dimension | Score 0 | Score 1 | Score 2 |
+|-----------|---------|---------|---------|
+| `dim_load_type` | steady-state only | one pattern (ramp/spike/soak/stress) | ≥2 combined patterns |
+| `dim_think_time` | absent | fixed sleep | variable/distribution |
+| `dim_payload` | hardcoded | parameterised | external dataset |
+| `dim_negative` | absent | one boundary/error signal | ≥2 signals |
+| `dim_sla` | absent | raw threshold | SLO/percentile-linked |
+
+**Corpus (1,533 PRs):**
+
+| Agent | PRs in corpus | PRs with scoreable diffs |
+|-------|--------------:|-------------------------:|
+| OpenAI Codex | 1,007 | 803 |
+| GitHub Copilot | 209 | 162 |
+| Devin | 164 | 107 |
+| Cursor | 43 | 21 |
+| Claude Code | 22 | 18 |
+| Human | 88 | **0** — see limitations |
+
+> ⚠️ **Known limitations of the current RQ3 run**
+>
+> 1. **No human comparison group is possible offline.** `pr_commit_details.parquet` contains diffs for
+>    33,580 agentic PRs and **zero** human PRs, so all AI-vs-Human tests in `rq3_03` are skipped. Answering the
+>    comparative half of RQ3 requires fetching human PR diffs from the GitHub API.
+> 2. **Corpus precision is low.** The broad path rule `[/_-](perf|load|stress|benchmark)[/_-]` captures 60.6% of
+>    files on its own, and 61.3% of captured files use *load* in the data-loading/ETL sense
+>    (e.g. `airbyte-cdk/bulk/core/load/...`) rather than load testing; 26.4% are docs/config/fixtures rather than
+>    scripts. Only ~24% (969 files across 194 PRs) are plausibly genuine performance scripts.
+> 3. **Genuine load-testing tooling is nearly absent** — 10 k6 files and 7 pytest-benchmark files in the whole
+>    corpus, consistent with the `rq3_decision.txt` feasibility probe.
+
+---
+
 ## Key Findings
 
 The key findings from the analysis of are based on AIDev-pop, a subset of the AIDev dataset.
