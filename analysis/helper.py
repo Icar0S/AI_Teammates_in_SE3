@@ -237,3 +237,72 @@ PERF_TOOL_ORDER: list[str] = [
     "pytest_benchmark",
     "generic_perf",
 ]
+
+
+# ---------------------------------------------------------------------------
+# RQ4 — Review-comment taxonomy (Bacchelli & Bird 2013, adapted to tests)
+# ---------------------------------------------------------------------------
+
+REVIEW_CATEGORIES: list[str] = [
+    "superficial",      # style, naming, formatting
+    "functional",       # wrong test logic, bad assertion, setup/teardown
+    "coverage",         # missing cases, absent boundary scenarios
+    "maintainability",  # test smells, coupling, duplication
+    "confidence",       # questions the validity/usefulness of the test
+    "process",          # PR flow itself: timing, scope, rebase, CI
+    "directive",        # emergent: terse imperative with no diagnosis
+]
+
+REVIEW_CATEGORY_LABELS: dict[str, str] = {
+    "superficial": "Superficial",
+    "functional": "Functional",
+    "coverage": "Coverage",
+    "maintainability": "Maintainability",
+    "confidence": "Confidence",
+    "process": "Process",
+    "directive": "Directive",
+    "unclassified": "Unclassified",
+}
+
+# A review comment is not always feedback: in agentic PRs a large share are the
+# agent reporting back a fix. Mixing the two inflates "feedback" counts, so the
+# role is scored separately and the taxonomy is applied to `feedback` only.
+REVIEW_ROLES: list[str] = [
+    "feedback",         # a reviewer raising something
+    "acknowledgement",  # author/agent replying: "fixed in commit abc123"
+    "code_suggestion",  # bare ```suggestion block, no prose to classify
+]
+
+# Ordinal tone scale: -1 critical / 0 neutral / +1 constructive
+TONE_LABELS: dict[int, str] = {
+    -1: "critical",
+    0: "neutral",
+    1: "constructive",
+}
+
+ARTIFACT_KINDS: list[str] = ["test", "production", "config", "docs"]
+
+# Non-test paths that must not be counted as production source code
+CONFIG_FILE_PATTERNS: re.Pattern = re.compile(
+    r"(\.(ya?ml|json|toml|ini|cfg|lock|env)$"
+    r"|(^|/)(Dockerfile|Makefile|\.gitignore)$"
+    r"|(^|/)\.github/)",
+    re.IGNORECASE,
+)
+
+DOC_FILE_PATTERNS: re.Pattern = re.compile(
+    r"\.(md|mdx|rst|txt|adoc)$", re.IGNORECASE
+)
+
+
+def classify_artifact_kind(path: str | None) -> str:
+    """Bucket a commented file path into test / config / docs / production."""
+    if not path or not isinstance(path, str):
+        return "production"
+    if TEST_FILE_PATTERNS.search(path):
+        return "test"
+    if DOC_FILE_PATTERNS.search(path):
+        return "docs"
+    if CONFIG_FILE_PATTERNS.search(path):
+        return "config"
+    return "production"

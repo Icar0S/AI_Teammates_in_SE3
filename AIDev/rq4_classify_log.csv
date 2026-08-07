@@ -1,0 +1,2 @@
+n_comments,n_feedback,n_acknowledgement,n_code_suggestion,n_test_comments,n_bot_comments,pct_unclassified_of_feedback,mean_tone,mean_intensity,manual_sample_size,seed
+26779,21372,3788,1619,1602,12669,64.21,0.1338,0.5076,300,42

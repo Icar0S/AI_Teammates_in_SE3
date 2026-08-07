@@ -1,0 +1,41 @@
+agent,artifact_kind,is_bot,n_comments,n_prs
+Claude Code,production,True,612,75
+Claude Code,production,False,308,50
+Claude Code,test,True,93,10
+Claude Code,config,True,72,13
+Claude Code,docs,False,60,13
+Claude Code,docs,True,22,11
+Claude Code,config,False,13,6
+Claude Code,test,False,11,3
+Cursor,production,True,604,166
+Cursor,production,False,380,101
+Cursor,docs,False,125,38
+Cursor,docs,True,115,59
+Cursor,test,True,82,21
+Cursor,config,True,62,22
+Cursor,test,False,50,17
+Cursor,config,False,38,23
+Devin,production,False,2507,652
+Devin,production,True,826,265
+Devin,docs,False,777,216
+Devin,config,False,375,155
+Devin,docs,True,156,43
+Devin,test,False,151,81
+Devin,test,True,110,33
+Devin,config,True,86,37
+GitHub Copilot,production,False,5539,1168
+GitHub Copilot,production,True,4969,1203
+GitHub Copilot,docs,False,1356,308
+GitHub Copilot,docs,True,1094,297
+GitHub Copilot,config,False,762,280
+GitHub Copilot,config,True,631,272
+GitHub Copilot,test,True,484,149
+GitHub Copilot,test,False,401,139
+OpenAI Codex,production,True,2088,752
+OpenAI Codex,production,False,949,288
+OpenAI Codex,docs,True,237,127
+OpenAI Codex,config,True,181,92
+OpenAI Codex,docs,False,146,48
+OpenAI Codex,test,True,145,72
+OpenAI Codex,config,False,87,40
+OpenAI Codex,test,False,75,32

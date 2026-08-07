@@ -3,3 +3,9 @@
 OFFICIALDATASET.zip
 
 /__pycache__
+
+# RQ4 raw review-comment corpora: these carry verbatim comment bodies from the
+# AIDev dataset, some of which contain third-party credentials that GitHub push
+# protection blocks. Regenerate with rq4_00_build_corpus.py + rq4_01_classify_comments.py
+AIDev/rq4_comments.parquet
+AIDev/rq4_comments_classified.parquet

@@ -237,6 +237,66 @@ python rq3_03_stats_analysis.py
 
 ---
 
+### RQ4 — Human-Agent Collaboration in Review
+
+> *Quais padrões de feedback de revisão (tipo, tom, intensidade, resolução) emergem em PRs com artefatos de teste
+> agênticos, e como se correlacionam com MSI, TDT e as decisões de merge?*
+
+Applies the **Bacchelli & Bird (2013)** review-comment taxonomy, adapted to test artifacts (protocol §3.6.2).
+The protocol assumed GitHub API extraction; the dataset already ships the review comments, so the pipeline runs
+fully offline.
+
+| Script | Purpose |
+|--------|---------|
+| `rq4_00_build_corpus.py` | Unify both review-comment snapshots, link to PRs by URL rewriting, bucket each commented path (test/production/config/docs), anonymise reviewers, rebuild threads, cache PR size |
+| `rq4_01_classify_comments.py` | Score comment **role**, then the 6-category taxonomy + tone + intensity + resolution; export a blind sample for two-rater Cohen's κ |
+| `rq4_02_aggregate_feedback.py` | Per-PR feature matrix; join MSI (RQ1) and TDT (RQ2) |
+| `rq4_03_stats_analysis.py` | Chi-square/Cramér's V, Mann-Whitney U/Cliff's delta, logistic regression, Spearman, Kruskal-Wallis + 5 figures |
+
+**Execution order:**
+
+```bash
+python rq4_00_build_corpus.py --offline        # heavy: reads pr_commit_details for PR size
+python rq4_00_build_corpus.py --offline --skip-size   # faster, drops the size control
+python rq4_01_classify_comments.py
+python rq4_02_aggregate_feedback.py
+python rq4_03_stats_analysis.py
+```
+
+**Outputs:** `AIDev/rq4_*.{parquet,csv}`, `figs/rq4/rq4_*.png`
+
+**Comment roles.** In agentic PRs a sizeable share of "review comments" are not feedback but the agent reporting
+back (*"Fixed in commit abc123"*). Counting these as feedback inflates the taxonomy, so role is scored first and
+the taxonomy applies to `feedback` only:
+
+| Role | n | Share |
+|------|--:|------:|
+| `feedback` — a reviewer raising something | 21,372 | 79.8% |
+| `acknowledgement` — author/agent reporting a fix | 3,788 | 14.1% |
+| `code_suggestion` — bare ```` ```suggestion ```` block, no prose | 1,619 | 6.0% |
+
+**Taxonomy** (6 a-priori categories + `directive`, an emergent inductive category for terse imperatives such as
+*"remove this"*, as anticipated by protocol §3.6.2).
+
+**Corpus:** 26,779 comments → 4,451 PRs; 1,602 on test files (688 human / 914 bot) across 410 PRs.
+
+> ⚠️ **Known limitations of the current RQ4 run**
+>
+> 1. **MSI cannot enter the regression.** Only 12 of the mutation-tested PRs have review comments (3 with
+>    test-file comments), so `rq4_03` excludes any covariate below 50 PRs and reports MSI descriptively. The
+>    MSI half of the RQ is therefore unanswered — this traces back to RQ1's small mutation run, not to RQ4.
+>    TDT is unaffected (1,235 PRs).
+> 2. **64% of feedback comments remain unclassified** by the rule-based lexicons. Test-file comments are
+>    *more* classifiable (49.5%) than production ones (64.2%), so this does not bias against the main contrast,
+>    but the category shares are lower bounds.
+> 3. **Resolution is a proxy.** GitHub's `resolved` flag is absent from the dataset, so resolution is
+>    approximated by whether a comment received a reply in its thread.
+> 4. **The classifier is deterministic, not an LLM.** It is auditable (per-category scores are written to
+>    `category_scores_json`) but unvalidated: `rq4_manual_coding_sample.csv` exists so the two-rater κ ≥ 0.70
+>    required by protocol §4.3.1 can be computed before the category distributions are treated as findings.
+
+---
+
 ## Key Findings
 
 The key findings from the analysis of are based on AIDev-pop, a subset of the AIDev dataset.

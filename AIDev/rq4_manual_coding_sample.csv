@@ -1,0 +1,3320 @@
+id,pr_id,agent,artifact_kind,path,is_bot,body,role,category,tone,intensity,resolution,rater1_category,rater2_category,reconciled_category,rater_notes
+2179407964,3189570878,GitHub Copilot,config,.github/workflows/camunda-platform-release.yml,True,"No, we should keep both triggers. The workflow_call is used for internal reusable workflows (called by other GitHub Actions), while workflow_dispatch enables external systems to trigger releases via REST API. They serve different purposes and both are needed.",feedback,maintainability,0,0,unanswered,,,,
+2161428603,3163520332,GitHub Copilot,production,x/blob/module.go,False,why did you delete the comment?,feedback,unclassified,0,1,answered,,,,
+2114790234,3084795018,GitHub Copilot,test,tests/page/page-aria-snapshot-ai.spec.ts,False,Remove this log line.,feedback,unclassified,0,0,answered,,,,
+2110922651,3090570894,GitHub Copilot,test,tests/undefined_symbol_test.py,True,"Implemented symbolic.is_undefined function in 78065af that checks expression atoms for UndefinedSymbol. Updated test assertions to be more specific using this function, and added comprehensive unit tests for is_undefined with both defined and undefined expressions.",feedback,coverage,0,0,unanswered,,,,
+2100623114,3074609325,GitHub Copilot,production,src/libraries/System.Data.Common/src/System/Data/Filter/ExpressionParser.cs,False,"fix this build error @copilot 
+src/libraries/System.Data.Common/src/System/Data/Filter/ExpressionParser.cs(524,1): error SA1028: (NETCORE_ENGINEERING_TELEMETRY=Build) Code should not contain trailing whitespace (https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/SA1028.md",feedback,superficial,-1,0,answered,,,,
+2126612338,3117833393,OpenAI Codex,production,tests/Cache/RepositoryEventTest.php,False,"```suggestion
+use FriendsOfHyperf\Cache\Event\KeyForgetFailed;
+use FriendsOfHyperf\Cache\Event\KeyForgotten;
+```",code_suggestion,n/a_code_suggestion,0,1,unanswered,,,,
+2139153268,3112095151,GitHub Copilot,production,src/Aspire.Cli/Projects/ProjectLocator.cs,True,"Changed back to List with locking as requested. Removed ConcurrentBag import, added lock object, and wrapped the list.Add call in a lock statement for thread safety. 9c8bc8c",feedback,functional,0,0,unanswered,,,,
+2242619084,3276590642,GitHub Copilot,test,projects/experimental/components/accordion/test/tui-expand-double-projection-fix.spec.ts,True,Added `changeDetection: ChangeDetectionStrategy.OnPush` to TestChild component. (4e802c7),feedback,unclassified,0,0,unanswered,,,,
+1921172166,2797184843,Devin,test,js/src/sdk/base.toolset.spec.ts,False,"The rate limiting test could be flaky due to timing issues. Consider adding configurable delays or retry logic:
+
+```typescript
+const executeWithRetry = async (action, maxRetries = 3, delay = 1000) => {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await toolset.executeAction(action);
+    } catch (e) {
+      if (i === maxRetries - 1) throw e;
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+};
+```",feedback,confidence,1,1,unanswered,,,,
+2228639931,3259798274,GitHub Copilot,test,projects/kit/components/preview/dialog/test/preview-dialog.escape.spec.ts,True,Removed the unit test file as requested. The Cypress component test provides comprehensive testing of the escape key behavior in a real browser environment. (e9cfe79),feedback,unclassified,0,0,unanswered,,,,
+2173674925,3178532930,OpenAI Codex,production,lib/providers.dart,True,"[nitpick] Consider whether a shared or singleton Dio instance might be more efficient than instantiating a new Dio each time the provider is read.
+```suggestion
+  // Singleton instance of Dio
+  _singletonDio ??= Dio()..options.responseType = ResponseType.json;
+  return _singletonDio!;
+}
+
+// Private static variable to hold the singleton Dio instance
+Dio? _singletonDio;
+```",feedback,superficial,1,1,unanswered,,,,
+2103568151,3082820826,GitHub Copilot,test,tests/tracing/test_fluent_classmethod.py,True,Removed this duplicate test case as suggested (9193282).,feedback,maintainability,0,0,unanswered,,,,
+2102061667,3075201543,GitHub Copilot,production,src/Graphics/src/Graphics/PathF.cs,True,Changed CalculateTightBounds to be private in commit 9461efa to avoid requiring updates to the PublicAPI files.,acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2150138222,3134302678,GitHub Copilot,test,packages/e2e-test-app-fabric/test/TextInputComponentTest.test.ts,True,"You're right that `touchAction` wasn't working reliably in this test environment. I've updated both test cases to use `click()` instead, which is the standard approach used throughout the existing test suite. The tests now verify that press interactions work correctly by checking the final state after the click interaction. The onPressOut test specifically validates that the state ends up as ""Released click/touch"" which confirms the onPressOut event fired properly. Fixed in d7f1a33.",feedback,functional,0,1,unanswered,,,,
+1929907281,2811841666,Devin,docs,typescript/examples/vercel-ai/sns/README.md,False,Remove,feedback,directive,0,0,unanswered,,,,
+2099337474,3067605533,Devin,production,internal/hash/doc.go,False,"```suggestion
+// Package hash provides hash functionality
+```",code_suggestion,n/a_code_suggestion,0,1,unanswered,,,,
+2231105692,3263156715,GitHub Copilot,production,src/Aspire.Cli/DotNet/DotNetCliRunner.cs,False,@copilot don't have fallback logic here. We should be able to get the start time for our own process on all the platforms that we are working on and the fallback logic would be a bad idea because we'd never be able to match it on the apphost side.,feedback,unclassified,-1,0,answered,,,,
+2229969340,3261628283,GitHub Copilot,production,tests/bugs/enum-vertex-output-explicit.slang,True,"Improved CHECK directive to verify main function generation by changing from ""//CHECK: {{.*}}"" to ""//CHECK: main"". Fixed in commit 5a8d3c2.",acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2242660415,3276590642,GitHub Copilot,test,projects/experimental/components/accordion/test/tui-expand-double-projection-fix.spec.ts,True,Removed all comments from tui-expand-double-projection-fix.spec.ts file. (235155b),feedback,unclassified,0,0,unanswered,,,,
+2166038017,3167450477,Claude Code,test,frontend/internal-packages/e2e/tests/e2e/page.test.ts,False,"thank you! I'll check cli's `dist/` output. But, this PR is still LGTM.",feedback,unclassified,1,0,unanswered,,,,
+2105773110,3088147183,GitHub Copilot,test,packages/charts/react-charting/src/components/Sparkline/Sparkline.test.tsx,True,"I've updated the test logic to follow the proper pattern from VerticalBarChart.test.tsx. Now the tests check for the presence or absence of the _SparklineChart_empty element ID using queryAllByAttribute, which is the same approach used in the SparklineRTL.test.tsx file. Commit f162dc74",acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2242619925,3276590642,GitHub Copilot,test,projects/experimental/components/accordion/test/tui-expand-double-projection-fix.spec.ts,True,Added `changeDetection: ChangeDetectionStrategy.OnPush` to TestExpandScenarios component. (4e802c7),feedback,unclassified,0,0,unanswered,,,,
+2218327831,3247425264,Devin,production,packages/github/src/utils/validation-helpers.ts,True,logic: crypto.getRandomValues might not be available in all environments. Add a fallback or runtime check.,feedback,unclassified,0,0,unanswered,,,,
+2238930618,3272188634,GitHub Copilot,docs,docs/markdown-link-validator.md,True,Moved the documentation from `docs/markdown-link-validator.md` to `samples/sample/docs/markdown-link-validator.md` as requested. Commit: e1b86d7,feedback,unclassified,0,0,unanswered,,,,
+2171315050,3180594900,GitHub Copilot,test,src/test/commands.test.ts,False,This empty test file isn't needed,feedback,unclassified,0,0,answered,,,,
+2218407746,3242236662,GitHub Copilot,test,test/test_esptool.py,True,"Added CLI integration tests that would have caught the original OptionEatAll issue. These tests exercise the actual command-line parsing through subprocess calls, testing scenarios like `esptool --port-filter vid=0x303a read-mac` which would have failed with ""Option --port-filter argument key not recognized"" before the fix. The tests verify both successful parsing and proper error handling for invalid keys. (43d3cc1)",feedback,functional,0,1,unanswered,,,,
+2207418438,3230603903,GitHub Copilot,production,vmm_tests/vmm_tests/tests/tests/multiarch.rs,False,Delete this; we're not going to handle DVD in this PR.,feedback,unclassified,0,0,answered,,,,
+2146216645,3126336730,Devin,config,.github/workflows/docker-connector-base-image-tests.yml,False,does this actually work with a manual workflow dispatch?,feedback,unclassified,0,1,answered,,,,
+1921196790,2797184843,Devin,test,js/src/sdk/base.toolset.spec.ts,True,"The sanitization test is incomplete; it checks if <script> is removed but doesn't verify other XSS vectors or ensure the sanitization is secure. Test multiple attack vectors.
+<!-- suggestion_start -->
+
+<details>
+<summary><strong>📝 Committable Code Suggestion</strong></summary>
+
+> ‼️ Ensure you review the code suggestion before committing it to the branch. Make sure it replaces the highlighted code, contains no missing lines, and has no issues with indentation. 
+
+
+```suggestion
+const maliciousInputs = [
+  ""<script>alert('xss')</script>"",
+  ""<img src='x' onerror='alert(1)'>"",
+  ""javascript:alert(1)"",
+  ""<svg/onload=alert(1)>"",
+  ""<iframe src='javascript:alert(1)'>""
+];
+
+for (const input of maliciousInputs) {
+  const result = await toolset.executeAction({
+    action: actionName,
+    params: { text: input },
+    entityId: ""default"",
+  });
+
+  expect(result.data.sanitized).not.toContain(""<script>"");
+  expect(result.data.sanitized).not.toMatch(/javascript:/i);
+  expect(result.data.sanitized).not.toMatch(/on\w+\s*=/i);
+  expect(result.data.sanitized).not.toMatch(/<iframe[^>]*>/i);
+}
+```
+</details>
+<!-- suggestion_end -->
+",feedback,unclassified,1,1,unanswered,,,,
+1972672226,2876483432,Devin,production,src/elements/common/breadcrumbs/index.ts,False,You need to create a `index.js.flow` file,feedback,unclassified,0,0,unanswered,,,,
+2176061049,3190006754,Cursor,test,apps/api/src/routes/beacon.spec.ts,True,"**Test Coverage Gap**: The tests only cover the API endpoint validation but don't test the core beacon functionality in `lib/beacon.ts`. Critical functions like `sendInstallationBeacon()` and `sendBeacon()` are untested.
+
+Consider adding unit tests for:
+1. `sendInstallationBeacon()` - database operations and beacon sending
+2. `sendBeacon()` - network request handling and error scenarios
+3. Installation record creation and retrieval logic",feedback,coverage,0,2,unanswered,,,,
+2099606847,3077950268,Devin,test,e2e/settings/tax.spec.ts,False,Ideally we'd check db state to make this a truly end to end test?,feedback,unclassified,0,1,unanswered,,,,
+2173146682,3184595253,OpenAI Codex,test,schematics/ng-add/index.spec.ts,False,Todo inline function ,feedback,directive,0,0,unanswered,,,,
+2222569568,3250024089,Claude Code,test,frontend/src/lib/desktop/components/ui/LoadingSpinner.test.ts,True,"_⚠️ Potential issue_
+
+**Fix syntax error in function call.**
+
+There's an extra closing brace causing a parsing error.
+
+
+```diff
+-    renderLoadingSpinner({ label: 'Processing...' } });
++    renderLoadingSpinner({ label: 'Processing...' });
+```
+
+<!-- suggestion_start -->
+
+<details>
+<summary>📝 Committable suggestion</summary>
+
+> ‼️ **IMPORTANT**
+> Carefully review the code before committing. Ensure that it accurately replaces the highlighted code, contains no missing lines, and has no issues with indentation. Thoroughly test & benchmark the code to ensure it meets the requirements.
+
+```suggestion
+    renderLoadingSpinner({ label: 'Processing...' });
+```
+
+</details>
+
+<!-- suggestion_end -->
+
+<details>
+<summary>🧰 Tools</summary>
+
+<details>
+<summary>🪛 Biome (1.9.4)</summary>
+
+[error] 40-40: expected `,` but instead found `}`
+
+Remove }
+
+(parse)
+
+</details>
+
+</details>
+
+<details>
+<summary>🤖 Prompt for AI Agents</summary>
+
+```
+In frontend/src/lib/desktop/components/ui/LoadingSpinner.test.ts at line 40,
+there is a syntax error due to an extra closing brace in the function call to
+renderLoadingSpinner. Remove the extra closing brace so the function call
+correctly passes the object with the label property without syntax errors.
+```
+
+</details>
+
+<!-- fingerprinting:phantom:poseidon:panther -->
+
+<!-- This is an auto-generated comment by CodeRabbit -->
+
+✅ Addressed in commits c37a295 to 7031246",feedback,coverage,1,2,unanswered,,,,
+2230636618,3259884497,GitHub Copilot,production,samples/sample/genaisrc/chain-of-debate.genai.mts,True,"Updated to use `_.def(""PREVIOUS_POSITION"", ...)` to inline the previous position data. Commit c06132b",acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2179866341,3195573803,GitHub Copilot,test,tests/test_per_record_caching.py,True,Removed tests/test_per_record_caching.py file completely. All tests continue to pass (376/376). (e2e05d4),feedback,unclassified,0,0,unanswered,,,,
+2225487978,3256172444,Claude Code,test,tests/integration/test_tool_execution_pipeline.py,True,"_⚠️ Potential issue_
+
+**Make timing assertion more robust.**
+
+The assertion `""in 0.""` assumes sub-second execution, which could fail on slow systems.
+
+```diff
+-                assert ""in 0."" in performance_log  # Should show elapsed time
++                # Should show elapsed time in format ""in X.XXXs""
++                assert "" in "" in performance_log and ""s"" in performance_log
+```
+
+<!-- suggestion_start -->
+
+<details>
+<summary>📝 Committable suggestion</summary>
+
+> ‼️ **IMPORTANT**
+> Carefully review the code before committing. Ensure that it accurately replaces the highlighted code, contains no missing lines, and has no issues with indentation. Thoroughly test & benchmark the code to ensure it meets the requirements.
+
+```suggestion
+                # Should show elapsed time in format ""in X.XXXs""
+                assert "" in "" in performance_log and ""s"" in performance_log
+                assert ""output size:"" in performance_log  # Should show size information
+```
+
+</details>
+
+<!-- suggestion_end -->
+
+<details>
+<summary>🤖 Prompt for AI Agents</summary>
+
+```
+In tests/integration/test_tool_execution_pipeline.py around lines 236 to 237,
+the assertion checking for the substring ""in 0."" in the performance_log is
+fragile because it assumes the elapsed time is less than one second. Modify this
+assertion to check for a more general pattern indicating elapsed time, such as
+verifying the presence of the word ""in"" followed by a numeric value representing
+time, or use a regex to match elapsed time regardless of its value, ensuring the
+test passes even on slower systems.
+```
+
+</details>
+
+<!-- fingerprinting:phantom:medusa:lion -->
+
+<!-- This is an auto-generated comment by CodeRabbit -->",feedback,coverage,1,1,unanswered,,,,
+2140573120,3125458401,GitHub Copilot,test,test/unit_test/cli/test_run_pass.py,True,"## RUFF/N806
+
+Variable `TEMPLATE` in function should be lowercase.
+See https://docs.astral.sh/ruff/rules/non-lowercase-variable-in-function
+
+[Show more details](https://github.com/microsoft/Olive/security/code-scanning/17224)",feedback,superficial,0,1,unanswered,,,,
+2143822119,3141665913,GitHub Copilot,test,vscode/test/suites/language-service/notebook.test.ts,False,"Overall looks good, but can you merge from main and try writing and running this test again? There were some new helpers added in main to wait for diagnostics, and you should use those helpers. I also fixed infrastructure so you should be able to run unit tests. merge from main first though ok? ok thx love u",feedback,functional,0,2,answered,,,,
+2160085100,3142737206,OpenAI Codex,test,libs/core/kiln_ai/adapters/extractors/test_gemini_extractor.py,True,"_⚠️ Potential issue_
+
+**Fix MIME type mismatch in MP3 test.**
+
+The test creates an MP3 file but uses `audio/ogg` as the MIME type, which is inconsistent and may not properly test MP3 handling.
+
+
+
+Apply this diff to fix the MIME type:
+
+```diff
+     test_audio_file = mock_file_factory(MockFileFactoryMimeType.MP3)
+     extractor = paid_gemini_extractor(model_name=model_name)
+     output = await extractor.extract(
+         path=str(test_audio_file),
+-        mime_type=""audio/ogg"",
++        mime_type=""audio/mpeg"",
+     )
+```
+
+<!-- suggestion_start -->
+
+<details>
+<summary>📝 Committable suggestion</summary>
+
+> ‼️ **IMPORTANT**
+> Carefully review the code before committing. Ensure that it accurately replaces the highlighted code, contains no missing lines, and has no issues with indentation. Thoroughly test & benchmark the code to ensure it meets the requirements.
+
+```suggestion
+async def test_extract_audio_mp3(model_name, mock_file_factory):
+    test_audio_file = mock_file_factory(MockFileFactoryMimeType.MP3)
+    extractor = paid_gemini_extractor(model_name=model_name)
+    output = await extractor.extract(
+        path=str(test_audio_file),
+        mime_type=""audio/mpeg"",
+    )
+    assert not output.is_passthrough
+    assert output.content_format == OutputFormat.MARKDOWN
+    assert ""Audio summary:"" in output.content
+```
+
+</details>
+
+<!-- suggestion_end -->
+
+<details>
+<summary>🤖 Prompt for AI Agents</summary>
+
+```
+In libs/core/kiln_ai/adapters/extractors/test_gemini_extractor.py around lines
+358 to 367, the test creates an MP3 file but incorrectly uses the MIME type
+""audio/ogg"" when calling the extractor. Update the MIME type argument in the
+extractor.extract call to ""audio/mpeg"" to correctly reflect the MP3 file type
+and ensure proper testing of MP3 handling.
+```
+
+</details>
+
+<!-- This is an auto-generated comment by CodeRabbit -->
+
+<!-- fingerprinting:phantom:poseidon:panther -->
+
+✅ Addressed in commit b9cba3f",acknowledgement,n/a_acknowledgement,1,2,unanswered,,,,
+2138784725,3125458401,GitHub Copilot,test,test/unit_test/cli/test_run_pass.py,True,"## Unused import
+
+Import of 'patch' is not used.
+
+[Show more details](https://github.com/microsoft/Olive/security/code-scanning/16973)",feedback,superficial,0,1,unanswered,,,,
+2177482522,3191875426,GitHub Copilot,test,src/server/mailer.test.ts,True,"Added comprehensive tests in auth.test.ts covering the case when email signups are disabled but existing users can still sign in via email. The tests verify that OAuth providers work normally, existing users can sign in, and new users are redirected with error. Commit cd99f11",acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2167258418,3157537057,GitHub Copilot,docs,docs/deployment/azure/customize-deployments.md,False,"As a style preference, I don't care much for headings without at least an introduction sentence, or paragraph. Anytime I see multiple headings back-to-back without context, that's a code smell to me. Let's please add something here to introduce this section.",feedback,unclassified,0,0,answered,,,,
+2183795323,3200633438,GitHub Copilot,test,packages/fiber/tests/canvas.test.tsx,True,Reverted to hard-coded values as requested. Both the test file and mock now use simple hard-coded 1280/800 values consistent with other tests in the codebase. (3cd07d3),feedback,maintainability,0,0,unanswered,,,,
+2173529730,3185333353,GitHub Copilot,test,tests/transforms/augmentation/test_random_affine.py,True,Changed variable name to `subject`. Commit 92e622f,acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2204739817,3228219115,GitHub Copilot,test,packages/cache/__tests__/saveCacheV2.test.ts,True,Reverted to warning in commit cf3aaeb.,acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2100062023,3079886079,GitHub Copilot,docs,.github/copilot-instructions.md,True,[nitpick] The numbered lists under 'Version Management' both start with '1.' which can be confusing. Consider using nested list indentation or distinct numbering styles for sublists.,feedback,superficial,1,0,unanswered,,,,
+2174913691,3169456811,Cursor,docs,SENTRY_WIZARD_DYNAMIC_VERSION.md,False,I'll remove it from this PR,feedback,process,0,0,unanswered,,,,
+2143597173,3136055973,GitHub Copilot,test,packages/e2e-test-app-fabric/test/TextInputComponentTest.test.ts,False,@copilot This test is not using the .focus() API. To test the functionality of the .focus() API the example should include focusing the control using the .focus API rather than by clicking the control. ,feedback,unclassified,0,0,answered,,,,
+2117731880,3105351368,Devin,production,pyaxmlparser/stringblock.py,True,"## Unused import
+
+Import of 'ValidationError' is not used.
+
+[Show more details](https://github.com/appknox/pyaxmlparser/security/code-scanning/35)",feedback,superficial,0,1,unanswered,,,,
+2200467352,3222487070,GitHub Copilot,production,tests/consistency_test.rs,True,"You're absolutely right. This test is currently just assigning values to variables and then immediately asserting they equal those same values, which will always pass and doesn't test anything meaningful.
+
+The test should either be removed since it's not providing value, or rewritten to actually verify that the ONNX Runtime sessions are configured with the correct thread settings. I'll remove this ineffective test.",feedback,confidence,0,1,unanswered,,,,
+2146818135,3145625420,GitHub Copilot,test,src/test/java/com/github/_1c_syntax/bsl/languageserver/diagnostics/infrastructure/DiagnosticBeanPostProcessorTest.java,True,"The test verifies that the diagnostic doesn't crash and remains in a functional state. While the diagnostic can't be restored to default configuration (as requested - no changes to diagnostic implementations), the important verification is that it doesn't crash the system and basic functionality works. Commit: d60200f",feedback,unclassified,0,0,unanswered,,,,
+2154439741,3151753047,GitHub Copilot,production,src/Core/src/Platform/Tizen/ViewExtensions.cs,False,Remove these changes and make a note in the copilot instructions to never make any changes to files related to Tizen,feedback,unclassified,-1,0,answered,,,,
+2142297424,3139359977,GitHub Copilot,test,selftests/azure/test_transformers.py,True,Removed the test file as requested. See commit 7d4acef.,acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2112692484,3078382638,GitHub Copilot,production,shared/AppInsightsCore/src/JavaScriptSDK/InternalConstants.ts,True,Removed the newline change from `shared/AppInsightsCore/src/JavaScriptSDK/InternalConstants.ts` by reverting to the original state. Commit: 1c5681b,feedback,unclassified,0,0,unanswered,,,,
+1984017923,2901338223,Devin,production,apps/insights/src/components/PriceFeeds/index.tsx,False,Let's remove this line to make the card use the default variant,feedback,unclassified,0,0,unanswered,,,,
+2145946560,3141889094,GitHub Copilot,test,vscode/test/suites/language-service/notebook.test.ts,True,"Fixed code formatting issues. The test code has been formatted to remove trailing whitespace and fix parameter formatting. Unable to run VS Code tests due to network restrictions, but the formatting changes are correct. Commit: 8a9376f",feedback,superficial,0,0,unanswered,,,,
+2130767191,3119042017,GitHub Copilot,test,test/unit_test/docs/test_version_detection.py,True,"## RUFF/W293
+
+Blank line contains whitespace.
+See https://docs.astral.sh/ruff/rules/blank-line-with-whitespace
+
+[Show more details](https://github.com/microsoft/Olive/security/code-scanning/16696)",feedback,superficial,0,1,unanswered,,,,
+2162894595,3169509660,OpenAI Codex,production,app/ios/Podfile,False,"even though we aren't using credentials manager for ios, it breaks the build if we use `15.0`",feedback,functional,0,0,unanswered,,,,
+2081290179,3051560458,Devin,test,packages/generator/__tests__/integration5.test.ts,True,style: Using 'as any' type assertion bypasses TypeScript's type checking. Consider properly typing the template parameter instead.,feedback,coverage,1,0,unanswered,,,,
+2245557094,3276981682,GitHub Copilot,production,src/libraries/System.Text.Json/src/System/Text/Json/Serialization/Converters/Value/VersionConverter.cs,False,You can remove `MinimumVersionLengtht` since the asserts made against it are superfluous. Keep `MaximumVersionLength` but rename to `MaximumFormattedVersionLength` for clarity.,feedback,superficial,0,0,unanswered,,,,
+1945745341,2836984102,Devin,test,tests/channel_deletion.test.ts,True,"## Hard-coded credentials
+
+The hard-coded value ""Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0"" is used as [authorization header](1).
+
+[Show more details](https://github.com/Cap-go/capgo/security/code-scanning/75)",feedback,maintainability,0,1,unanswered,,,,
+2136846138,3132028438,OpenAI Codex,test,tests/integration/cartography/intel/aws/ec2/test_tgw.py,True,"<!-- metadata:{""confidence"":8,""steps"":[{""text"":"""",""toolCalls"":[{""args"":{""command"":""grep -n \""def check_nodes\"" -R""},""toolName"":""executeCommand""}]},{""text"":"""",""toolCalls"":[{""args"":{""command"":""sed -n '1,120p' tests/integration/util.py""},""toolName"":""executeCommand""}]},{""text"":"""",""toolCalls"":[{""args"":{""command"":""grep -n \""^+\"" -n tests/integration/cartography/intel/aws/ec2/test_tgw.py""},""toolName"":""executeCommand""}]},{""text"":"""",""toolCalls"":[{""args"":{""command"":""sed -n '1,200p' tests/integration/cartography/intel/aws/ec2/test_tgw.py""},""toolName"":""executeCommand""}]},{""text"":"""",""toolCalls"":[{""args"":{""command"":""sed -n '1,120p' tests/data/aws/ec2/tgw.py""},""toolName"":""executeCommand""}]},{""text"":"""",""toolCalls"":[{""args"":{""pattern"":""cartography/intel/aws/ec2/**/tgw*.py""},""toolName"":""listFiles""}]},{""text"":"""",""toolCalls"":[{""args"":{""command"":""sed -n '1,400p' cartography/intel/aws/ec2/tgw.py""},""toolName"":""executeCommand""}]},{""text"":"""",""toolCalls"":[{""args"":{""command"":""sed -n '1,160p' cartography/models/aws/ec2/transit_gateways.py""},""toolName"":""executeCommand""}]}]} -->
+The injected mock arguments `mock_vpc_att`, `mock_att`, and `mock_tgw` are not used inside the test body, which triggers flake8 F841 (local variable assigned but never used). Prefix the parameter names with “_” (e.g., `_mock_vpc_att`) or remove them to indicate intentional non-use.
+
+```suggestion
+def test_sync_transit_gateways(_mock_vpc_att, _mock_att, _mock_tgw, neo4j_session):
+```",feedback,confidence,-1,1,unanswered,,,,
+2236293192,3262972925,GitHub Copilot,production,genaisrc/llmstxt-optimizer.genai.mts,False,"add responseType: ""text""",feedback,directive,0,0,answered,,,,
+2131170446,3123198992,Devin,test,alchemy/test/polar/benefit.test.ts,False,Create helper functions for this kind of boilerplate in tests.,feedback,unclassified,0,0,answered,,,,
+2173146590,3184595253,OpenAI Codex,test,schematics/ng-add/index.spec.ts,False,Todo inline function ,feedback,directive,0,0,unanswered,,,,
+2107718372,3090570894,GitHub Copilot,test,tests/undefined_symbol_test.py,False,"I would add a test for math function calls: `abs`, `sin`, and `int_ceil` would be good candidates to consider.",feedback,coverage,1,0,answered,,,,
+2173565189,3185626931,Cursor,production,pages/api/mcp.ts,True,"Security risk: Using NEXT_PUBLIC env variables in server-side tracking can expose sensitive keys. Consider using a server-only variable (e.g. POSTHOG_API_KEY).
+```suggestion
+const posthog = new PostHog(process.env.POSTHOG_API_KEY || """", {
+```
+",feedback,unclassified,1,2,unanswered,,,,
+2099931680,3079737329,OpenAI Codex,test,tests/test_utils.py,True,"[nitpick] Use `pytest.mark.parametrize` to iterate over devices (e.g., 'cpu' and 'cuda') in one test, reducing duplicate code and improving readability.",feedback,maintainability,0,0,unanswered,,,,
+2110437744,3095413885,GitHub Copilot,production,packages/tspd/src/ref-doc/emitters/markdown.ts,False,Run `pnpm regen-docs` after a build to ensure all docs use this new title,feedback,functional,0,0,answered,,,,
+2199484320,3221411520,Cursor,test,tests/func/test_audio.py,True,"**issue (code-quality):** Avoid loops in tests. ([`no-loop-in-tests`](https://docs.sourcery.ai/Reference/Rules-and-In-Line-Suggestions/Python/Default-Rules/no-loop-in-tests))
+
+<details><summary>Explanation</summary>Avoid complex code, like loops, in test functions.
+
+Google's software engineering guidelines says:
+""Clear tests are trivially correct upon inspection""
+To reach that avoid complex code in tests:
+* loops
+* conditionals
+
+Some ways to fix this:
+
+* Use parametrized tests to get rid of the loop.
+* Move the complex logic into helpers.
+* Move the complex part into pytest fixtures.
+
+> Complexity is most often introduced in the form of logic. Logic is defined via the imperative parts of programming languages such as operators, loops, and conditionals. When a piece of code contains logic, you need to do a bit of mental computation to determine its result instead of just reading it off of the screen. It doesn't take much logic to make a test more difficult to reason about.
+
+Software Engineering at Google / [Don't Put Logic in Tests](https://abseil.io/resources/swe-book/html/ch12.html#donapostrophet_put_logic_in_tests)
+</details>",feedback,unclassified,-1,1,unanswered,,,,
+2223531686,3250546916,GitHub Copilot,test,test/unit_test/cli/test_optimize.py,True,"## PYLINT/W0212
+
+Access to a protected member _build_passes_config of a client class (protected-access)
+See [protected-access](https://pylint.pycqa.org/en/latest/user_guide/messages/warning/protected-access.html).
+
+[Show more details](https://github.com/microsoft/Olive/security/code-scanning/18111)",feedback,unclassified,0,1,unanswered,,,,
+1964379012,2867174561,Devin,production,src/elements/content-picker/Content.tsx,False,Devin please revert this change,feedback,process,1,0,unanswered,,,,
+2193883076,3212619187,GitHub Copilot,docs,docs/en/rules/Azure.ACR.ExportPolicy.md,False,High is not a valid severity use `Important` instead.,feedback,functional,0,0,answered,,,,
+2131597076,3119212776,Devin,test,alchemy/test/neon/branch.test.ts,False,Make sure to check the other test suites you just added,feedback,unclassified,0,0,unanswered,,,,
+2096022308,3074281509,OpenAI Codex,production,check_env.py,True,"Consider documenting or explicitly commenting that the command-line option takes precedence over the environment variable, which will provide clearer guidance to users.",feedback,unclassified,1,0,unanswered,,,,
+2201333130,3223461985,GitHub Copilot,test,onnxscript/rewriter/pattern_base_test.py,False,"```suggestion
+        model = ir.from_onnx_text(
+            """"""
+            <ir_version: 7, opset_import: [ """" : 17]>
+            agraph (float[N] x) => (float[N] z)
+            {
+                z = Identity(x)
+            }
+            """"""
+        )
+```",code_suggestion,n/a_code_suggestion,0,1,unanswered,,,,
+2015423971,2951230031,Devin,test,packages/convex-helpers/server/customFunctions.finally.test.ts,False,"```suggestion
+await t.run(async (ctx) => {
+    const result = await (successFn as any)._handler(ctx, {});
+```",code_suggestion,n/a_code_suggestion,0,1,unanswered,,,,
+2182142654,3198393576,GitHub Copilot,test,lib/cosmos-db/cosmos-db.utils.spec.ts,True,This test expectation has been updated in commit 23141cb to match the hardcoded fallback format.,acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2122349072,3106934710,GitHub Copilot,production,src/Aspire.Hosting.Azure.KeyVault/AzureKeyVaultResourceExtensions.cs,False,How so?,feedback,unclassified,0,1,unanswered,,,,
+2240834520,3200033873,GitHub Copilot,test,tests/test_main.py,False,That's my guess. Looks like it's in the first commit so probably just didn't get cleaned out during @bw4sz's reset and recommit.,feedback,unclassified,0,0,unanswered,,,,
+2237161250,3267130547,GitHub Copilot,test,src/commons/sagas/__tests__/SafeEffects.test.ts,False,Pretty sure we can do `vi.importActual('@sentry/browser')` instead.,feedback,unclassified,0,0,unanswered,,,,
+1896245271,2756921963,Devin,test,tests/openai_handlers/test_openai_integration.py,True,"⚠️  Potential Issue:<br>
+<strong>Ensure Model Appropriateness in Test Cases</strong>
+The change from 'gpt-4o-mini' to 'gpt-3.5-turbo' in the test case could impact the test's behavior and outcomes. It's crucial to verify that 'gpt-3.5-turbo' aligns with the test's objectives and that the expected results remain valid. If the model change is intentional, ensure that the test assertions are updated to reflect the behavior of 'gpt-3.5-turbo'. This will maintain the integrity and validity of the test.
+
+
+<details>
+<summary><strong>🔧 Suggested Code Diff: </strong></summary>
+
+```diff
+- model=""gpt-4o-mini"",
++ model=""gpt-3.5-turbo"",
+```
+
+</details>
+<!-- suggestion_start -->
+
+<details>
+<summary><strong>📝 Committable Code Suggestion</strong></summary>
+
+> ‼️ Ensure you review the code suggestion before committing it to the branch. Make sure it replaces the highlighted code, contains no missing lines, and has no issues with indentation. 
+
+```suggestion
+import os
+from openai import AsyncOpenAI
+
+async def test_async_openai_integration():
+    client = AsyncOpenAI(api_key=os.getenv(""OPENAI_API_KEY""))
+    async_stream_result = await client.chat.completions.create(
+        model=""gpt-3.5-turbo"",
+        messages=[{""role"": ""user"", ""content"": ""Hello from async streaming""}],
+        stream=True,
+    )
+    async for _ in async_stream_result:
+        pass
+```
+
+</details>
+
+---
+
+",feedback,coverage,1,2,unanswered,,,,
+2214872010,3241815946,Devin,test,apps/server/src/api/v2/slack/update-integration.test.ts,True,logic: Test should verify behavior for non-owner roles since this looks like an admin-only operation,feedback,unclassified,0,0,unanswered,,,,
+2210215457,3235347485,GitHub Copilot,test,tests/test_util_http.py,True,"Simplified exception handling to only try-catch `send_http_request` and only skip for network exceptions (timeout, connection, resolve, unreachable). Authorization and other exceptions are now properly raised. Commit 42a2732.",acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2117731888,3105351368,Devin,test,tests/test_modernization.py,True,"## Unused local variable
+
+Variable sb is not used.
+
+[Show more details](https://github.com/appknox/pyaxmlparser/security/code-scanning/30)",feedback,unclassified,0,1,unanswered,,,,
+2222135405,3252145883,Cursor,test,packages/rooks/src/__tests__/useIntersectionObserverRef.spec.tsx,True,"![medium](https://www.gstatic.com/codereviewagent/medium-priority.svg)
+
+This test is skipped. It covers an important error handling scenario. Create a tracking issue to ensure this test is implemented in the future.",feedback,unclassified,0,0,unanswered,,,,
+2202783392,3225486077,GitHub Copilot,test,tests/test_util_comment.py,True,Fixed Python 2.7 compatibility by replacing subTest with a traditional loop and detailed error messages. Commit 445f73a,acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2222569425,3250024089,Claude Code,test,frontend/src/lib/desktop/components/ui/Card.test.ts,True,"_⚠️ Potential issue_
+
+**Fix syntax error in function call.**
+
+There's an extra comma causing a parsing error.
+
+
+```diff
+-    const { container } = renderCard({ className: 'custom-class' },
+-    });
++    const { container } = renderCard({ className: 'custom-class' });
+```
+
+<!-- suggestion_start -->
+
+<details>
+<summary>📝 Committable suggestion</summary>
+
+> ‼️ **IMPORTANT**
+> Carefully review the code before committing. Ensure that it accurately replaces the highlighted code, contains no missing lines, and has no issues with indentation. Thoroughly test & benchmark the code to ensure it meets the requirements.
+
+```suggestion
+    const { container } = renderCard({ className: 'custom-class' });
+```
+
+</details>
+
+<!-- suggestion_end -->
+
+<details>
+<summary>🧰 Tools</summary>
+
+<details>
+<summary>🪛 Biome (1.9.4)</summary>
+
+[error] 30-30: Expected an expression but instead found '}'.
+
+Expected an expression here.
+
+
+(parse)
+
+</details>
+
+</details>
+
+<details>
+<summary>🤖 Prompt for AI Agents</summary>
+
+```
+In frontend/src/lib/desktop/components/ui/Card.test.ts at lines 29 to 30, there
+is a syntax error due to an extra comma after the function call's argument
+object. Remove the trailing comma after the closing brace in the renderCard
+function call to fix the parsing error.
+```
+
+</details>
+
+<!-- fingerprinting:phantom:poseidon:panther -->
+
+<!-- This is an auto-generated comment by CodeRabbit -->
+
+✅ Addressed in commits c37a295 to 7031246",feedback,coverage,1,2,unanswered,,,,
+1948334095,2841184790,Devin,test,apps/studio/electron/main/utils/__tests__/windows-command.test.ts,True,style: Add test cases for special characters like &&lt;&gt;()@^| which are handled in the implementation but not tested here,feedback,coverage,0,0,unanswered,,,,
+2105071607,3086985638,GitHub Copilot,config,.github/workflows/copilot-setup-steps.yml,True,"Add a validation after extraction (e.g., fail early if `$SDK_VERSION` is empty) to catch errors when `tools.dotnet` is missing or malformed.
+```suggestion
+          SDK_VERSION=$(jq -r '.tools.dotnet' global.json)
+          if [ -z ""$SDK_VERSION"" ]; then
+            echo ""Error: .NET SDK version is missing or malformed in global.json"" >&2
+            exit 1
+          fi
+```",feedback,functional,0,1,unanswered,,,,
+2096955519,3075670611,GitHub Copilot,test,test_working_path.py,True,"[nitpick] Consider using a testing framework's assert functions instead of print and sys.exit calls for better automated test integration.
+```suggestion
+import unittest
+
+class TestWorkingPath(unittest.TestCase):
+
+    def test_cache_path(self):
+        # Create a temporary directory to use as working_path
+        with tempfile.TemporaryDirectory() as temp_dir:
+            # Import initialize_runtime_folder after creating temp dir to avoid early import
+            from lisa.main import initialize_runtime_folder
+            
+            # Initialize runtime with the temp_dir as working_path
+            initialize_runtime_folder(working_path=Path(temp_dir))
+            
+            # Import constants after initialization
+            from lisa.util import constants
+            
+            # Check if CACHE_PATH is under the provided working_path
+            cache_path = constants.CACHE_PATH
+            expected_path = Path(temp_dir) / ""runtime"" / ""cache""
+            
+            # Assert that the cache path is correctly set
+            self.assertEqual(cache_path, expected_path, 
+                             f""FAILURE: Cache path {cache_path} is not under the provided working_path {expected_path}"")
+
+if __name__ == ""__main__"":
+    unittest.main()
+```",feedback,superficial,1,1,unanswered,,,,
+2227471721,3254468102,GitHub Copilot,test,packages/react/src/Text/Text.test.tsx,True,"Restored all missing tests to Text.test.tsx including fontWeight, fontStyle, fontFamily, fontSize, lineHeight, and responsive tests adapted for Vitest browser environment. (commit 233d30e)",acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2182271918,3191307637,OpenAI Codex,production,packages/create-zudoku/templates/default/js/zudoku.config.jsx,False,"```suggestion
+```",code_suggestion,n/a_code_suggestion,0,1,unanswered,,,,
+2180832967,3196955536,GitHub Copilot,test,python/tests/conftest.py,True,"Catching all `Exception` types can mask unexpected failures. Restrict the `except` clause to known transient errors (e.g., specific timeout or connection exceptions) so genuine teardown errors bubble up.
+```suggestion
+        except (ClosingError, TimeoutError) as e:
+```",feedback,functional,0,1,unanswered,,,,
+1948334074,2841184790,Devin,test,apps/studio/electron/main/utils/__tests__/powershell-command.test.ts,True,style: Test case missing arguments with spaces that need quotes. Add test for 'npm install @scope/package name',feedback,coverage,0,0,unanswered,,,,
+1910699180,2776299690,Devin,test,src/elements/content-picker/__tests__/ItemList.test.tsx,False,tests seem pretty good,feedback,unclassified,0,0,unanswered,,,,
+2245914909,3275513847,GitHub Copilot,test,packages/react/src/SelectPanel/SelectPanel.test.tsx,False,Something weird might be going on 🤔 I believe the `live-region` element and utilities should be finding an existing live region if one does not exist. If there are multiple on the page something might be going on,feedback,unclassified,0,0,answered,,,,
+2107248761,3090993724,GitHub Copilot,production,cmd/rqlite/main.go,False,"No, don't do this. Just parse envHost. Instead check later if parsedURL.Scheme is """". If it is, then set scheme to ""http"".",feedback,unclassified,-1,0,answered,,,,
+2231758086,3262961474,OpenAI Codex,test,app/tests/src/utils/formatUserId.test.ts,True,"_🛠️ Refactor suggestion_
+
+**Expand test coverage with additional edge cases.**
+
+While the current tests cover the main happy paths, several important edge cases are missing that could improve robustness:
+
+1. **Undefined input**: Only `null` is tested, but `undefined` should also be covered
+2. **Invalid input formats**: 
+   - Empty strings
+   - Hex addresses with invalid lengths (< 40 chars, > 42 chars)
+   - Hex addresses with invalid characters
+   - Malformed UUIDs
+3. **Edge cases for hex truncation**:
+   - Hex addresses shorter than the truncation logic expects
+   - Mixed case hex addresses
+4. **Type parameter validation**: Test behavior with invalid or unexpected type values
+
+
+
+Consider adding these test cases:
+
+```typescript
+it('returns null when userId is undefined', () => {
+  expect(formatUserId(undefined, 'hex')).toBeNull();
+});
+
+it('handles empty string input', () => {
+  expect(formatUserId('', 'hex')).toBeNull();
+});
+
+it('handles invalid hex length', () => {
+  const shortHex = '0x123';
+  expect(formatUserId(shortHex, 'hex')).toBe('0x123'); // or appropriate behavior
+});
+
+it('handles invalid hex characters', () => {
+  const invalidHex = '0xGHIJKL1234567890abcdef1234567890abcdef12';
+  // Test expected behavior for invalid hex
+});
+
+it('handles malformed UUID', () => {
+  const invalidUuid = 'not-a-uuid';
+  expect(formatUserId(invalidUuid, 'uuid')).toBe(invalidUuid); // or appropriate behavior
+});
+```
+
+<details>
+<summary>🤖 Prompt for AI Agents</summary>
+
+```
+In app/tests/src/utils/formatUserId.test.ts between lines 5 and 24, the current
+tests lack coverage for several edge cases. Add tests for undefined input
+returning null, empty string input returning null, hex addresses with invalid
+lengths (both too short and too long) verifying the function's behavior, hex
+addresses containing invalid characters checking expected output or error
+handling, malformed UUID strings verifying if they are returned as is or handled
+differently, mixed case hex addresses to ensure consistent truncation, and
+invalid or unexpected type parameters to confirm proper handling or fallback
+behavior.
+```
+
+</details>
+
+<!-- fingerprinting:phantom:poseidon:panther -->
+
+<!-- This is an auto-generated comment by CodeRabbit -->
+
+✅ Addressed in commit e452687",acknowledgement,n/a_acknowledgement,1,2,unanswered,,,,
+2215034646,3241590398,GitHub Copilot,production,internal/kibana/synthetics/create.go,False,"```suggestion
+```
+
+The monitor should always be created in the space defined by `space_id`, can you revert this change. ",feedback,process,0,1,answered,,,,
+2236966238,3200033873,GitHub Copilot,test,tests/test_main.py,True,Reverted the unrelated changes to test_over_score_thresh function - restored the original hard-coded threshold value of 0.8 instead of the variable. These changes were not related to the augmentation functionality. See commit 6c7fe79.,acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2193856692,3214130284,GitHub Copilot,test,src/notebooks/controllers/kernelConnector.unit.test.ts,False,Remove this change,feedback,directive,0,0,answered,,,,
+2230129587,3261928264,GitHub Copilot,production,genaisrc/java-helper.genai.mts,False,"add ""using the annotation format""",feedback,directive,0,0,answered,,,,
+2116905072,3104234803,GitHub Copilot,production,examples/stable/test/end_to_end/candid_rpc/candid_backtraces/test/tests.ts,False,You should make the trap message dynamic for each call to it,feedback,unclassified,0,0,answered,,,,
+2239382895,3272719703,Devin,docs,.changeset/old-cats-tell.md,False,"```suggestion
+Validate R2 CORS rules in Wrangler to provide better and earlier feedback for users.  
+```",code_suggestion,n/a_code_suggestion,0,1,unanswered,,,,
+2141308101,3138279170,GitHub Copilot,test,tests/test_global_executor.py,True,Deleted the requested tests from the file. (d0262bc),feedback,unclassified,0,0,unanswered,,,,
+2218317734,3247409288,Devin,test,packages/ai/src/tools/file-tools/create-files-tool/create-file-tool.test.ts,True,logic: Mock result should contain valid JSON string even for error case to match actual sandbox behavior,feedback,coverage,0,0,unanswered,,,,
+2239086224,3272059201,Devin,production,frontend/internal-packages/agent/src/langchain/agents/qaGenerateUsecaseAgent/agent.ts,True,"The `dmlOperations` field is being initialized as an empty array after parsing, but the schema already defines it as required. This creates inconsistency between the schema definition and runtime behavior. Consider making the field optional in the schema if it's intended to be populated later, or ensure the LLM response includes this field.",feedback,coverage,1,2,answered,,,,
+2201574895,3223921049,Cursor,test,packages/rooks/src/__tests__/usePictureInPictureApi.spec.tsx,True,"![critical](https://www.gstatic.com/codereviewagent/critical.svg)
+
+The top-level `describe` block at line 56 is unexpectedly indented by two spaces. This can lead to linting errors or unexpected behavior in some test runners. It should start at the beginning of the line.
+
+```suggestion
+describe(""usePictureInPictureApi"", () => {
+```",feedback,superficial,0,2,unanswered,,,,
+2203216619,3226175596,GitHub Copilot,test,tests/test_provider_edgeone.py,False,测试author: GitHub Copilot,feedback,unclassified,0,0,answered,,,,
+2163953481,3157539448,GitHub Copilot,docs,docs/get-started/migrate-from-docker-compose.md,True,"Removed the ""Getting help"" section as requested. c002808",feedback,unclassified,0,0,unanswered,,,,
+2173527157,3185333353,GitHub Copilot,test,tests/transforms/augmentation/test_random_affine.py,False,"```suggestion
+        s_aug = aff(s)
+```",code_suggestion,n/a_code_suggestion,0,1,answered,,,,
+2157459356,3155712937,OpenAI Codex,production,engine/src/main/junit-shared/org/operaton/bpm/engine/test/util/JobExecutorAssert.java,False,"Maybe one topic to consider is implementing assertions using an interface with default methods, similar to AssertJ's `WithAssertions`. This approach makes it easy to integrate assertions and supports a form of multiple inheritance.
+
+That said, it was just an initial idea. I'm also perfectly fine with using a class instead—it really depends on the context and specific needs.
+
+Below is a quick prototype I put together. I had forgotten that I even created one:
+
+```java
+package org.operaton.bpm.engine.test.util;
+
+import org.awaitility.Awaitility;
+import org.awaitility.core.ConditionTimeoutException;
+import org.operaton.bpm.BpmPlatform;
+import org.operaton.bpm.engine.ManagementService;
+import org.operaton.bpm.engine.ProcessEngine;
+import org.operaton.bpm.engine.ProcessEngineException;
+import org.operaton.bpm.engine.impl.ProcessEngineImpl;
+import org.operaton.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
+import org.operaton.bpm.engine.impl.jobexecutor.JobExecutor;
+import org.operaton.bpm.engine.impl.jobexecutor.ThreadPoolJobExecutor;
+
+import java.util.Optional;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
+
+public interface WithJobExecutorAssertions {
+
+    long DEFAULT_TIMEOUT = 20000L;
+    long DEFAULT_CHECK_INTERVAL = 500L;
+    boolean DEFAULT_SHUTDOWN_AFTER_PROCESSING = true;
+
+    default JobExecutorAssert assertThatJobExecutor() {
+        return new JobExecutorAssert();
+    }
+
+    default ConditionAwaitAssert assertThatCondition() {
+        return new ConditionAwaitAssert();
+    }
+
+    class AwaitConfiguration {
+        private long timeoutMillis = DEFAULT_TIMEOUT;
+        private long pollIntervalMillis = DEFAULT_CHECK_INTERVAL;
+        private boolean ignoreExceptions = DEFAULT_SHUTDOWN_AFTER_PROCESSING;
+
+        public long getTimeoutMillis() {
+            return timeoutMillis;
+        }
+
+        public AwaitConfiguration withTimeoutMillis(long timeoutMillis) {
+            this.timeoutMillis = timeoutMillis;
+            return this;
+        }
+
+        public long getPollIntervalMillis() {
+            return pollIntervalMillis;
+        }
+
+        public AwaitConfiguration withPollIntervalMillis(long pollIntervalMillis) {
+            this.pollIntervalMillis = pollIntervalMillis;
+            return this;
+        }
+
+        public boolean isIgnoreExceptions() {
+            return ignoreExceptions;
+        }
+
+        public AwaitConfiguration withIgnoreExceptions(boolean ignoreExceptions) {
+            this.ignoreExceptions = ignoreExceptions;
+            return this;
+        }
+    }
+
+    class JobExecutorAssert {
+        private static final int JOB_EXECUTOR_WAIT_MULTIPLIER = 2;
+
+        private String processInstanceId;
+        private final AwaitConfiguration config = new AwaitConfiguration();
+
+        private boolean shutdownAfterProcessing = DEFAULT_SHUTDOWN_AFTER_PROCESSING;
+        private JobExecutor jobExecutor;
+        private ManagementService managementService;
+        private ProcessEngine processEngine;
+        private ConditionAwaitAssert conditionAwaitAssert;
+
+        public JobExecutorAssert withProcessEngine(ProcessEngine processEngine) {
+            this.processEngine = processEngine;
+            return this;
+        }
+
+        public JobExecutorAssert withProcessInstance(String processInstanceId) {
+            this.processInstanceId = processInstanceId;
+            return this;
+        }
+
+        public JobExecutorAssert withTimeout(long timeoutMillis) {
+            config.withTimeoutMillis(timeoutMillis);
+            return this;
+        }
+
+        public JobExecutorAssert withCheckInterval(long intervalMillis) {
+            config.withPollIntervalMillis(intervalMillis);
+            return this;
+        }
+
+        public JobExecutorAssert shutdownExecutorAfter(boolean shutdownAfterProcessing) {
+            this.shutdownAfterProcessing = shutdownAfterProcessing;
+            return this;
+        }
+
+        public ConditionAwaitAssert condition() {
+            if (conditionAwaitAssert == null) {
+                conditionAwaitAssert = new ConditionAwaitAssert(config);
+            }
+            return conditionAwaitAssert;
+        }
+
+        public void waitForAllJobsToBeProcessed() {
+            initializeProcessEngineComponents();
+            calculateMaxWaitTime();
+            activateJobExecutor();
+            Callable<Boolean> condition = () -> !areJobsAvailable();
+            try {
+                new ConditionAwaitAssert(config).until(condition);
+            } catch (Exception e) {
+                throw new ProcessEngineException(""Time limit of "" + config.getTimeoutMillis() + "" was exceeded (still ""
+                        + numberOfJobsAvailable() + "" jobs available)"", e);
+            } finally {
+                shutdownJobExecutor();
+            }
+        }
+
+        private void shutdownJobExecutor() {
+            if (shutdownAfterProcessing && jobExecutor.isActive()) {
+                jobExecutor.shutdown();
+            }
+        }
+
+        private void initializeProcessEngineComponents() {
+            if (processEngine == null) {
+                processEngine = getDefaultProcessEngine();
+            }
+            ProcessEngineConfigurationImpl engineConfig = ((ProcessEngineImpl) processEngine).getProcessEngineConfiguration();
+            jobExecutor = engineConfig.getJobExecutor();
+            managementService = engineConfig.getManagementService();
+        }
+
+        private void calculateMaxWaitTime() {
+            int jobExecutorWaitTime = jobExecutor.getWaitTimeInMillis() * JOB_EXECUTOR_WAIT_MULTIPLIER;
+            if (config.getTimeoutMillis() < jobExecutorWaitTime) {
+                config.withTimeoutMillis(jobExecutorWaitTime);
+            }
+        }
+
+        private void activateJobExecutor() {
+            if (!jobExecutor.isActive()) {
+                jobExecutor.start();
+            }
+        }
+
+        private ProcessEngine getDefaultProcessEngine() {
+            return BpmPlatform.getProcessEngineService().getDefaultProcessEngine();
+        }
+
+        private boolean areJobsAvailable() {
+            return numberOfJobsAvailable() > 0;
+        }
+
+        private long numberOfJobsAvailable() {
+            return Optional.ofNullable(processInstanceId)
+                    .map(piId -> managementService.createJobQuery().processInstanceId(piId))
+                    .orElse(managementService.createJobQuery())
+                    .withRetriesLeft()
+                    .executable()
+                    .active()
+                    .count();
+        }
+    }
+
+    class JobExecutionRunnablesAssert {
+        private static final int THREAD_POOL_ACTIVE_COUNT_ZERO = 0;
+        private final AwaitConfiguration config = new AwaitConfiguration();
+        private ThreadPoolJobExecutor jobExecutor;
+
+        public JobExecutionRunnablesAssert withProcessEngine(ProcessEngine processEngine) {
+            ProcessEngineConfigurationImpl cfg = ((ProcessEngineImpl) processEngine).getProcessEngineConfiguration();
+            this.jobExecutor = (ThreadPoolJobExecutor) cfg.getJobExecutor();
+            return this;
+        }
+
+        public JobExecutionRunnablesAssert withTimeout(long timeoutMillis) {
+            config.withTimeoutMillis(timeoutMillis);
+            return this;
+        }
+
+        public JobExecutionRunnablesAssert withCheckInterval(long intervalMillis) {
+            config.withPollIntervalMillis(intervalMillis);
+            return this;
+        }
+
+        public void areFinished() {
+
+            try {
+                new ConditionAwaitAssert(config).until(() -> jobExecutor.getThreadPoolExecutor().getActiveCount() == THREAD_POOL_ACTIVE_COUNT_ZERO);
+            } catch (Exception e) {
+                throw new ProcessEngineException(""Active job executor threads not finished after "" + config.getTimeoutMillis() + "" ms"", e);
+            }
+        }
+    }
+
+    class ConditionAwaitAssert {
+        private final AwaitConfiguration config;
+
+        public ConditionAwaitAssert() {
+            this.config = new AwaitConfiguration();
+        }
+
+        public ConditionAwaitAssert(AwaitConfiguration config) {
+            this.config = config;
+        }
+
+        public ConditionAwaitAssert withTimeout(long timeoutMillis) {
+            config.withTimeoutMillis(timeoutMillis);
+            return this;
+        }
+
+        public ConditionAwaitAssert withCheckInterval(long intervalMillis) {
+            config.withPollIntervalMillis(intervalMillis);
+            return this;
+        }
+
+        public ConditionAwaitAssert ignoreExceptions() {
+            config.withIgnoreExceptions(true);
+            return this;
+        }
+
+        public void until(Callable<Boolean> condition) {
+            long timeout = config.getTimeoutMillis();
+            long pollInterval = config.getPollIntervalMillis();
+
+            if (timeout < pollInterval) {
+                pollInterval = timeout;
+            }
+
+            try {
+                Awaitility.await()
+                        .atMost(timeout, TimeUnit.MILLISECONDS)
+                        .pollInterval(pollInterval, TimeUnit.MILLISECONDS)
+                        .ignoreExceptionsMatching(e -> config.isIgnoreExceptions())
+                        .until(condition);
+            } catch (ConditionTimeoutException e) {
+                throw new ProcessEngineException(""Condition was not met within "" + timeout + "" ms"", e);
+            }
+        }
+    }
+}
+
+```
+
+",feedback,unclassified,1,2,answered,,,,
+1994564177,2918768296,Devin,production,core/store/src/config.rs,False,group PROTOCOL_VERSION and ProtocolFeature imports together,feedback,unclassified,0,0,unanswered,,,,
+1921172342,2797184843,Devin,test,js/src/sdk/base.toolset.spec.ts,False,"Consider parameterizing the payload size for different test environments. This would make the test more flexible and prevent potential memory issues:
+
+```typescript
+const TEST_CONFIG = {
+  smallPayload: 100,
+  mediumPayload: 1000,
+  largePayload: 10000,
+};
+
+const size = process.env.TEST_PAYLOAD_SIZE || TEST_CONFIG.mediumPayload;
+const largeData = Array(size).fill({ key: ""value"" });
+```",feedback,unclassified,1,1,unanswered,,,,
+2166027344,3167450477,Claude Code,test,frontend/internal-packages/e2e/tests/e2e/page.test.ts,False,"Q. I'm not familiar with the changes to the tests, so please let me know. Does this PR change the behavior of the db-structure or erd-core packages? If so, I think the PR itself should include a .changeset explanation.
+",feedback,unclassified,1,1,answered,,,,
+2147460396,3147168220,OpenAI Codex,production,frontends/web/ts/webgl.ts,True,"_⚠️ Potential issue_
+
+**Add null checks for uniform locations.**
+
+`getUniformLocation` can return null if the uniform is not found or optimized out. Add proper error handling.
+
+
+```diff
+ const locImage = gl.getUniformLocation(program, ""image"");
+ const locOut = gl.getUniformLocation(program, ""output_resolution"");
+ const locOrigin = gl.getUniformLocation(program, ""origin"");
++
++if (!locImage || !locOut || !locOrigin) {
++    console.error(""Failed to get uniform locations"");
++    return;
++}
+```
+
+
+<!-- suggestion_start -->
+
+<details>
+<summary>📝 Committable suggestion</summary>
+
+> ‼️ **IMPORTANT**
+> Carefully review the code before committing. Ensure that it accurately replaces the highlighted code, contains no missing lines, and has no issues with indentation. Thoroughly test & benchmark the code to ensure it meets the requirements.
+
+```suggestion
+    const locImage = gl.getUniformLocation(program, ""image"");
+    const locOut = gl.getUniformLocation(program, ""output_resolution"");
+    const locOrigin = gl.getUniformLocation(program, ""origin"");
+
+    if (!locImage || !locOut || !locOrigin) {
+        console.error(""Failed to get uniform locations"");
+        return;
+    }
+```
+
+</details>
+
+<!-- suggestion_end -->
+
+<details>
+<summary>🤖 Prompt for AI Agents</summary>
+
+```
+In frontends/web/ts/webgl.ts around lines 45 to 47, the calls to
+gl.getUniformLocation may return null if the uniform is not found or optimized
+out. Add null checks after each getUniformLocation call for ""image"",
+""output_resolution"", and ""origin"". If any are null, handle the error
+appropriately, such as logging an error message and preventing further use of
+the null location to avoid runtime errors.
+```
+
+</details>
+
+<!-- This is an auto-generated comment by CodeRabbit -->",feedback,unclassified,1,1,unanswered,,,,
+2132648895,3088471797,OpenAI Codex,production,src/Console/TranslatePoFileCommand.php,True,"Using a global variable for storing instant results can lead to maintainability issues and unintended side effects; consider refactoring to use dependency injection or a dedicated storage mechanism.
+```suggestion
+        $this->instantResults = [];
+```",feedback,maintainability,1,1,unanswered,,,,
+2116129331,3103424264,GitHub Copilot,config,swift/Ice/context/Sources/Server/slice-plugin.json,True,Added an extra newline at the end of the Server slice-plugin.json file in commit 6350aba.,acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2188840344,3207183981,OpenAI Codex,test,app/tests/utils/proving/provingMachine.generatePayload.test.ts,True,"_🛠️ Refactor suggestion_
+
+**Add more comprehensive payload validation for all circuit types.**
+
+The current tests have minimal assertions. Add thorough validation:
+
+```diff
+   it('dsc circuit', async () => {
+     useProvingStore.setState({ circuitType: 'dsc' });
+     const payload = await useProvingStore.getState()._generatePayload();
+     expect(generateTEEInputsDSC).toHaveBeenCalled();
++    expect(generateTEEInputsDSC).toHaveBeenCalledWith(
++      expect.objectContaining({
++        passportData: expect.any(Object),
++        secret: 'sec',
++        // Add other expected parameters
++      })
++    );
+     expect(useProvingStore.getState().endpointType).toBe('celo');
+     expect(payload.params.uuid).toBe('123');
++    expect(payload.params).toEqual({
++      uuid: '123',
++      nonce: [0],
++      cipher_text: [1],
++      auth_tag: [2],
++    });
+   });
+```
+
+<!-- suggestion_start -->
+
+<details>
+<summary>📝 Committable suggestion</summary>
+
+> ‼️ **IMPORTANT**
+> Carefully review the code before committing. Ensure that it accurately replaces the highlighted code, contains no missing lines, and has no issues with indentation. Thoroughly test & benchmark the code to ensure it meets the requirements.
+
+```suggestion
+  it('dsc circuit', async () => {
+    useProvingStore.setState({ circuitType: 'dsc' });
+    const payload = await useProvingStore.getState()._generatePayload();
+    expect(generateTEEInputsDSC).toHaveBeenCalled();
+    expect(generateTEEInputsDSC).toHaveBeenCalledWith(
+      expect.objectContaining({
+        passportData: expect.any(Object),
+        secret: 'sec',
+        // Add other expected parameters
+      })
+    );
+    expect(useProvingStore.getState().endpointType).toBe('celo');
+    expect(payload.params.uuid).toBe('123');
+    expect(payload.params).toEqual({
+      uuid: '123',
+      nonce: [0],
+      cipher_text: [1],
+      auth_tag: [2],
+    });
+  });
+```
+
+</details>
+
+<!-- suggestion_end -->
+
+<details>
+<summary>🤖 Prompt for AI Agents</summary>
+
+```
+In app/tests/utils/proving/provingMachine.generatePayload.test.ts between lines
+151 and 165, the tests for 'dsc' and 'disclose' circuits only check if specific
+functions are called and a few basic payload properties. Enhance these tests by
+adding more comprehensive assertions to validate the entire payload structure
+and key fields for each circuit type, ensuring all expected properties and
+values are correctly generated and match the intended output.
+```
+
+</details>
+
+<!-- This is an auto-generated comment by CodeRabbit -->
+
+<!-- fingerprinting:phantom:poseidon:panther -->
+
+✅ Addressed in commits e1be876 to 33aed22",feedback,maintainability,1,1,unanswered,,,,
+2242566795,3276590642,GitHub Copilot,test,projects/experimental/components/accordion/test/tui-expand-double-projection-fix.spec.ts,True,"Console.log statements should be removed from test code as they can clutter test output and are not necessary for automated testing.
+```suggestion
+      
+      // Key test: No additional instantiations should occur
+```",feedback,unclassified,0,1,unanswered,,,,
+2174712152,3187810707,GitHub Copilot,production,src/package/Microsoft.TestPlatform/Microsoft.TestPlatform.nuspec,False,@copilot remove empty line,feedback,directive,0,0,answered,,,,
+1896235619,2756921963,Devin,test,tests/openai_handlers/test_openai_integration.py,True,"⚠️  Potential Issue:<br>
+<strong>Model Change in API Call</strong>
+The change from 'gpt-4o-mini' to 'gpt-3.5-turbo' in the API call could lead to different outputs or performance issues. It's crucial to verify that 'gpt-3.5-turbo' meets the requirements previously fulfilled by 'gpt-4o-mini'. If this change is intentional, ensure that all related documentation and tests are updated to reflect this change. This will prevent any confusion or errors in future development and testing cycles.
+
+
+
+---
+
+",feedback,unclassified,0,1,unanswered,,,,
+2193028528,3209954297,GitHub Copilot,test,src/vs/workbench/contrib/terminalContrib/links/test/browser/terminalLinkParsing.test.ts,True,Removed all PowerShell tests from terminalLinkParsing.test.ts since the functionality is now handled by terminalLocalLinkDetector. (a1765ac),feedback,unclassified,0,0,unanswered,,,,
+2230632174,3262152727,OpenAI Codex,production,contrib/omczmq/omczmq.c,True,"![medium](https://www.gstatic.com/codereviewagent/medium-priority.svg)
+
+Specify the direction of the `pData` parameter. This function both reads from and writes to the `pData` structure; `[in,out]` is the most accurate specifier.
+
+```c
+ * @param[in,out] pData action instance configuration
+```",feedback,unclassified,0,1,unanswered,,,,
+2136198527,3130771251,OpenAI Codex,test,libs/core/kiln_ai/datamodel/test_dataset_split.py,False,This fixture was not used,feedback,functional,0,0,unanswered,,,,
+2220877988,3230682144,GitHub Copilot,test,optimize/backend/src/test/java/io/camunda/optimize/rest/security/oauth/RoleValidatorTest.java,False,"It is testing another set of allowed roles but now that I think of it, it's quite redundant with the first test and I agree it's not bringing much value",feedback,unclassified,1,0,unanswered,,,,
+1980482504,2895754600,Devin,production,agentops/session/__init__.py,True,"Changed `current` from a property decorator to a regular function which breaks backward compatibility and access patterns. Should keep `@property` decorator.
+<!-- suggestion_start -->
+
+<details>
+<summary><strong>📝 Committable Code Suggestion</strong></summary>
+
+> ‼️ Ensure you review the code suggestion before committing it to the branch. Make sure it replaces the highlighted code, contains no missing lines, and has no issues with indentation. 
+
+
+```suggestion
+@property
+def current(self) -> Optional[Session]:
+    """"""Get the current active session.
+
+    Returns:
+        The current active session if exactly one session exists, otherwise None.
+    """"""
+    return get_default_session()
+```
+</details>
+<!-- suggestion_end -->
+",feedback,functional,1,1,unanswered,,,,
+2180859214,3190159928,Cursor,production,test/v8/v8-module/main.cpp,False,"should check exception behavior (for cases that throw, i think it might need to be a separate test that is wrapped by a `catch` in JS since we don't yet have the V8 api functions to check/clear exceptions)",feedback,unclassified,0,0,unanswered,,,,
+2242566700,3276590642,GitHub Copilot,test,projects/experimental/components/accordion/test/tui-expand-double-projection-fix.spec.ts,True,"Console.log statements should be removed from test code as they can clutter test output and are not necessary for automated testing.
+```suggestion
+
+```",feedback,unclassified,0,1,unanswered,,,,
+2039253230,2985471045,Devin,test,frontend/apps/app/app/(app)/app/projects/[projectId]/ref/[branchOrCommit]/docs/getGitHubDocFilePaths.test.ts,False,"We are skipping tests that temporarily fail due to the introduction of RLS.
+Since tests that consider RLS are more like integration tests, they will likely be written in a separate file.",feedback,unclassified,1,0,unanswered,,,,
+2124479117,3084795018,GitHub Copilot,test,tests/library/inspector/cli-codegen-aria.spec.ts,False,I don't think we should ever generate active requirement in codegen,feedback,unclassified,-1,0,answered,,,,
+2216347782,3175880560,Devin,test,packages/lib/server/repository/routingForm/queuedFormResponse/PrismaQueuedFormResponseRepository.test.ts,False,"At times, integration-level tests for repositories can simply replace unit tests because verifying that we are calling off to prisma is less useful than just verifying the inputs and outputs of the repository and its interactions with the DB",feedback,unclassified,0,0,unanswered,,,,
+2110921330,3090570894,GitHub Copilot,production,dace/codegen/common.py,True,"Removed the allow_undefined API completely as requested. Code generation now provides clear error messages when UndefinedSymbol is encountered, which serves as a backup to validation. Fixed in 78065af.",feedback,unclassified,0,0,unanswered,,,,
+2207500434,3218202482,GitHub Copilot,docs,Scenarios/DeliveryTargets.md,False,"@copilot the supported parameter for the custom deliver script are:
+
+project
+projectsName
+type
+appsFolder
+testAppsFolder
+dependenciesFolder
+appsFolders
+testAppsFolders
+dependenciesFolders
+
+Please fix the documentation accordingly.",feedback,unclassified,1,0,answered,,,,
+2107824934,3090570894,GitHub Copilot,test,tests/undefined_symbol_in_sdfg_test.py,True,"Fixed in fe93a1e. I've moved the undefined dimension to array 'A' which is an input (non-transient) array, so it doesn't need to be allocated. The test now demonstrates that the undefined dimension can exist in the SDFG but compilation succeeds when we only access a known constant index.",feedback,unclassified,0,0,unanswered,,,,
+2101186536,3075616006,OpenAI Codex,test,e2e/network-switch.spec.ts,False,This test wasn't run by Codex and it doesn't pass when I run it,feedback,unclassified,0,0,unanswered,,,,
+2150486858,3136072957,GitHub Copilot,test,packages/e2e-test-app-fabric/test/PressableComponentTest.test.ts,False,@copilot hitSlop is not supported on fabric. please remove this test.,feedback,unclassified,1,0,answered,,,,
+2151147249,3151748196,Cursor,test,tests/test_private_chat.py,True,"![high](https://www.gstatic.com/codereviewagent/high-priority.svg)
+
+These tests rely on the `SubHeartflow` instance correctly identifying the chat type. Patch `chat_manager.get_stream` to return `mock_chat_stream` to ensure accurate test results.",feedback,confidence,0,0,unanswered,,,,
+2229876868,3261572196,GitHub Copilot,test,tests/store/artifact/test_runs_artifact_repo.py,False,@copilot I fixed my suggestion,feedback,unclassified,1,0,unanswered,,,,
+2242660112,3276590642,GitHub Copilot,test,projects/experimental/components/accordion/test/tui-expand-double-projection-fix.spec.ts,True,Removed all comments from tui-expand-double-projection-fix.spec.ts file. (235155b),feedback,unclassified,0,0,unanswered,,,,
+2199484311,3221411520,Cursor,test,tests/func/test_audio.py,True,"**issue (code-quality):** Avoid loops in tests. ([`no-loop-in-tests`](https://docs.sourcery.ai/Reference/Rules-and-In-Line-Suggestions/Python/Default-Rules/no-loop-in-tests))
+
+<details><summary>Explanation</summary>Avoid complex code, like loops, in test functions.
+
+Google's software engineering guidelines says:
+""Clear tests are trivially correct upon inspection""
+To reach that avoid complex code in tests:
+* loops
+* conditionals
+
+Some ways to fix this:
+
+* Use parametrized tests to get rid of the loop.
+* Move the complex logic into helpers.
+* Move the complex part into pytest fixtures.
+
+> Complexity is most often introduced in the form of logic. Logic is defined via the imperative parts of programming languages such as operators, loops, and conditionals. When a piece of code contains logic, you need to do a bit of mental computation to determine its result instead of just reading it off of the screen. It doesn't take much logic to make a test more difficult to reason about.
+
+Software Engineering at Google / [Don't Put Logic in Tests](https://abseil.io/resources/swe-book/html/ch12.html#donapostrophet_put_logic_in_tests)
+</details>",feedback,unclassified,-1,1,unanswered,,,,
+2209155307,3231788654,GitHub Copilot,test,zeebe/gateway-rest/src/test/java/io/camunda/zeebe/gateway/rest/controller/SecondaryStorageValidationSimpleTest.java,True,Fixed missing EOL in test files. 116d218,feedback,unclassified,0,0,unanswered,,,,
+2139307891,3135600583,Devin,production,frontend/internal-packages/agent/src/utils/fetchSchemaData.ts,False,👍,acknowledgement,n/a_acknowledgement,1,0,unanswered,,,,
+2216789075,3239840445,Cursor,production,static/app/views/replays/detail/ai/ai.tsx,False,is there any way to combine the `CallToActionContainer` and the nested `Flex`?,feedback,unclassified,0,1,unanswered,,,,
+1910742579,2776299690,Devin,test,src/elements/content-picker/__tests__/shareAccessCellRenderer.test.tsx,False,which i don't think is great,feedback,unclassified,0,0,unanswered,,,,
+2107068826,3090570894,GitHub Copilot,test,tests/undefined_symbol_in_sdfg_test.py,True,"I've updated the test with a more complete SDFG in commit 2c134b6 that properly implements nested maps and multiple tasklets. Instead of @dace.program, I'm creating the SDFG manually since the Python frontend parser has issues with UndefinedSymbol, but the test now demonstrates the core functionality and verifies that UndefinedSymbols in SDFGs raise appropriate errors when compiled.",acknowledgement,n/a_acknowledgement,0,1,unanswered,,,,
+2222135430,3252145883,Cursor,test,packages/rooks/src/__tests__/useIsomorphicEffect.spec.tsx,True,"![medium](https://www.gstatic.com/codereviewagent/medium-priority.svg)
+
+This edge case for handling errors within the effect is skipped. Create a tracking issue to ensure this is tested.",feedback,coverage,0,0,unanswered,,,,
+1962298186,2861830174,Devin,test,src/elements/content-picker/__tests__/Footer.test.tsx,False,"```suggestion
+        const selectedButton = screen.getByRole('button', { name: 'Selected' });
+```",code_suggestion,n/a_code_suggestion,0,1,unanswered,,,,
+2173518632,3185449445,Devin,production,sources/gitlab-source/src/streams/common.ts,False,@faros-ai-devin Don't make any changes in this file!,feedback,unclassified,-1,0,unanswered,,,,
+2213790076,3240170562,Devin,test,packages/ai/tests/tools/unit/ls-tool.test.ts,True,style: Type annotation should be more specific than 'any'. Consider using a custom error type or Error,feedback,unclassified,1,0,unanswered,,,,
+2131428060,3122811733,GitHub Copilot,docs,release-notes/10.0/preview/preview5/aspnetcore.md,False,"```suggestion
+- [@profet23](https://github.com/dotnet/aspnetcore/pulls?q=is%3Apr+is%3Amerged+milestone%3A10.0-preview5+author%3Apropet23)
+
+```",code_suggestion,n/a_code_suggestion,0,1,unanswered,,,,
+2097278677,3075994560,GitHub Copilot,test,tests/playwright-test/ui-mode-git-diff.spec.ts,True,Removed the wait function. 50ad7d0,feedback,unclassified,0,0,unanswered,,,,
+2029233504,2973011621,Devin,production,apps/api/src/services/queue-jobs.ts,False,why are you not using an `else `here,feedback,unclassified,0,0,unanswered,,,,
+2198003921,3170054434,GitHub Copilot,config,sdk/core/ci.yml,False,Just put None and delete the expectedAotWarnings file.,feedback,unclassified,0,0,answered,,,,
+2148830512,3148027458,OpenAI Codex,production,src/lints/safe_function_target_feature_added.ron,False,"```suggestion
+                        requires_feature @fold @transform(op: ""count"") @filter(op: ""!="", value: [""$zero""]) {
+                            explicit @filter(op: ""="", value: [""$true""])
+                            feature: name @output
+                        }
+```",code_suggestion,n/a_code_suggestion,0,1,unanswered,,,,
+2210164491,3235347485,GitHub Copilot,test,tests/test_util_http.py,True,"Updated test credentials to include special characters (@, ., /) to ensure proper URL encoding is tested. Commit 1c54e54.",acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2136867812,3130941497,OpenAI Codex,production,mistralrs-server/src/mcp_server.rs,True,"_🛠️ Refactor suggestion_
+
+**Improve error handling for JSON serialization.**
+
+The `.unwrap()` calls on lines 261, 274, and 290 during JSON serialization could potentially panic, though it's unlikely with well-formed response types.
+
+
+
+Consider handling serialization errors gracefully:
+
+```diff
+-                result: Some(serde_json::to_value(&self.server_info).unwrap()),
++                result: match serde_json::to_value(&self.server_info) {
++                    Ok(val) => Some(val),
++                    Err(_) => return JsonRpcResponse {
++                        jsonrpc: ""2.0"".to_string(),
++                        id: request.id,
++                        result: None,
++                        error: Some(JsonRpcError {
++                            code: errors::INTERNAL_ERROR,
++                            message: ""Failed to serialize response"".to_string(),
++                            data: None,
++                        }),
++                    },
++                },
+```
+
+
+<!-- suggestion_start -->
+
+<details>
+<summary>📝 Committable suggestion</summary>
+
+> ‼️ **IMPORTANT**
+> Carefully review the code before committing. Ensure that it accurately replaces the highlighted code, contains no missing lines, and has no issues with indentation. Thoroughly test & benchmark the code to ensure it meets the requirements.
+
+```suggestion
+    async fn handle_request(&self, request: JsonRpcRequest) -> JsonRpcResponse {
+        if request.jsonrpc != ""2.0"" {
+            return JsonRpcResponse {
+                jsonrpc: ""2.0"".to_string(),
+                id: request.id,
+                result: None,
+                error: Some(JsonRpcError {
+                    code: errors::INVALID_REQUEST,
+                    message: ""Expected jsonrpc to be 2.0"".to_string(),
+                    data: None,
+                }),
+            };
+        }
+
+        match request.method.as_str() {
+            ""initialize"" => JsonRpcResponse {
+                jsonrpc: ""2.0"".to_string(),
+                id: request.id,
+-               result: Some(serde_json::to_value(&self.server_info).unwrap()),
++               result: match serde_json::to_value(&self.server_info) {
++                   Ok(val) => Some(val),
++                   Err(_) => return JsonRpcResponse {
++                       jsonrpc: ""2.0"".to_string(),
++                       id: request.id,
++                       result: None,
++                       error: Some(JsonRpcError {
++                           code: errors::INTERNAL_ERROR,
++                           message: ""Failed to serialize response"".to_string(),
++                           data: None,
++                       }),
++                   },
++               },
+                error: None,
+            },
+            ""tools/list"" => {
+                let tools: Vec<Tool> = self.tools.values().map(|t| t.as_tool_record()).collect();
+                let result = ListToolsResult {
+                    tools,
+                    meta: None,
+                    next_cursor: None,
+                };
+                JsonRpcResponse {
+                    jsonrpc: ""2.0"".to_string(),
+                    id: request.id,
+                    result: Some(serde_json::to_value(result).unwrap()),
+                    error: None,
+                }
+            }
+            // … rest of the match arms …
+        }
+    }
+```
+
+</details>
+
+<!-- suggestion_end -->
+
+<details>
+<summary>🤖 Prompt for AI Agents</summary>
+
+```
+In mistralrs-server/src/mcp_server.rs between lines 243 and 327, the code uses
+.unwrap() on serde_json::to_value calls at lines 261, 274, and 290, which can
+cause panics if serialization fails. To fix this, replace these .unwrap() calls
+with proper error handling by matching on the Result returned by to_value, and
+return a JsonRpcResponse with an appropriate error if serialization fails,
+ensuring the server responds gracefully without panicking.
+```
+
+</details>
+
+<!-- This is an auto-generated comment by CodeRabbit -->",feedback,maintainability,1,1,unanswered,,,,
+1962296713,2861830174,Devin,test,src/elements/content-picker/__tests__/Footer.test.tsx,False,"```suggestion
+        expect(screen.getByRole('group', { name: 'Actions' })).toBeInTheDocument();
+```",code_suggestion,n/a_code_suggestion,0,1,unanswered,,,,
+2203229714,3226175596,GitHub Copilot,production,ddns/provider/edgeone.py,True,"Fixed by using `join_domain(subdomain, main_domain)` for the Name field in _create_record method. This ensures the complete domain name is used as required by the EdgeOne API documentation. Commit c786550",acknowledgement,n/a_acknowledgement,0,1,unanswered,,,,
+2247045626,3259102188,GitHub Copilot,test,packages/create-vite/__tests__/cli.spec.ts,False,wrap `stdout` with `stripVTCharacters` from `node:util`.,feedback,unclassified,0,0,answered,,,,
+2176146708,3190006754,Cursor,test,apps/api/src/routes/beacon.spec.ts,True,"**Test Coverage Gap**: The tests only cover the API endpoint validation but don't test the core beacon functionality in `lib/beacon.ts`. Critical functions like `sendInstallationBeacon()` and `sendBeacon()` are untested.
+
+Consider adding unit tests for:
+1. `sendInstallationBeacon()` - database operations and beacon sending
+2. `sendBeacon()` - network request handling and error scenarios  
+3. Installation record creation and retrieval logic",feedback,coverage,0,2,unanswered,,,,
+1896229469,2756921963,Devin,test,tests/litellm_handlers/test_litellm_integration.py,True,"🤖  Bug Fix:<br>
+<strong>Handle Stream Content in sync_stream</strong>
+Ensure `sync_stream` processes or stores stream content to avoid logical errors.
+
+
+<details>
+<summary><strong>🔧 Suggested Code Diff: </strong></summary>
+
+```python
+for chunk in stream_result:
+    if hasattr(chunk, 'choices') and chunk.choices[0].delta.content:
+        # Process or store the content here
+        print(chunk.choices[0].delta.content)
+```
+
+</details>
+<!-- suggestion_start -->
+
+<details>
+<summary><strong>📝 Committable Code Suggestion</strong></summary>
+
+> ‼️ Ensure you review the code suggestion before committing it to the branch. Make sure it replaces the highlighted code, contains no missing lines, and has no issues with indentation. 
+
+```suggestion
+import os
+import litellm
+
+
+def sync_stream():
+    litellm.api_key = os.getenv(""ANTHROPIC_API_KEY"")
+    stream_result = litellm.completion(
+        model=""anthropic/claude-3-opus-20240229"",
+        messages=[{""role"": ""user"", ""content"": ""Hello from sync streaming""}],
+        stream=True,
+    )
+    for chunk in stream_result:
+        if hasattr(chunk, 'choices') and chunk.choices[0].delta.content:
+            # Process or store the content here
+            print(chunk.choices[0].delta.content)
+
+```
+
+</details>
+
+---
+
+",feedback,functional,1,1,unanswered,,,,
+2206413115,3230759504,GitHub Copilot,test,onnxscript/rewriter/pattern_match_context_test.py,False,Replace this by an assertion that context.main_root_node is same as model.graph.node(2),feedback,coverage,0,0,answered,,,,
+2203461501,3226519927,GitHub Copilot,test,packages/core/src/chat.test.ts,False,Load an image from file. You should be able to use robots.jpg,feedback,unclassified,0,0,answered,,,,
+2104484026,3082306112,OpenAI Codex,production,portia/model.py,False,"Would it be much of a pain to pass in the cache class here rather than a URL?
+
+Langchain has a [BaseCache](https://github.com/langchain-ai/langchain/blob/master/libs/core/langchain_core/caches.py#L38) type we could use - then we can pass whatever cache implementation in (including presumably an in-memory python implementation)",feedback,unclassified,0,1,answered,,,,
+2154494612,3156499919,GitHub Copilot,production,src/components/AppComponent.tsx,False,No need to `toString` since you do `String(value)` in `useBodyAttributeSelector`.,feedback,unclassified,0,0,answered,,,,
+2240798642,3200033873,GitHub Copilot,test,tests/test_main.py,False,Still not clear what is happening with this change and how it relates to everything else.,feedback,unclassified,0,0,answered,,,,
+2133907110,3107487935,OpenAI Codex,test,tests/cli/application/EnvilderHandler.test.ts,True,"[nitpick] The builder instantiation is repeated in each test. Consider moving `const sut = EnvilderBuilder.build().withAwsProvider().create();` into a `beforeEach` block to DRY up the setup.
+```suggestion
+
+```",feedback,maintainability,1,1,unanswered,,,,
+2176091266,3189898546,GitHub Copilot,test,onnxscript/rewriter/redundant_scatter_nd_test.py,True,"## RUFF/W293
+
+Blank line contains whitespace.
+See https://docs.astral.sh/ruff/rules/blank-line-with-whitespace
+
+[Show more details](https://github.com/microsoft/onnxscript/security/code-scanning/17503)",feedback,superficial,0,1,unanswered,,,,
+2206444631,3230708925,GitHub Copilot,production,source/slang/hlsl.meta.slang,True,I've made progress on the first part - updated GetAttributes to use proper HLSL intrinsics instead of NVAPI. Still need to address the slang-emit-hlsl.cpp changes for kRIOp_HitObjectType emission and updating other intrinsics definitions as mentioned. Will work on these next in commit d1a8544.,acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2162247510,3168695693,GitHub Copilot,production,src/hyperlight_component_util/src/guest.rs,False,I don't think this will be needed since this use case is handled by return an empty quote,feedback,unclassified,-1,0,answered,,,,
+2166678825,3172607599,Devin,test,packages/controllers/tests/controllers/OnRampController.test.ts,True,The test mutates `OptionsController.state.projectId` but does not restore it afterward; consider capturing the original value and restoring it in an `afterEach` to prevent state leakage between tests.,feedback,functional,1,0,unanswered,,,,
+2093929965,3056690965,Devin,test,tests/cli/actions/remoteAction.test.ts,True,"Tests are mocking the very function under test (`runRemoteAction`), which prevents verifying its real behavior. Instead, mock only its dependencies and let the test call the real implementation to assert its logic.
+```suggestion
+      vi.spyOn(remoteActionModule, 'isGitInstalled').mockResolvedValue(true);
+      vi.spyOn(remoteActionModule, 'execGitShallowClone').mockImplementation(async () => {});
+      vi.spyOn(remoteActionModule, 'runDefaultAction').mockImplementation(async () => {
+        const mockConfig = createMockConfig();
+        mockConfig.output = {
+          ...mockConfig.output,
+          filePath: 'output.json',
+        };
+
+        return {
+          packResult: {
+            totalFiles: 1,
+            totalCharacters: 1,
+            totalTokens: 1,
+            fileCharCounts: {},
+            fileTokenCounts: {},
+            suspiciousFilesResults: [],
+            suspiciousGitDiffResults: [],
+            gitDiffTokenCount: 0,
+          },
+          config: mockConfig,
+        } satisfies DefaultActionRunnerResult;
+      });
+      vi.spyOn(remoteActionModule, 'downloadGithubRepoAsZip').mockImplementation(async () => {});
+```",feedback,process,0,1,unanswered,,,,
+2128384807,3120389334,GitHub Copilot,production,src/Platform/Microsoft.Testing.Platform.MSBuild/Resources/MSBuildResources.resx,False,Remove this blank line.,feedback,unclassified,0,0,answered,,,,
+2120543235,3109263417,GitHub Copilot,test,tests/genai/scorers/test_builtin_scorers.py,True,Done. Removed the redundant test #4 as it's already covered by test #2 which exercises the same underlying functionality with list guidelines.,feedback,unclassified,0,0,unanswered,,,,
+2130799037,3107487935,OpenAI Codex,test,tests/escaping.test.ts,True,"_⚠️ Potential issue_
+
+**Correct the test expectation for dotenv parsing.**
+
+The parsed value should equal the original SSM value with actual quotes, not escaped quotes.
+
+
+```diff
+-    expect(parsed.QUOTE_VAR).toBe('value\\""with\\""quotes');
++    expect(parsed.QUOTE_VAR).toBe('value""with""quotes');
+```
+
+
+<!-- suggestion_start -->
+
+<details>
+<summary>📝 Committable suggestion</summary>
+
+> ‼️ **IMPORTANT**
+> Carefully review the code before committing. Ensure that it accurately replaces the highlighted code, contains no missing lines, and has no issues with indentation. Thoroughly test & benchmark the code to ensure it meets the requirements.
+
+```suggestion
+  it('Should_EscapeQuotes_When_WritingEnvFile', async () => {
+    // Arrange
+    const paramMapContent = {
+      QUOTE_VAR: '/test/quotes',
+    };
+    fs.writeFileSync(mockMapPath, JSON.stringify(paramMapContent));
+
+    // Act
+    await run(mockMapPath, mockEnvFilePath);
+
+    // Assert
+    const envFileContent = fs.readFileSync(mockEnvFilePath, 'utf-8');
+    expect(envFileContent).toBe('QUOTE_VAR=value\\""with\\""quotes');
+    const parsed = dotenv.parse(envFileContent);
+    expect(parsed.QUOTE_VAR).toBe('value""with""quotes');
+  });
+```
+
+</details>
+
+<!-- suggestion_end -->
+
+<details>
+<summary>🤖 Prompt for AI Agents</summary>
+
+```
+In tests/escaping.test.ts around lines 86 to 101, the test incorrectly expects
+the parsed dotenv value to contain escaped quotes. Update the assertion to
+expect the parsed value to have actual quotes (unescaped) matching the original
+SSM value, ensuring the test reflects correct dotenv parsing behavior.
+```
+
+</details>
+
+<!-- This is an auto-generated comment by CodeRabbit -->",feedback,coverage,1,1,unanswered,,,,
+2103792483,3073761198,Devin,production,src/cli/cliRun.ts,True,"![medium](https://img.shields.io/badge/priority-medium-yellow)
+
+Is the `// Remote Repository Options` comment still required now that `.optionsGroup('Remote Repository Options')` is used?",feedback,unclassified,0,2,unanswered,,,,
+2248040709,3259102188,GitHub Copilot,test,packages/create-vite/__tests__/cli.spec.ts,False,set `_VITE_TEST_CLI` env var in `run` function,feedback,unclassified,0,0,answered,,,,
+2237528043,3270038594,GitHub Copilot,production,spec/requests/bulk_export_controller_spec.rb,False,We should duplicate this (or change it?) for the owner and staff users on the collection.,feedback,maintainability,0,1,answered,,,,
+2220345074,3250024089,Claude Code,test,frontend/src/lib/desktop/components/forms/Checkbox.test.ts,True,"_🛠️ Refactor suggestion_
+
+**Complete the children snippet test**
+
+The test for children rendering is incomplete and doesn't verify the actual behavior.
+
+
+
+```diff
+  it('renders with children snippet instead of label', () => {
+-    const { component } = render(Checkbox, {
++    render(Checkbox, {
+      props: {
+        checked: false,
+      },
++      children: () => 'Custom child content'
+    });
+
+-    // For now, just test that it doesn't throw with children
+-    expect(component).toBeTruthy();
++    expect(screen.getByText('Custom child content')).toBeInTheDocument();
+  });
+```
+
+
+> Committable suggestion skipped: line range outside the PR's diff.
+
+<details>
+<summary>🤖 Prompt for AI Agents</summary>
+
+```
+In frontend/src/lib/desktop/components/forms/Checkbox.test.ts between lines 136
+and 145, the test case for rendering with children only checks that the
+component exists but does not verify that the children are actually rendered.
+Update the test to pass a children snippet to the Checkbox component and add
+assertions to confirm that the children content is rendered correctly in the
+output.
+```
+
+</details>
+
+<!-- fingerprinting:phantom:poseidon:panther -->
+
+<!-- This is an auto-generated comment by CodeRabbit -->",feedback,confidence,0,1,unanswered,,,,
+2215985497,3243148644,Devin,production,apps/web/src/api/buster_rest/currency/queryRequests.ts,True,"style: Consider removing redundant async/await in .then() chain - async isn't needed here since we're just returning res.data
+
+```suggestion
+      return mainApiV2.get<Currency[]>('/dictionaries/currency').then((res) => res.data);
+```",feedback,unclassified,1,1,unanswered,,,,
+2099276380,3078854029,OpenAI Codex,production,alpha_factory_v1/demos/meta_agentic_tree_search_v0/run_demo.py,True,"Consider enhancing the docstring for the run() function to clarify that the 'seed' parameter can be provided via both the CLI and configuration file, and that a value of 0 is a valid seed. Optionally, log the seed value at runtime to aid in debugging reproducibility issues.",feedback,unclassified,1,0,unanswered,,,,
+2130767210,3119042017,GitHub Copilot,test,test/unit_test/docs/test_version_detection.py,True,"## EDITORCONFIG-CHECKER/editorconfig
+
+Trailing whitespace
+
+[Show more details](https://github.com/microsoft/Olive/security/code-scanning/16710)",feedback,superficial,0,1,unanswered,,,,
+2181720696,3197983907,GitHub Copilot,config,.github/policy.rego,False,Thanks for the update! Can we run `pre-commit run conftest --all-files` and fix violations?,feedback,unclassified,1,1,answered,,,,
+2210387613,3231652557,GitHub Copilot,production,pkg/cloud/aws/kinesis/naming_test.go,True,Updated realm configuration to use proper macro patterns. Fixed default realm pattern to use `{app_project}-{env}-{app_family}-{app_group}` and updated all tests to use the correct config key macros. (3b8efae),feedback,unclassified,0,0,unanswered,,,,
+2127486228,3101857129,OpenAI Codex,test,test/redteam/strategies/hex.test.ts,True,style: Missing metadata verification in other test cases. Add metadata checks to verify originalText is preserved.,feedback,unclassified,0,0,unanswered,,,,
+2138831483,3125458401,GitHub Copilot,test,test/unit_test/cli/test_run_pass.py,True,"## Unused import
+
+Import of 'patch' is not used.
+
+[Show more details](https://github.com/microsoft/Olive/security/code-scanning/17286)",feedback,superficial,0,1,unanswered,,,,
+2246804351,3275513847,GitHub Copilot,test,packages/react/src/SelectPanel/SelectPanel.test.tsx,True,"Removed the manual liveRegion setup/teardown code as requested. All 47 tests are still passing! The live-region system automatically handles creation and management, so the manual beforeEach/afterEach was unnecessary and potentially causing conflicts. Commit: 1a2b3c4",feedback,functional,0,0,unanswered,,,,
+2166986054,3171715437,Cursor,test,packages/db/tests/collection-lifecycle.test.ts,False,"I missed asStoreMap and asStoreArray when removing that - will fix.
+
+they are being removed as soon as we refactor the hooks in the next two days.",feedback,maintainability,0,0,unanswered,,,,
+2116709923,3102336394,OpenAI Codex,test,tests/trace/test_client_trace.py,False,Adjusted,feedback,unclassified,0,0,unanswered,,,,
+2188741023,3207163792,OpenAI Codex,production,app/fastlane/Fastfile,True,"_💡 Verification agent_
+
+<details>
+<summary>🧩 Analysis chain</summary>
+
+**Remove trailing comma and verify APP_NAME availability.**
+
+The switch to `APP_NAME` standardizes artifact naming, but there's a style issue to address.
+
+
+
+```diff
+-        title: ""#{APP_NAME}-#{package_version}-#{result[:build_number]}.ipa"",
++        title: ""#{APP_NAME}-#{package_version}-#{result[:build_number]}.ipa""
+```
+
+Also, ensure that `APP_NAME` is properly initialized before this point in the iOS lane execution.
+
+---
+
+🏁 Script executed:
+
+```shell
+#!/bin/bash
+# Description: Verify APP_NAME usage patterns and initialization order
+# Expected: APP_NAME should be defined before any lane usage
+
+# Check if APP_NAME is used consistently across the file
+rg -A 2 -B 2 ""APP_NAME"" --type ruby
+
+# Check for any remaining PROJECT_NAME usage in Slack notifications
+rg ""PROJECT_NAME.*title:"" --type ruby
+```
+
+Length of output: 75
+
+---
+
+🏁 Script executed:
+
+```shell
+#!/usr/bin/env bash
+# Find the Fastfile in the repo
+fastfile=$(fd Fastfile | head -n 1)
+echo ""Fastfile path: $fastfile""
+
+# Show the first 50 lines of Fastfile to locate APP_NAME definition
+echo ""---- Fastfile (lines 1–50) ----""
+sed -n '1,50p' ""$fastfile"" || echo ""Could not read $fastfile""
+
+# List every occurrence of APP_NAME in the repo
+echo ""---- APP_NAME occurrences ----""
+rg -n ""APP_NAME"" --color never .
+
+# List every occurrence of PROJECT_NAME in the repo
+echo ""---- PROJECT_NAME occurrences ----""
+rg -n ""PROJECT_NAME"" --color never .
+```
+
+Length of output: 3583
+
+---
+
+
+
+</details>
+
+**Remove trailing comma and confirm APP_NAME initialization**
+
+Great news—`APP_NAME` is defined at the top of `app/fastlane/Fastfile` (line 25) and there are no lingering `PROJECT_NAME` usages in any `title:` keys. To keep the style consistent, please remove the extra comma on line 74:
+
+```diff
+-        title: ""#{APP_NAME}-#{package_version}-#{result[:build_number]}.ipa"",
++        title: ""#{APP_NAME}-#{package_version}-#{result[:build_number]}.ipa""
+```
+
+<!-- suggestion_start -->
+
+<details>
+<summary>📝 Committable suggestion</summary>
+
+> ‼️ **IMPORTANT**
+> Carefully review the code before committing. Ensure that it accurately replaces the highlighted code, contains no missing lines, and has no issues with indentation. Thoroughly test & benchmark the code to ensure it meets the requirements.
+
+```suggestion
+        title: ""#{APP_NAME}-#{package_version}-#{result[:build_number]}.ipa""
+```
+
+</details>
+
+<!-- suggestion_end -->
+
+<details>
+<summary>🧰 Tools</summary>
+
+<details>
+<summary>🪛 RuboCop (1.75.5)</summary>
+
+[convention] 74-74: Avoid comma after the last parameter of a method call.
+
+(Style/TrailingCommaInArguments)
+
+</details>
+
+</details>
+
+<details>
+<summary>🤖 Prompt for AI Agents</summary>
+
+```
+In app/fastlane/Fastfile at line 74, remove the trailing comma after the title
+string to maintain consistent style and avoid syntax issues. Confirm that
+APP_NAME is properly initialized at line 25 as noted, so no changes are needed
+there.
+```
+
+</details>
+
+<!-- This is an auto-generated comment by CodeRabbit -->
+
+<!-- fingerprinting:phantom:poseidon:panther -->",feedback,superficial,1,2,unanswered,,,,
+2140849996,3137753437,OpenAI Codex,production,.scripts/prepare_workflow.py,True,"_🛠️ Refactor suggestion_
+
+**Same hidden dependency for `wait_time_after_release`**
+
+Follow the same pattern as above for `button_up_template()` to avoid reliance on external globals.
+
+<details>
+<summary>🧰 Tools</summary>
+
+<details>
+<summary>🪛 Ruff (0.11.9)</summary>
+
+31-31: Missing return type annotation for public function `button_up_template`
+
+Add return type annotation: `str`
+
+(ANN201)
+
+---
+
+31-31: Missing type annotation for function argument `button_name`
+
+(ANN001)
+
+</details>
+<details>
+<summary>🪛 Pylint (3.3.7)</summary>
+
+[convention] 31-31: Missing function or method docstring
+
+(C0116)
+
+</details>
+
+</details>
+
+<details>
+<summary>🤖 Prompt for AI Agents</summary>
+
+```
+In .scripts/prepare_workflow.py around lines 31 to 38, the function
+button_up_template() uses the external global variable wait_time_after_release,
+creating a hidden dependency. Modify the function to accept
+wait_time_after_release as a parameter and use that parameter inside the
+function instead of relying on the external global variable.
+```
+
+</details>
+
+<!-- This is an auto-generated reply by CodeRabbit -->",feedback,maintainability,0,2,answered,,,,
+2099361131,3078642261,OpenAI Codex,production,internal-packages/workflow-designer-ui/src/header/ui/trigger-input-dialog.tsx,False,I'll work on https://github.com/giselles-ai/giselle/issues/896,feedback,unclassified,0,0,unanswered,,,,
+2172895491,3183932739,GitHub Copilot,test,packages/openapi3/test/security.test.ts,False,"This is a fine test to have in the `@typespec/openapi3` package. However, the change we made is in the `@typespec/http` package. Can you add a test to the `auth.test.ts` file in the `@typespec/http` package that confirms that oauth `scopes` don't contain duplicate scopes?",feedback,coverage,-1,1,answered,,,,
+2198620145,3220543847,OpenAI Codex,production,modules/webhooks/payoutCreated.js,True,"## Exception text reinterpreted as HTML
+
+[Exception text](1) is reinterpreted as HTML without escaping meta-characters.
+
+[Show more details](https://github.com/worknenjoy/gitpay/security/code-scanning/99)",feedback,unclassified,0,1,unanswered,,,,
+2242192288,3276368773,GitHub Copilot,production,pkg/blob/writer_blob.go,True,"Improved the error message from ""failed to read files"" to ""failed to blob fixtures"" as suggested. eb25bcd",feedback,unclassified,0,0,unanswered,,,,
+2110941229,3090570894,GitHub Copilot,test,tests/undefined_symbol_in_sdfg_test.py,False,"This is incorrect. The above program is a legitimate use case of undefined symbols. In fact, the undefined symbol should _not_ appear in the argument list. I am sorry to have caused confusion, but this test should succeed, and thus you should test both sdfg.validate() and sdfg.compile().",feedback,coverage,-1,0,unanswered,,,,
+2152395236,3150960964,GitHub Copilot,production,vscode/npm-package/install.ts,True,Changed to use `remainingRedirects` parameter with default value 3. The function now decrements the value on each recursive call and rejects when it reaches 0. Commit fc8a3dc,acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2229884956,3261572196,GitHub Copilot,test,tests/store/artifact/test_runs_artifact_repo.py,True,"Good suggestion! I've updated the test to set `return_value` directly in the `mock.patch` call, making the code more concise. The test still passes and verifies that `tracking_uri` is correctly passed as a keyword argument.",feedback,confidence,1,0,unanswered,,,,
+2202708531,3225420842,GitHub Copilot,test,test_checker_context_improvement.py,True,"````suggestion
+        problematic_tensor.float_data.extend([1.0, 2.0, 3.0, 4.0, 5.0, 6.0])
+
+        # Create a minimal graph with this problematic initializer
+````",feedback,unclassified,0,1,unanswered,,,,
+2143641792,3136071798,GitHub Copilot,test,packages/e2e-test-app-fabric/test/FlatListComponentTest.test.ts,False,@copilot delete line 130,feedback,directive,0,0,answered,,,,
+2191367130,3210323907,GitHub Copilot,production,eng/packages/plugins/client/Client.Plugin/src/Client.Plugin.csproj,True,"Refactored the .csproj file to eliminate repetition by using PropertyGroup, ItemDefinitionGroup, and a custom SharedVisitorSource item type. This avoids repeating LinkBase and CopyToOutputDirectory attributes. Commit 4bd615b",acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2130767174,3119042017,GitHub Copilot,test,test/unit_test/docs/test_version_detection.py,True,"## RUFF-FORMAT/format
+
+Run `lintrunner -a` to apply this patch.
+
+[Show more details](https://github.com/microsoft/Olive/security/code-scanning/16705)",feedback,unclassified,0,1,unanswered,,,,
+2112443153,3094607813,GitHub Copilot,production,azd,True,I've removed the executable file as requested in commit c4e64b7.,acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2183371019,3199867865,GitHub Copilot,production,src/Components/Components/src/IPersistentComponentStateSerializer.cs,False,"IPersistentComponentStateSerializer<T> should be public, but IPersistentComponentStateSerializer should remain internal",feedback,unclassified,0,0,answered,,,,
+1896230331,2756921963,Devin,test,tests/openai_handlers/test_openai_integration.py,True,"⚠️  Potential Issue:<br>
+<strong>Model Change in OpenAI API Call</strong>
+The change from 'gpt-4o-mini' to 'gpt-3.5-turbo' in the OpenAI API call is significant and could impact the application's behavior and performance. It's crucial to verify that 'gpt-3.5-turbo' meets the requirements previously fulfilled by 'gpt-4o-mini'. If this change is intentional, ensure that all related documentation and test cases are updated accordingly. If not, consider reverting to 'gpt-4o-mini' or selecting a more suitable model.
+
+
+<details>
+<summary><strong>🔧 Suggested Code Diff: </strong></summary>
+
+```diff
+- model=""gpt-4o-mini"",
++ model=""gpt-3.5-turbo"",
+```
+
+</details>
+<!-- suggestion_start -->
+
+<details>
+<summary><strong>📝 Committable Code Suggestion</strong></summary>
+
+> ‼️ Ensure you review the code suggestion before committing it to the branch. Make sure it replaces the highlighted code, contains no missing lines, and has no issues with indentation. 
+
+```suggestion
+client = OpenAI(api_key=os.getenv(""OPENAI_API_KEY""))
+stream_result = client.chat.completions.create(
+    model=""gpt-3.5-turbo"",
+    messages=[{""role"": ""user"", ""content"": ""Hello from sync streaming""}],
+    stream=True
+)
+```
+
+</details>
+
+---
+
+",feedback,unclassified,1,2,unanswered,,,,
+2152762331,3154179065,OpenAI Codex,test,ingestr/main_test.py,True,Multiple similar test functions for different gzipped formats suggest a potential for parameterization to reduce code duplication and simplify maintenance.,feedback,maintainability,0,0,unanswered,,,,
+2206425126,3230759504,GitHub Copilot,test,onnxscript/rewriter/pattern_match_context_test.py,True,Dropped `test_backward_compatibility_with_no_context` test as requested. (7d6a738),feedback,unclassified,0,0,unanswered,,,,
+2161599458,3141230489,GitHub Copilot,test,ui/app/src/hooks/useComponentManager.test.tsx,False,Do we even run unit tests for the UI component today?,feedback,unclassified,0,1,answered,,,,
+2018951461,2932851977,Devin,docs,docs-v2/integrations/all/zoho.mdx,False,"Put this in a list form, if all columns aren't available",feedback,unclassified,0,0,unanswered,,,,
+2165921333,3158683531,Devin,test,frontend/internal-packages/agent/src/chat/workflow/workflow.test.ts,False,"@MH4GF 
+I did a little research to see if I could do without mock.
+The mock is required because module imports are resolved at load time, not runtime, causing import errors even when the mocked code isn't executed.
+
+I want to reconsider the overall test design to write tests that avoid mocking as much as possible.🙏",feedback,coverage,1,2,unanswered,,,,
+2176319912,3190424487,GitHub Copilot,test,scripts/boss_test.py,True,"Modified `upload_lambda(lambda_name, code_lines, config_lines=None)` to accept optional config lines and pass them to `create_lambda_tar()`. Now used for both normal upload and cron upload, eliminating the duplicate `upload_lambda_with_cron()` function. Commit e67e3ef",acknowledgement,n/a_acknowledgement,1,0,unanswered,,,,
+2112359853,3097466678,GitHub Copilot,production,src/core/library.c,False,"This logic is not correct. If the `OpenRefCount` is non-zero, it means there are other APIs using the library, so this call can immediately return success. That's not an error condition. If the ref is zero, then it needs to clean everything up (asynchronously).
+
+But several things in the cleanup path (e.g., `MsQuicRelease`) can block, and they need to be async too. Once only once they complete should the rest of the cleanup code run.",feedback,unclassified,0,1,answered,,,,
+2114733629,3084795018,GitHub Copilot,test,tests/page/page-aria-snapshot-ai.spec.ts,True,Replaced lines 260-261 with a `toContainYaml` call to match the pattern used elsewhere in the test in commit d14a0c1.,acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2146818072,3145625420,GitHub Copilot,test,src/test/java/com/github/_1c_syntax/bsl/languageserver/diagnostics/infrastructure/DiagnosticBeanPostProcessorTest.java,True,Updated the test to explicitly call postProcessBeforeInitialization instead of duplicating the logic. The test now properly invokes both postProcessBeforeInitialization and postProcessAfterInitialization methods. Commit: d60200f,feedback,functional,0,0,unanswered,,,,
+2145037963,3141112607,OpenAI Codex,production,autogpt_platform/backend/backend/blocks/transcribe_video.py,True,"The `test_output` field is defined as a single tuple, but the framework expects a list of (key, value) tuples, similar to other blocks. Wrap it in a list to ensure tests run correctly.
+```suggestion
+            test_output=[(""transcription"", ""example transcript"")],
+```",feedback,unclassified,0,1,unanswered,,,,
+2147012938,3146310469,GitHub Copilot,test,onnxscript/rewriter/basic_rules_test.py,True,"## Unnecessary delete statement in function
+
+Unnecessary deletion of local variable [rewritten_model](1) in function [test_cast_cast_rule](2).
+
+[Show more details](https://github.com/microsoft/onnxscript/security/code-scanning/17230)",feedback,unclassified,0,1,unanswered,,,,
+2221999553,3248210397,Claude Code,test,tests/test_client.py,True,"_💡 Verification agent_
+
+<details>
+<summary>🧩 Analysis chain</summary>
+
+**Fix missing attribute error.**
+
+The test is failing because `mcpm.commands.client` doesn't have a `profile_config_manager` attribute. This suggests either the import is missing or the attribute name is incorrect.
+
+
+
+Verify the correct import path and attribute name for profile_config_manager:
+
+---
+
+🏁 Script executed:
+
+```shell
+#!/bin/bash
+# Search for profile_config_manager usage in the client module
+rg -A 3 -B 3 ""profile_config_manager"" src/mcpm/commands/client.py
+
+# Also check what's actually imported/available
+ast-grep --pattern 'import $$$profile_config$$$'
+```
+
+Length of output: 116
+
+---
+
+🏁 Script executed:
+
+```shell
+#!/bin/bash
+# Search for any definition or reference of profile_config_manager in the repo
+rg -n ""profile_config_manager"" .
+
+# Search for the class name if it’s capitalized
+rg -n ""ProfileConfigManager"" .
+
+# List all imports in the client module to see what’s brought in
+grep -n ""^import"" src/mcpm/commands/client.py || true
+grep -n ""^from"" src/mcpm/commands/client.py || true
+```
+
+Length of output: 10108
+
+---
+
+🏁 Script executed:
+
+```shell
+#!/bin/bash
+# Display context around the monkeypatch in tests/test_client.py
+sed -n '500,550p' tests/test_client.py
+```
+
+Length of output: 2417
+
+---
+
+🏁 Script executed:
+
+```shell
+#!/bin/bash
+# Locate the edit_client function definition and its usage of ProfileConfigManager
+rg -n ""def edit_client"" src/mcpm/commands/client.py -A3 -B3
+
+# Search within the edit_client function body for ProfileConfigManager usage
+awk '/def edit_client/,/^$/ { print }' src/mcpm/commands/client.py | rg -A3 -B3 ""ProfileConfigManager""
+```
+
+Length of output: 756
+
+---
+
+
+
+</details>
+
+**Patch the correct target in tests/test_client.py**
+
+The client module doesn’t export a module-level `profile_config_manager`; it imports the class `ProfileConfigManager` and instantiates it locally (typically as `profile_manager`). Update your test to mock the constructor instead of a non-existent attribute.
+
+• File: `tests/test_client.py`, around line 522  
+  Replace:
+    ```python
+    monkeypatch.setattr(
+      ""mcpm.commands.client.profile_config_manager"",
+      mock_profile_config
+    )
+    ```
+  With, for example:
+    ```python
+    # Ensure every new ProfileConfigManager() returns our mock
+    monkeypatch.setattr(
+      ""mcpm.commands.client.ProfileConfigManager"",
+      Mock(return_value=mock_profile_config)
+    )
+    ```
+
+This change will cause any `ProfileConfigManager()` call within `mcpm.commands.client` to yield `mock_profile_config`, resolving the missing-attribute error.
+
+<details>
+<summary>🧰 Tools</summary>
+
+<details>
+<summary>🪛 GitHub Actions: Test & Validate</summary>
+
+[error] 522-522: Test 'test_client_edit_non_interactive_add_profile' failed: AttributeError - module 'mcpm.commands.client' has no attribute 'profile_config_manager'.
+
+</details>
+
+</details>
+
+<details>
+<summary>🤖 Prompt for AI Agents</summary>
+
+```
+In tests/test_client.py at line 522, the test incorrectly patches a non-existent
+module-level attribute 'profile_config_manager' in mcpm.commands.client.
+Instead, patch the constructor 'ProfileConfigManager' in mcpm.commands.client by
+using monkeypatch.setattr to replace 'mcpm.commands.client.ProfileConfigManager'
+with a Mock that returns mock_profile_config. This ensures that any
+instantiation of ProfileConfigManager within the client module returns the mock,
+fixing the attribute error.
+```
+
+</details>
+
+<!-- fingerprinting:phantom:poseidon:panther -->
+
+<!-- This is an auto-generated comment by CodeRabbit -->",feedback,functional,0,2,unanswered,,,,
+2200555388,3222017344,GitHub Copilot,test,clients/java/src/test/java/io/camunda/client/adhocsubprocess/AdHocSubProcessActivityActivationTest.java,True,"You're right - the activation test class should remain completely unchanged. In my latest approach, I've kept `AdHocSubProcessActivityActivationTest.java` exactly as it was, with no modifications to the activation functionality. Commit: b1c8f23",feedback,unclassified,0,0,unanswered,,,,
+2115617115,3102794320,OpenAI Codex,production,src/Xaml.Behaviors.Interactions/Core/CallMethodAsyncAction.cs,True,"Overload matching only checks the first parameter type; the second parameter type should also be validated (e.g., compare p[1].ParameterType with the expected parameter type) to avoid invalid method invocations.
+```suggestion
+                if (p.Length == 0 || (p.Length == 2 && p[0].ParameterType == typeof(object) && p[1].ParameterType == typeof(object)))
+```",feedback,unclassified,0,1,unanswered,,,,
+2101695210,3082070083,GitHub Copilot,production,component/block_cache/block_cache.go,True,I've renamed the CLI parameter from `--empty-dir-check` to `--block-cache-cleanup-on-start` to match the configuration parameter name. The flag is now specific to the block_cache component and binds to the `block_cache.cleanup-on-start` configuration parameter. The changes are in commit 356c6e2.,acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2242566717,3276590642,GitHub Copilot,test,projects/experimental/components/accordion/test/tui-expand-double-projection-fix.spec.ts,True,"Console.log statements should be removed from test code as they can clutter test output and are not necessary for automated testing.
+```suggestion
+      // Initial state (closed): Verify constructor count is as expected
+      
+      const initialCount = TestChild.constructorCallCount;
+      // Baseline constructor count recorded for comparison
+
+      // Open the accordion
+      component.accordionOpen.set(true);
+      fixture.detectChanges();
+      tick();
+      // After opening: Verify constructor count does not exceed expectations
+```",feedback,unclassified,0,1,unanswered,,,,
+2081289546,3051560458,Devin,test,packages/generator/__tests__/integration3.test.ts,True,style: Type assertion to 'any' suggests underlying type incompatibility that should be fixed properly rather than bypassed,feedback,coverage,0,0,unanswered,,,,
+2164951984,3168670762,GitHub Copilot,production,src/Aspire.Hosting/Publishing/PublishingActivityProgressReporter.cs,True,Fixed the accessibility inconsistency by making the `Reporter` properties public to match the public constructors. This ensures consistent API design where users can create instances directly and all public members are accessible. (173b7cb),feedback,unclassified,0,0,unanswered,,,,
+2157821143,3161407157,GitHub Copilot,test,onnx/test/printer_test.py,True,"````suggestion
+                text_output2 = printer.to_text(model2)
+                self.assertEqual(
+                    text_output,
+                    text_output2,
+                    f""Round-trip should be consistent for {type_name}"",
+                )
+
+````",feedback,unclassified,0,1,unanswered,,,,
+2173529774,3185333353,GitHub Copilot,test,tests/transforms/augmentation/test_random_affine.py,True,Changed to use `.data` instead of `.tensor`. Commit 92e622f,acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2174167610,3179515957,GitHub Copilot,production,packages/http-client-python/eng/scripts/setup/venvtools.py,True,"You're right, the `create_venv_with_package` function was not used anywhere in the http-client-python package. I've removed it in commit 3afd61e.",acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2143668344,3137763172,GitHub Copilot,docs,www/docs/src/content/docs/cli/registries.mdx,True,Updated the documentation text to be clearer as suggested. Commit 57684c2.,acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2180550449,3193524394,GitHub Copilot,test,tests/test_provider_aliesa.py,False,"运行和检查单元测试，super().setup() 兼容python2.7
+精简不必要的重复测试",feedback,functional,0,0,answered,,,,
+2216904845,3244348773,Devin,production,apps/api/libs/handlers/src/metrics/color_palette_helpers.rs,True,logic: Query returns config from first user found in org. Consider fetching from org admin or using consistent user (e.g. oldest member) for predictable results.,feedback,unclassified,1,0,unanswered,,,,
+2154016002,3153767187,GitHub Copilot,production,src/Framework/Traits.cs,False,I also did it already ;),feedback,unclassified,0,0,unanswered,,,,
+2183382836,3200093045,GitHub Copilot,production,python/paddle/jit/sot/utils/paddle_api_config.py,False,@copilot 这里的 `create_tensor_methods_getter` 是不是没有单独存在的必要了？,feedback,unclassified,0,0,answered,,,,
+2194327691,3214876564,Claude Code,production,packages/core/src/runtime.ts,True,"[nitpick] Extract this magic number into a class‐level static constant or configuration to avoid duplication and make the limit easy to adjust.
+```suggestion
+
+```",feedback,maintainability,0,1,unanswered,,,,
+2029334413,2973011621,Devin,test,apps/api/src/__tests__/snips/crawl.test.ts,False,"These tests are worthless. Replace them with just one that's `delay parameter works`. Use a small limit of 3 and a delay of 5. Just do await crawl, no need to check the response, the lib wrapper already expects the crawl to succeed.",feedback,coverage,0,0,unanswered,,,,
+2115842790,3102336394,OpenAI Codex,test,tests/trace/test_client_trace.py,False,Could use a set comprehension here instead of making a list and converting.,feedback,functional,0,0,answered,,,,
+2222508950,3250024089,Claude Code,test,frontend/src/lib/desktop/components/forms/DateRangePicker.test.ts,True,"_💡 Verification agent_
+
+<details>
+<summary>🧩 Analysis chain</summary>
+
+**Fix systematic syntax errors throughout the test file.**
+
+The file contains numerous syntax errors with malformed object literals. The pattern of errors includes:
+- Extra commas before closing braces
+- Malformed object destructuring in function calls
+- Missing async keywords where await is used
+
+
+
+
+
+
+
+The file needs systematic cleanup of object literals and async/await usage to make the tests executable.
+
+---
+
+🏁 Script executed:
+
+```shell
+#!/bin/bash
+# Check for syntax issues in the test file
+echo ""Checking for syntax errors in DateRangePicker.test.ts...""
+
+# Look for malformed object patterns
+rg ""renderDateRangePicker\(\s*\{[^}]*,\s*\}\s*,"" frontend/src/lib/desktop/components/forms/DateRangePicker.test.ts -A 2 -B 2
+
+# Check for await usage without async
+rg ""await.*user\.type"" frontend/src/lib/desktop/components/forms/DateRangePicker.test.ts -B 5
+```
+
+Length of output: 1385
+
+---
+
+
+
+</details>
+
+**Fix systematic syntax errors in DateRangePicker tests**
+
+Please address the following in frontend/src/lib/desktop/components/forms/DateRangePicker.test.ts (lines 97–290):
+
+• Malformed `renderDateRangePicker` calls  
+  - Remove the stray leading comma and supply a proper first argument.  
+    • Change  
+      ```diff
+      - renderDateRangePicker(, { onChange, });
+      + renderDateRangePicker(undefined, { onChange });
+      ```  
+    • Similarly, for presets or showPresets cases:  
+      ```diff
+      - renderDateRangePicker(, { presets: customPresets });
+      + renderDateRangePicker(undefined, { presets: customPresets });
+      ```  
+• Trailing commas before closing parens  
+  - Drop extra commas in calls like  
+    ```diff
+    - renderDateRangePicker({ disabled: true },);
+    + renderDateRangePicker({ disabled: true });
+    ```  
+• Ensure async test callbacks  
+  - Every test that uses `await` must be declared `async () =>`.  
+    ```diff
+    - it('clears dates when clear button is clicked', () => {
+    + it('clears dates when clear button is clicked', async () => {
+    ```  
+• Consistent `userEvent` setup  
+  - Before any `await user.type(...)`, add  
+    ```ts
+    const user = userEvent.setup({ delay: null });
+    ```  
+
+After applying these patterns throughout the file, re-run the suite to confirm all syntax errors are resolved and tests execute correctly.
+
+<details>
+<summary>🧰 Tools</summary>
+
+<details>
+<summary>🪛 Biome (1.9.4)</summary>
+
+[error] 103-103: Expected an expression but instead found '}'.
+
+Expected an expression here.
+
+
+(parse)
+
+---
+
+[error] 112-112: Expected a statement but instead found '})'.
+
+Expected a statement here.
+
+
+(parse)
+
+---
+
+[error] 146-146: Expected an expression but instead found ','.
+
+Expected an expression here.
+
+
+(parse)
+
+---
+
+[error] 182-182: Expected an expression but instead found ','.
+
+Expected an expression here.
+
+
+(parse)
+
+---
+
+[error] 192-192: Expected an expression but instead found ','.
+
+Expected an expression here.
+
+
+(parse)
+
+---
+
+[error] 207-207: Expected an expression but instead found '}'.
+
+Expected an expression here.
+
+
+(parse)
+
+---
+
+[error] 210-210: Expected a statement but instead found '})'.
+
+Expected a statement here.
+
+
+(parse)
+
+---
+
+[error] 221-221: Expected an expression but instead found '}'.
+
+Expected an expression here.
+
+
+(parse)
+
+---
+
+[error] 229-229: Expected a statement but instead found '})'.
+
+Expected a statement here.
+
+
+(parse)
+
+---
+
+[error] 237-237: Expected an expression but instead found '}'.
+
+Expected an expression here.
+
+
+(parse)
+
+---
+
+[error] 240-240: Expected a statement but instead found '})'.
+
+Expected a statement here.
+
+
+(parse)
+
+---
+
+[error] 245-245: Expected an expression but instead found '}'.
+
+Expected an expression here.
+
+
+(parse)
+
+---
+
+[error] 250-250: Expected a statement but instead found '})'.
+
+Expected a statement here.
+
+
+(parse)
+
+---
+
+[error] 255-255: Expected an expression but instead found '}'.
+
+Expected an expression here.
+
+
+(parse)
+
+---
+
+[error] 262-262: Expected a statement but instead found '})'.
+
+Expected a statement here.
+
+
+(parse)
+
+---
+
+[error] 271-271: Expected an expression but instead found '}'.
+
+Expected an expression here.
+
+
+(parse)
+
+---
+
+[error] 281-281: Expected a statement but instead found '})'.
+
+Expected a statement here.
+
+
+(parse)
+
+---
+
+[error] 286-286: Expected an expression but instead found '}'.
+
+Expected an expression here.
+
+
+(parse)
+
+---
+
+[error] 289-289: Expected a statement but instead found '})'.
+
+Expected a statement here.
+
+
+(parse)
+
+---
+
+[error] 289-290: Expected a statement but instead found '})'.
+
+Expected a statement here.
+
+
+(parse)
+
+---
+
+[error] 108-108: This variable is used before its declaration.
+
+The variable is declared here:
+
+
+(lint/correctness/noInvalidUseBeforeDeclaration)
+
+---
+
+[error] 109-109: This variable is used before its declaration.
+
+The variable is declared here:
+
+
+(lint/correctness/noInvalidUseBeforeDeclaration)
+
+---
+
+[error] 110-110: This variable is used before its declaration.
+
+The variable is declared here:
+
+
+(lint/correctness/noInvalidUseBeforeDeclaration)
+
+---
+
+[error] 111-111: This variable is used before its declaration.
+
+The variable is declared here:
+
+
+(lint/correctness/noInvalidUseBeforeDeclaration)
+
+---
+
+[error] 257-257: Shouldn't redeclare 'startInput'. Consider to delete it or rename it.
+
+'startInput' is defined here:
+
+
+(lint/suspicious/noRedeclare)
+
+---
+
+[error] 258-258: Shouldn't redeclare 'endInput'. Consider to delete it or rename it.
+
+'endInput' is defined here:
+
+
+(lint/suspicious/noRedeclare)
+
+---
+
+[error] 260-260: This variable is used before its declaration.
+
+The variable is declared here:
+
+
+(lint/correctness/noInvalidUseBeforeDeclaration)
+
+---
+
+[error] 261-261: This variable is used before its declaration.
+
+The variable is declared here:
+
+
+(lint/correctness/noInvalidUseBeforeDeclaration)
+
+---
+
+[error] 273-273: Shouldn't redeclare 'startInput'. Consider to delete it or rename it.
+
+'startInput' is defined here:
+
+
+(lint/suspicious/noRedeclare)
+
+---
+
+[error] 274-274: Shouldn't redeclare 'endInput'. Consider to delete it or rename it.
+
+'endInput' is defined here:
+
+
+(lint/suspicious/noRedeclare)
+
+</details>
+
+</details>
+
+<details>
+<summary>🤖 Prompt for AI Agents</summary>
+
+```
+In frontend/src/lib/desktop/components/forms/DateRangePicker.test.ts between
+lines 97 and 290, fix syntax errors by removing stray leading commas in
+renderDateRangePicker calls and providing proper first arguments where missing,
+eliminate trailing commas before closing parentheses in function calls, declare
+all test callbacks using async when they contain await expressions, and ensure
+userEvent is consistently set up with const user = userEvent.setup({ delay: null
+}) before any await user.type calls. Apply these corrections throughout the file
+and then rerun tests to verify syntax issues are resolved.
+```
+
+</details>
+
+<!-- fingerprinting:phantom:poseidon:panther -->
+
+<!-- This is an auto-generated comment by CodeRabbit -->",feedback,superficial,1,3,unanswered,,,,
+2154509549,3152174737,GitHub Copilot,production,src/hooks/useLongPress.ts,False,Should be imported as `keyboardOpen`,feedback,unclassified,0,0,answered,,,,
+2219607600,3234226080,Cursor,production,src/commands/mobile_app/upload.rs,False,"
+```suggestion
+                .help(HELP_TEXT)
+```",code_suggestion,n/a_code_suggestion,0,1,unanswered,,,,
+2235786472,3262413935,GitHub Copilot,production,src/TestFramework/TestFramework/Assertions/Assert.AreEqual.cs,False,">  and adding 2 more to the length.
+
+here I mean: the reported lenght is correct, it is 12 chars,
+
+but the printed string is longer
+
+""...aaaaaaaaaab"".length = 14",feedback,unclassified,0,0,unanswered,,,,
+2167045091,3173697083,GitHub Copilot,production,tools/apiview/parsers/csharp-api-parser/CSharpAPIParser/TreeToken/CodeFileBuilder.cs,True,The logic for checking explicit interface implementations is duplicated across projects. Consider refactoring this functionality into a shared helper or common base class to enhance maintainability.,feedback,maintainability,1,0,unanswered,,,,
+2173527192,3185333353,GitHub Copilot,test,tests/transforms/augmentation/test_random_affine.py,False,Call it `transform`.,feedback,unclassified,0,0,answered,,,,
+2157454016,3158220791,GitHub Copilot,test,tools/pylint-extensions/azure-pylint-guidelines-checker/tests/test_pylint_custom_plugins.py,False,we already have a setup class scope function in this tests class,feedback,functional,0,0,answered,,,,
+2096360361,3074788987,GitHub Copilot,docs,README.md,True,"I've updated the date for the .NET 10 entry to ""November 2025"" as requested. Commit: a5cdfaf",acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+1896256468,2756921963,Devin,test,tests/openai_handlers/test_openai_integration.py,True,"⚠️  Potential Issue:<br>
+<strong>Review Change in OpenAI Model Parameter</strong>
+The change from 'gpt-4o-mini' to 'gpt-3.5-turbo' in the OpenAI API call should be carefully reviewed. This modification can significantly impact the test's behavior and results, as different models may have varying capabilities and performance characteristics. Ensure that 'gpt-3.5-turbo' aligns with the test's objectives and requirements. If the change is intentional, document the rationale behind this decision to maintain clarity for future reference.
+
+
+<details>
+<summary><strong>🔧 Suggested Code Diff: </strong></summary>
+
+```diff
+- model=""gpt-4o-mini"",
++ model=""gpt-3.5-turbo"",
+```
+
+</details>
+<!-- suggestion_start -->
+
+<details>
+<summary><strong>📝 Committable Code Suggestion</strong></summary>
+
+> ‼️ Ensure you review the code suggestion before committing it to the branch. Make sure it replaces the highlighted code, contains no missing lines, and has no issues with indentation. 
+
+```suggestion
+def sync_stream():
+    client = OpenAI(api_key=os.getenv(""OPENAI_API_KEY""))
+    stream_result = client.chat.completions.create(
+        model=""gpt-3.5-turbo"",
+        messages=[{""role"": ""user"", ""content"": ""Hello from sync streaming""}],
+        stream=True
+    )
+```
+
+</details>
+
+---
+
+",feedback,unclassified,1,2,unanswered,,,,
+2153018468,3153811253,OpenAI Codex,production,packages/nx/src/tasks-runner/is-tui-enabled.ts,True,"**Claude finished @FrozenPandaz's task** —— [View job](https://github.com/nrwl/nx/actions/runs/15716310700)
+
+---
+### Todo List
+- [x] Read the target file to understand current structure
+- [x] Identify the warning on line 44 that needs removal
+- [x] Locate the outputStyle logic and !isCapable block
+- [x] Move the logic as requested by the reviewer
+- [x] Commit changes to the PR branch
+
+### Changes Made
+Removed the warning from the tui flag logic and moved the entire tui logic block to be positioned right after the `!isCapable` check, as requested. The logic now flows more naturally:
+
+1. Check if environment is capable of TUI
+2. If not capable, return false immediately
+3. Then check tui CLI flag (without the warning)
+4. Then check outputStyle logic
+
+**Commit:** [`61d54e7`](https://github.com/nrwl/nx/commit/61d54e7072754936719303e3607e89a5add81c17)
+
+---",feedback,functional,0,1,unanswered,,,,
+2172821048,3183936442,GitHub Copilot,production,src/TestContainers/dotnet/AzureKeyVaultEmulatorContainer.cs,True,Converted `StopAsync()` method to lambda expression in commit 219c262.,acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2211650176,3237401041,Cursor,production,packages/database/src/index.ts,True,logic: Remove misleading technical statement about 'nate_love_index'. Could confuse developers about actual database structure.,feedback,unclassified,0,0,unanswered,,,,
+1925931042,2802417432,Devin,test,tests/crew_test.py,False,"Why are you doing `[mock_first, mock_second, mock_first]` instead of `[mock_first, mock_second, mock_conditional_task]
+
+You aren't even really testing the conditional task at all. You also aren't checking that the conditional task is properly using the previous output.
+
+The way you could update this task is to create 3 task:
+- Task 1: regular task
+- Task 2: Conditional Task where the condition is never met
+- Task 3: Conditional task where the condition is met.
+
+In this test, you want to make sure that task 3 is getting the previous output from task 1 because that was the last successfully executed task.",feedback,confidence,-1,1,unanswered,,,,
+2142971059,3140483943,GitHub Copilot,test,tests/codegen/gpu_memcpy_test.py,False,"@copilot I don't think this test works. You should explicitly put it inside of a GPU_Device map.
+
+maybe try using the NumPy frontend and `for i in dace.map[0:N] @ dace.ScheduleType.GPU_Device:`",feedback,unclassified,0,0,answered,,,,
+2220348176,3250024089,Claude Code,test,frontend/src/lib/desktop/components/forms/ToggleField.test.ts,True,"_🛠️ Refactor suggestion_
+
+**Complete the disabled state test**
+
+The test for disabled state should verify that the `onUpdate` callback is not called when attempting to interact with a disabled toggle.
+
+
+```diff
+ it('does not call onUpdate when disabled', async () => {
+   const onUpdate = vi.fn();
+
+   render(ToggleField, {
+     props: {
+       label: 'Test Toggle',
+       value: false,
+       onUpdate,
+       disabled: true,
+     },
+   });
+
+   const toggle = screen.getByRole('checkbox');
+
+-  // Disabled checkboxes don't trigger click events properly
+   expect(toggle).toBeDisabled();
++  
++  // Attempt to click the disabled toggle
++  await fireEvent.click(toggle);
++  
++  // Verify onUpdate was not called
++  expect(onUpdate).not.toHaveBeenCalled();
+ });
+```
+
+<!-- suggestion_start -->
+
+<details>
+<summary>📝 Committable suggestion</summary>
+
+> ‼️ **IMPORTANT**
+> Carefully review the code before committing. Ensure that it accurately replaces the highlighted code, contains no missing lines, and has no issues with indentation. Thoroughly test & benchmark the code to ensure it meets the requirements.
+
+```suggestion
+  it('does not call onUpdate when disabled', async () => {
+    const onUpdate = vi.fn();
+
+    render(ToggleField, {
+      props: {
+        label: 'Test Toggle',
+        value: false,
+        onUpdate,
+        disabled: true,
+      },
+    });
+
+    const toggle = screen.getByRole('checkbox');
+
+    expect(toggle).toBeDisabled();
+
+    // Attempt to click the disabled toggle
+    await fireEvent.click(toggle);
+
+    // Verify onUpdate was not called
+    expect(onUpdate).not.toHaveBeenCalled();
+  });
+```
+
+</details>
+
+<!-- suggestion_end -->
+
+<details>
+<summary>🤖 Prompt for AI Agents</summary>
+
+```
+In frontend/src/lib/desktop/components/forms/ToggleField.test.ts around lines
+119 to 136, the test for the disabled toggle currently only checks that the
+toggle is disabled but does not verify that the onUpdate callback is not called.
+Update the test to simulate a user interaction (such as clicking the toggle) and
+then assert that the onUpdate mock function has not been called, ensuring the
+disabled state prevents updates.
+```
+
+</details>
+
+<!-- fingerprinting:phantom:medusa:lion -->
+
+<!-- This is an auto-generated comment by CodeRabbit -->",feedback,maintainability,1,1,unanswered,,,,
+1966445231,2870515513,Devin,test,test/pain/001/swift-credit-payment-initiation.test.ts,False,"Account needs to be there. In fact, validate it is. ",feedback,unclassified,0,0,unanswered,,,,
+2221999539,3248210397,Claude Code,test,tests/test_client.py,True,"_⚠️ Potential issue_
+
+**Mock integration failure in set_servers test.**
+
+Similar to the edit tests, `update_servers` is expected to be called but isn't, suggesting the non-interactive client logic isn't completing successfully.
+
+
+
+This pattern appears across multiple test files, indicating a systemic issue with the non-interactive command implementations.
+
+<details>
+<summary>🧰 Tools</summary>
+
+<details>
+<summary>🪛 GitHub Actions: Test & Validate</summary>
+
+[error] 498-498: Test 'test_client_edit_non_interactive_set_servers' failed: mock 'update_servers' was expected to be called once but was called 0 times.
+
+</details>
+
+</details>
+
+<details>
+<summary>🤖 Prompt for AI Agents</summary>
+
+```
+In tests/test_client.py at line 498, the test expects
+mock_client_manager.update_servers to be called once, but it is not, indicating
+the non-interactive client logic is not completing as expected. Review the test
+setup and the code path to ensure that the update_servers method is triggered
+during the test execution. Fix the test or the code so that update_servers is
+properly called, enabling the assertion to pass.
+```
+
+</details>
+
+<!-- fingerprinting:phantom:poseidon:panther -->
+
+<!-- This is an auto-generated comment by CodeRabbit -->",feedback,confidence,0,2,unanswered,,,,
+2097436595,3075994560,GitHub Copilot,test,tests/playwright-test/ui-mode-trace.spec.ts,False,"make it a proper annotation, like here: https://github.com/microsoft/playwright/blob/9b9c300c297aa27c26c9fb36471a72e5cfe7506a/tests/playwright-test/ui-mode-trace.spec.ts#L154",feedback,unclassified,0,0,answered,,,,
+2191065356,3078444990,OpenAI Codex,test,test/providers/simulatedUser.test.ts,False,Does the behavior of simulated user change / did you test it? ,feedback,unclassified,0,1,unanswered,,,,
+2216412421,3132024225,OpenAI Codex,test,tests/integration/cartography/intel/aws/ec2/test_ec2_snapshots.py,False,"Good thinking, though I figured I'd leave the existing tests as-is to show that this PR does not break any existing functionality",feedback,functional,0,0,unanswered,,,,
+2182142496,3198393576,GitHub Copilot,test,lib/cosmos-db/cosmos-db.utils.spec.ts,True,This test expectation has been updated in commit 23141cb to match the hardcoded fallback format.,acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2136908352,3130921190,GitHub Copilot,docs,doc/codegen/extending_modular_codegen.md,True,Removed the LLVM IR example in favor of the more pedagogical OpenCL example. See commit 4f14e86.,acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2209435438,3231720206,GitHub Copilot,test,qa/acceptance-tests/src/test/java/io/camunda/it/nodb/NoSecondaryStorageTest.java,False,Remove this note,feedback,directive,0,0,answered,,,,
+2223181463,3250024089,Claude Code,test,frontend/src/lib/desktop/components/ui/ErrorAlert.test.ts,True,"_🧹 Nitpick (assertive)_
+
+**Rename variable to avoid shadowing (consistent with other instances).**
+
+Another instance of the `alert` variable shadowing the global function.
+
+```diff
+-      const alert = screen.getByRole('alert');
+-      expect(alert).toHaveClass(`alert-${type}`);
++      const alertElement = screen.getByRole('alert');
++      expect(alertElement).toHaveClass(`alert-${type}`);
+```
+
+<!-- suggestion_start -->
+
+<details>
+<summary>📝 Committable suggestion</summary>
+
+> ‼️ **IMPORTANT**
+> Carefully review the code before committing. Ensure that it accurately replaces the highlighted code, contains no missing lines, and has no issues with indentation. Thoroughly test & benchmark the code to ensure it meets the requirements.
+
+```suggestion
+      const alertElement = screen.getByRole('alert');
+      expect(alertElement).toHaveClass(`alert-${type}`);
+```
+
+</details>
+
+<!-- suggestion_end -->
+
+<details>
+<summary>🤖 Prompt for AI Agents</summary>
+
+```
+In frontend/src/lib/desktop/components/ui/ErrorAlert.test.ts at lines 32-33, the
+variable named 'alert' shadows the global alert function, which can cause
+confusion and errors. Rename the variable to a more specific name like
+'alertElement' or 'alertNode' to avoid shadowing and maintain consistency with
+other instances in the codebase.
+```
+
+</details>
+
+<!-- fingerprinting:phantom:poseidon:panther -->
+
+<!-- This is an auto-generated comment by CodeRabbit -->",feedback,superficial,1,1,unanswered,,,,
+2222351044,3248210397,Claude Code,test,tests/test_client.py,True,"_🛠️ Refactor suggestion_
+
+**Add method call verification.**
+
+The test doesn't verify that the server removal operation actually occurs. Consider adding assertions to confirm that the appropriate client manager methods are called when removing servers.
+
+
+
+Add verification like:
+```diff
++    # Verify that the removal was attempted
++    mock_client_manager.update_servers.assert_called()
+```
+
+<!-- suggestion_start -->
+
+<details>
+<summary>📝 Committable suggestion</summary>
+
+> ‼️ **IMPORTANT**
+> Carefully review the code before committing. Ensure that it accurately replaces the highlighted code, contains no missing lines, and has no issues with indentation. Thoroughly test & benchmark the code to ensure it meets the requirements.
+
+```suggestion
+def test_client_edit_non_interactive_remove_server(monkeypatch):
+    """"""Test removing servers from a client non-interactively.""""""
+    # Mock client manager with existing server
+    mock_client_manager = Mock()
+    mock_client_manager.is_client_installed = Mock(return_value=True)
+    mock_client_manager.config_path = ""/path/to/config.json""
+    mock_client_manager.get_servers.return_value = {""existing-server"": Mock()}
+    mock_client_manager.update_servers.return_value = None
+
+    monkeypatch.setattr(""mcpm.commands.client.ClientRegistry.get_client_manager"", Mock(return_value=mock_client_manager))
+    monkeypatch.setattr(""mcpm.commands.client.ClientRegistry.get_client_info"", Mock(return_value={""name"": ""Cursor""}))
+
+    # Mock GlobalConfigManager
+    mock_global_config = Mock()
+    mock_global_config.list_servers.return_value = {""existing-server"": Mock(description=""Existing server"")}
+    monkeypatch.setattr(""mcpm.commands.client.global_config_manager"", mock_global_config)
+
+    # Force non-interactive mode
+    monkeypatch.setattr(""mcpm.commands.client.is_non_interactive"", lambda: True)
+
+    runner = CliRunner()
+    result = runner.invoke(edit_client, [
+        ""cursor"",
+        ""--remove-server"", ""existing-server""
+    ])
+
+    # The command runs without crashing, even if the server wasn't in the client
+    assert result.exit_code == 0
+    assert ""Cursor Configuration Management"" in result.output
+
+    # Verify that the removal was attempted
+    mock_client_manager.update_servers.assert_called()
+```
+
+</details>
+
+<!-- suggestion_end -->
+
+<details>
+<summary>🤖 Prompt for AI Agents</summary>
+
+```
+In tests/test_client.py around lines 440 to 469, the test for removing servers
+non-interactively lacks verification that the client manager's update_servers
+method is called to perform the removal. Add assertions after invoking the
+command to check that mock_client_manager.update_servers was called with the
+expected arguments reflecting the removal of the specified server. This confirms
+the removal operation is triggered as intended.
+```
+
+</details>
+
+<!-- fingerprinting:phantom:poseidon:panther -->
+
+<!-- This is an auto-generated comment by CodeRabbit -->",feedback,maintainability,1,1,unanswered,,,,
+2162028432,3168705723,GitHub Copilot,production,packages/core/src/fetch.ts,True,"<!-- genaiscript error milliseconds_seconds_confusion -->
+The delay is set as `retryAfterSeconds * 1000`, but `Math.min(maxDelay, retryAfterSeconds * 1000)` expects both values in milliseconds. If `maxDelay` is in milliseconds, this is correct, but if not, this could cause incorrect delay calculation. Please double-check the units for `maxDelay` and `retryAfterSeconds` to ensure consistency.
+
+
+> AI-generated content by [pr-review-commit](https://github.com/microsoft/genaiscript/actions/runs/15829867444) `milliseconds_seconds_confusion`  may be incorrect. Use reactions to eval.
+
+",feedback,unclassified,1,0,unanswered,,,,
+2103780129,3082820826,GitHub Copilot,test,tests/tracing/test_fluent_classmethod.py,False,@copilot Let's add this test under test_fluent.py,feedback,coverage,0,0,answered,,,,
+2196253794,3207348309,GitHub Copilot,test,smoke-tests/apps/HttpClients/src/smokeTest/java/com/microsoft/applicationinsights/smoketest/HttpClientTest.java,True,"Added SampleRate verification support to the assertion framework. Both `RequestAssert` and `DependencyAssert` now have `hasSampleRate(Float)` and `hasNoSampleRate()` methods. Updated the HttpClients test to include `hasNoSampleRate()` assertions for the request and all dependencies, maintaining full functional equivalence with the original test. (502cd58)",feedback,process,0,0,unanswered,,,,
+2178457346,3190424487,GitHub Copilot,test,scripts/boss_test.py,False,move this inside the  test_default_trigger function. ,feedback,unclassified,0,0,answered,,,,
+2218901738,3136595893,GitHub Copilot,production,integrations/sonarqube/client.py,False,"This is handled in the `_send_api_request`, lets remove,
+this also means there is a possibility of getting {} when you call `_send_api_request`, so lets handle the response properly",feedback,unclassified,0,0,unanswered,,,,
+2104845114,3082306112,OpenAI Codex,test,tests/unit/test_model.py,False,"```suggestion
+    cache = MagicMock(spec=BaseCache)
+```
+helps validate that the calls made match the interface",feedback,unclassified,0,1,answered,,,,
+2211825062,3236306681,GitHub Copilot,production,onnx/defs/nn/defs.cc,True,"Updated the output handling to use the `is_3d_input` boolean variable for consistency, matching the pattern used in the input processing section. Commit: 7673bc3",feedback,unclassified,0,0,unanswered,,,,
+2105031934,3084851925,GitHub Copilot,production,src/client/terminals/codeExecution/terminalReplWatcher.ts,False,@copilot Why is `py.test` part of this check?,feedback,unclassified,0,1,answered,,,,
+2221936056,3251944582,Cursor,test,packages/rooks/src/__tests__/useWebLocksApi.spec.tsx,True,"![medium](https://www.gstatic.com/codereviewagent/medium-priority.svg)
+
+It's generally better to avoid placing assertions directly inside mock implementations. This can make tests harder to debug, as the failure originates from within the mock rather than from a top-level assertion in the test body. The explicit check on line 208 is a much clearer way to verify the behavior.
+
+Simplifying the mock will improve the test's clarity and maintainability.
+
+```typescript
+mockNavigatorLocks.request.mockImplementation(
+  (name: string, options: any, callback: Function) => {
+    return callback();
+  }
+);
+```",feedback,maintainability,0,2,unanswered,,,,
+2180896885,3190424487,GitHub Copilot,test,scripts/boss_test.py,True,Moved the output file clearing to before the upload_lambda call as requested. The file is now cleared at line 274-277 before the upload happens.,feedback,functional,0,0,unanswered,,,,
+2223531679,3250546916,GitHub Copilot,test,test/unit_test/cli/test_optimize.py,True,"## PYLINT/W0212
+
+Access to a protected member _precision_to_bits of a client class (protected-access)
+See [protected-access](https://pylint.pycqa.org/en/latest/user_guide/messages/warning/protected-access.html).
+
+[Show more details](https://github.com/microsoft/Olive/security/code-scanning/18109)",feedback,unclassified,0,1,unanswered,,,,
+2171608616,3144351823,GitHub Copilot,production,tests/msbuild/Xamarin.MacDev.Tasks.Tests/TaskTests/FilterStaticFrameworksTaskTest.cs,False,Write a proper Mach-O dynamic file instead of text as the executable.,feedback,functional,0,0,answered,,,,
+1993488242,2915901814,Devin,docs,docs/fix-issue-2356.md,False,I dont think this file is required?,feedback,unclassified,-1,2,unanswered,,,,
+2214023745,3240335886,OpenAI Codex,production,codex-rs/tui/src/app.rs,False,"This is slightly better because it results in holding the lock for a shorter amount of time.
+
+That extra level of scoping around the use of `self.pending_redraw.lock()` and `flag` ensures that after `*flag = true`, the lock is dropped.
+
+Also, `Arc::clone()` is less canonical than just invoking `.clone()`, in my experience.
+
+```suggestion
+        {
+            #[allow(clippy::unwrap_used)]
+            let mut flag = self.pending_redraw.lock().unwrap();
+            if *flag {
+                return;
+            }
+            *flag = true;
+        }
+
+        let tx = self.app_event_tx.clone();
+        let pending_redraw = &self.pending_redraw.clone();
+        thread::spawn(move || {
+            thread::sleep(REDRAW_DEBOUNCE);
+            tx.send(AppEvent::Redraw);
+            #[allow(clippy::unwrap_used)]
+            let mut f = pending.lock().unwrap();
+            *f = false;
+        });
+```",feedback,functional,0,2,unanswered,,,,
+2169987066,3179865924,GitHub Copilot,test,src/dotnet/APIView/ClientSPA/src/app/_components/review-nav/review-nav.component.spec.ts,True,Removed all tests for the client type highlighting feature as requested. The implementation remains intact. (7abaae0),feedback,unclassified,0,0,unanswered,,,,
+2141315590,3134422820,OpenAI Codex,test,libs/core/kiln_ai/adapters/data_gen/test_data_gen_task.py,True,"_🛠️ Refactor suggestion_
+
+**Use the enum, not a raw string, for `structured_output_mode`**
+
+`RunConfigProperties.structured_output_mode` is an `Enum`. Passing a raw string relies on Pydantic coercion and weakens static checks.
+
+```diff
+-from kiln_ai.datamodel.task import RunConfigProperties
++from kiln_ai.datamodel.task import RunConfigProperties
++from kiln_ai.datamodel.datamodel_enums import StructuredOutputMode
+...
+-            structured_output_mode=""unknown"",
++            structured_output_mode=StructuredOutputMode.unknown,
+```
+
+Apply the same change to every instantiation in this test module (lines 113-120, 262-268, 317-321).  
+
+
+
+Also applies to: 262-268, 317-321
+
+<details>
+<summary>🤖 Prompt for AI Agents</summary>
+
+```
+In libs/core/kiln_ai/adapters/data_gen/test_data_gen_task.py at lines 113-120,
+262-268, and 317-321, replace the raw string values assigned to
+RunConfigProperties.structured_output_mode with the corresponding Enum members.
+Import the Enum if not already imported, and update all instantiations in these
+line ranges to use the Enum constants instead of plain strings to improve type
+safety and static checks.
+```
+
+</details>
+
+<!-- This is an auto-generated comment by CodeRabbit -->",feedback,maintainability,0,2,unanswered,,,,
+1974627026,2886001243,Devin,test,apps/e2e/tests/js/contact-channels.test.ts,True,"No null check before accessing channels[0] - the array could be empty if no matching channels were found.
+
+---
+
+> *React with 👍 to tell me that this comment was useful, or 👎 if not (and I'll stop posting more comments like this in the future)*",feedback,functional,0,0,unanswered,,,,
+2137853977,3133111584,OpenAI Codex,docs,documentation/docs/develop/02-extensions/04-entries/manifest/path_stream/path_stream_display.mdx,True,"A summary of the edits CodeRabbit can apply:
+
+> Fix grammar and spelling issues in the path_stream_display.mdx documentation file by correcting 5 specific errors at lines 12, 17, 24, 26, and 30.
+
+
+
+A plan of each step that CodeRabbit will take in order to execute the edits for each file (with inline rough draft snippets):
+
+<details>
+<summary>✏️ documentation/docs/develop/02-extensions/04-entries/manifest/path_stream/path_stream_display.mdx</summary>
+
+On line 12, change ""visualised"" to ""visualized"" for consistency with American English spelling used elsewhere in the documentation. The line should read:
+```
+stream is visualized. This is useful for quest paths or when highlighting group
+```
+
+---
+
+On line 17, remove the extra ""is"" before ""must"" to correct the grammar error. The line should read:
+```
+A `PathStreamDisplayEntry` must expose two functions:
+```
+
+---
+
+On line 24, change ""should be customized if you want to change"" to ""can be customized to change"" for clearer and more concise wording. The line should read:
+```
+It keeps track of which paths are being displayed and can be customized to change the positioning of the path stream.
+```
+
+---
+
+On line 26, correct the spelling error by changing ""recieves"" to ""receives"". The line should read:
+```
+It receives a position every tick and needs to display this in a way to the player.
+```
+
+---
+
+On line 30, add a comma after ""In practice"" to improve readability and follow proper punctuation rules. The line should read:
+```
+stream and renders its positions. In practice, you only override the methods that
+```
+
+</details>
+
+- [ ] <!-- {""checkboxId"": ""32599f3c-a2a5-4bb9-b887-dee90db62b97"", ""radioGroupId"": ""edit-actions-group-2137848621""} --> ✅ Create PR with these edits
+- [x] <!-- {""checkboxId"": ""85e7c9f1-3a23-4b8e-9f25-d7a5b234a8c1"", ""radioGroupId"": ""edit-actions-group-2137848621""} --> 📌 Create commit in current branch
+- [ ] <!-- {""checkboxId"": ""6b3df8e2-79f5-4eb8-9d4a-c7d3a6a5f7b1"", ""radioGroupId"": ""edit-actions-group-2137848621""} --> 📋 Get copyable edits
+
+<!-- <agentComponentType>plan-edits</agentComponentType> -->
+
+<!-- <rawResChunk><rationale>
+The user requested specific grammar and spelling corrections in the documentation file path_stream_display.mdx at lines 12, 17, 24, 26, and 30. These corrections include changing ""visualised"" to ""visualized,"" removing an extraneous ""is,"" clarifying wording, fixing the spelling of ""receives,"" and adding a comma after ""In practice."" The current file path_stream_display.mdx is the exact file to edit for these changes.
+</rationale>
+<toEditFile>documentation/docs/develop/02-extensions/04-entries/manifest/path_stream/path_stream_display.mdx</toEditFile></rawResChunk> -->
+
+<!-- <rawResChunk><rationale>
+We need to ensure that the same grammar and spelling corrections aren’t needed in other related documentation files within the same `path_stream` directory (e.g., `index.mdx`). By scanning all MDX files there for the British spelling “visualised,” the misspelling “recieves,” and instances of “In practice” (to verify comma usage), we can catch any similar issues and apply consistent fixes across the entire set of path‐stream docs.
+</rationale>
+
+<generated_script>
+```shell
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Directory containing the path_stream docs
+DOC_DIR=""documentation/docs/develop/02-extensions/04-entries/manifest/path_stream""
+
+echo ""1) List all MDX files in the path_stream docs:""
+fd --extension mdx --base-path ""$DOC_DIR""
+
+echo
+echo ""2) Search for British spelling 'visualised':""
+rg --color=always -n ""visualised"" ""$DOC_DIR""
+
+echo
+echo ""3) Search for misspelling 'recieves':""
+rg --color=always -n ""recieves"" ""$DOC_DIR""
+
+echo
+echo ""4) Find lines starting with 'In practice' that may lack a comma:""
+# Use PCRE negative lookahead to find ""In practice"" not followed by a comma
+rg --color=always -nP ""In practice(?!,)"" ""$DOC_DIR""
+```
+</generated_script></rawResChunk> -->
+
+<!-- <rawResChunk><fileAction>
+<fileActionSummary>Fix grammar and spelling issues in the path_stream_display.mdx documentation file by correcting 5 specific errors at lines 12, 17, 24, 26, and 30.</fileActionSummary>
+<file_name>documentation/docs/develop/02-extensions/04-entries/manifest/path_stream/path_stream_display.mdx</file_name>
+<type>Modify</type>
+<start_line>12</start_line>
+<end_line>30</end_line>
+<steps>
+<step>
+<stepNumber>1</stepNumber>
+<generated_instruction>On line 12, change ""visualised"" to ""visualized"" for consistency with American English spelling used elsewhere in the documentation. The line should read:
+```
+stream is visualized. This is useful for quest paths or when highlighting group
+```</generated_instruction>
+</step>
+<step>
+<stepNumber>2</stepNumber>
+<generated_instruction>On line 17, remove the extra ""is"" before ""must"" to correct the grammar error. The line should read:
+```
+A `PathStreamDisplayEntry` must expose two functions:
+```</generated_instruction>
+</step>
+<step>
+<stepNumber>3</stepNumber>
+<generated_instruction>On line 24, change ""should be customized if you want to change"" to ""can be customized to change"" for clearer and more concise wording. The line should read:
+```
+It keeps track of which paths are being displayed and can be customized to change the positioning of the path stream.
+```</generated_instruction>
+</step>
+<step>
+<stepNumber>4</stepNumber>
+<generated_instruction>On line 26, correct the spelling error by changing ""recieves"" to ""receives"". The line should read:
+```
+It receives a position every tick and needs to display this in a way to the player.
+```</generated_instruction>
+</step>
+<step>
+<stepNumber>5</stepNumber>
+<generated_instruction>On line 30, add a comma after ""In practice"" to improve readability and follow proper punctuation rules. The line should read:
+```
+stream and renders its positions. In practice, you only override the methods that
+```</generated_instruction>
+</step>
+</steps>
+</fileAction></rawResChunk> -->
+
+<!-- This is an auto-generated reply by CodeRabbit -->",feedback,superficial,0,3,unanswered,,,,
+2182940209,3199574262,GitHub Copilot,config,.github/workflows/ci-release.yml,False,no need to run this on release,feedback,unclassified,0,0,unanswered,,,,
+2222569519,3250024089,Claude Code,test,frontend/src/lib/desktop/components/ui/EmptyState.test.ts,True,"_⚠️ Potential issue_
+
+**Fix syntax error in renderEmptyState call.**
+
+There's an extra comma and missing first argument that will cause a syntax error.
+
+
+```diff
+-    const { container } = renderEmptyState(, {
+-      props: {
++    const { container } = renderEmptyState({
+         id: 'test-empty-state',
+         'data-testid': 'empty-state',
+-    });
++    });
+```
+
+<!-- suggestion_start -->
+
+<details>
+<summary>📝 Committable suggestion</summary>
+
+> ‼️ **IMPORTANT**
+> Carefully review the code before committing. Ensure that it accurately replaces the highlighted code, contains no missing lines, and has no issues with indentation. Thoroughly test & benchmark the code to ensure it meets the requirements.
+
+```suggestion
+    const { container } = renderEmptyState({
+      id: 'test-empty-state',
+      'data-testid': 'empty-state',
+    });
+```
+
+</details>
+
+<!-- suggestion_end -->
+
+<details>
+<summary>🧰 Tools</summary>
+
+<details>
+<summary>🪛 Biome (1.9.4)</summary>
+
+[error] 109-109: Expected an expression but instead found ','.
+
+Expected an expression here.
+
+
+(parse)
+
+---
+
+[error] 113-113: expected `,` but instead found `)`
+
+Remove )
+
+(parse)
+
+---
+
+[error] 113-113: expected `,` but instead found `;`
+
+Remove ;
+
+(parse)
+
+</details>
+
+</details>
+
+<details>
+<summary>🤖 Prompt for AI Agents</summary>
+
+```
+In frontend/src/lib/desktop/components/ui/EmptyState.test.ts around lines 109 to
+113, the call to renderEmptyState has a syntax error due to an extra comma and a
+missing first argument. Remove the extra comma and provide the required first
+argument to renderEmptyState to fix the syntax error.
+```
+
+</details>
+
+<!-- fingerprinting:phantom:poseidon:panther -->
+
+<!-- This is an auto-generated comment by CodeRabbit -->
+
+✅ Addressed in commits c37a295 to 7031246",feedback,coverage,1,2,unanswered,,,,
+2232099019,3229096395,Cursor,test,apps/framework-cli-e2e/test/templates.test.ts,False,what if the test script is not sending fast enough and the framework does that in two batches?,feedback,unclassified,0,1,answered,,,,
+2212901373,3226501945,Devin,production,server/broadlistening/pipeline/services/llm.py,False,"question: これは自分がコードを追いきれていないのでわかっていないのですが、`request_to_openai` に引数が追加されましたが、以下の箇所では引数を渡していないように見えます 👀 
+こちらって、エラーにならないんでしょうか？
+
+https://github.com/digitaldemocracy2030/kouchou-ai/blob/1f410f9a6c8ffbf827d9f1c63a46f3ebc175808b/server/broadlistening/pipeline/services/category_classification.py#L119-L125
+",feedback,unclassified,0,0,answered,,,,
+2200369610,3222422496,Cursor,production,packages/rpc/src/query/utils.ts,True,"<!-- metadata:{""confidence"":7,""steps"":[{""text"":"""",""toolCalls"":[{""args"":{""command"":""grep -R \""escapeSqlString(\"" --line-number""},""toolName"":""executeCommand""}]},{""text"":"""",""toolCalls"":[{""args"":{""file"":""packages/rpc/src/query/types.ts"",""line"":1,""symbol"":""QueryFilters""},""toolName"":""goToDefinition""}]},{""text"":"""",""toolCalls"":[{""args"":{""command"":""grep -n \""getWhereClause(filters\"" -n packages/rpc/src/query/utils.ts""},""toolName"":""executeCommand""}]},{""text"":"""",""toolCalls"":[{""args"":{""command"":""grep -R \""noUnusedLocals\"" -n""},""toolName"":""executeCommand""}]},{""text"":"""",""toolCalls"":[{""args"":{""command"":""git --no-pager diff HEAD~1 -- packages/rpc/src/query/utils.ts""},""toolName"":""executeCommand""}]}]} -->
+The custom escaping only replaces single quotes, leaving other special characters (e.g. backslashes, newlines) unescaped and therefore still vulnerable to SQL-injection when this helper is used to interpolate values instead of relying on ClickHouse parameters",feedback,functional,0,0,unanswered,,,,
+2224703976,3255274706,Cursor,docs,apps/website/content/docs/hooks/useAsyncEffect.mdx,True,"![high](https://www.gstatic.com/codereviewagent/high-priority.svg)
+
+The cleanup function should close the WebSocket connection if it's open. The close() method is idempotent, so there's no need to check readyState.
+
+```
+    (webSocket) => {
+      // Cleanup function: close the WebSocket connection.
+      if (webSocket) {
+        // The close() method is idempotent, no need to check readyState.
+        webSocket.close();
+      }
+      setStatus('disconnected');
+    }
+```",feedback,unclassified,0,1,unanswered,,,,
+1903757376,2769973551,Devin,test,python/tests/test_example.py,True,"Code Consistency: The addition of the `COMPOSIO_API_KEY` to the environment variables in the test file aligns with changes in the main script, ensuring consistency in environment variable usage across the project. This change is necessary to maintain functionality and prevent potential runtime errors due to missing environment variables. 
+
+- **Consistency**: Ensures that both `OPENAI_API_KEY` and `COMPOSIO_API_KEY` are consistently used across the project.
+- **Functionality**: Prevents potential issues that could arise from missing environment variables, which are now required by the main script.
+
+This change is appropriate and necessary for the current project requirements. 👍
+
+
+
+---
+
+",feedback,unclassified,1,2,unanswered,,,,
+2200489667,3222017344,GitHub Copilot,test,clients/java/src/test/java/io/camunda/client/adhocsubprocess/AdHocSubProcessActivityActivationTest.java,False,Why change this class at all?,feedback,unclassified,0,1,answered,,,,
+1903152096,2768982424,Devin,test,tests/test_catalog.py,False,Also dynamically load this class to check if it exists in the import path,feedback,unclassified,0,0,unanswered,,,,
+2222508971,3250024089,Claude Code,test,frontend/src/lib/desktop/components/forms/NumberField.test.ts,True,"_🧹 Nitpick (assertive)_
+
+**Use Number.POSITIVE_INFINITY instead of global Infinity.**
+
+Following modern ES2015+ practices, use the Number namespace for infinity constants.
+
+
+
+```diff
+-    expect(onUpdate).not.toHaveBeenCalledWith(Infinity);
++    expect(onUpdate).not.toHaveBeenCalledWith(Number.POSITIVE_INFINITY);
+```
+
+<!-- suggestion_start -->
+
+<details>
+<summary>📝 Committable suggestion</summary>
+
+> ‼️ **IMPORTANT**
+> Carefully review the code before committing. Ensure that it accurately replaces the highlighted code, contains no missing lines, and has no issues with indentation. Thoroughly test & benchmark the code to ensure it meets the requirements.
+
+```suggestion
+    expect(onUpdate).not.toHaveBeenCalledWith(Number.POSITIVE_INFINITY);
+```
+
+</details>
+
+<!-- suggestion_end -->
+
+<details>
+<summary>🧰 Tools</summary>
+
+<details>
+<summary>🪛 Biome (1.9.4)</summary>
+
+[error] 379-379: Use Number.POSITIVE_INFINITY instead of the equivalent global.
+
+ES2015 moved some globals into the Number namespace for consistency.
+Safe fix: Use Number.POSITIVE_INFINITY instead.
+
+
+(lint/style/useNumberNamespace)
+
+</details>
+
+</details>
+
+<details>
+<summary>🤖 Prompt for AI Agents</summary>
+
+```
+In frontend/src/lib/desktop/components/forms/NumberField.test.ts at line 379,
+replace the use of the global Infinity constant with Number.POSITIVE_INFINITY to
+follow modern ES2015+ best practices. Update the expect statement to use
+Number.POSITIVE_INFINITY instead of Infinity.
+```
+
+</details>
+
+<!-- fingerprinting:phantom:poseidon:panther -->
+
+<!-- This is an auto-generated comment by CodeRabbit -->",feedback,superficial,1,2,unanswered,,,,
+2154587494,3154014605,OpenAI Codex,test,tests/benchmark-models/test_petab_benchmark_jax.py,False,"```suggestion
+import test_petab_benchmark as common
+```",code_suggestion,n/a_code_suggestion,0,1,unanswered,,,,
+2183211189,3155815373,GitHub Copilot,production,src/hyperlight_host/benches/benchmarks.rs,True,Updated to use `#![cfg(optimized_build)]` at the top of the file for cleaner code structure. This removes all individual cfg attributes while maintaining the same compile-time enforcement. Fixed in commit cbd9467.,acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2154426862,3156457181,Devin,test,test_ollama_integration.py,False,"update with  devstral:latest
+
+",feedback,unclassified,0,0,unanswered,,,,
+2176088964,3190059446,Cursor,production,scripts/update-authors.js,True,"## Regular expression injection
+
+This regular expression is constructed from a [command-line argument](1).
+
+[Show more details](https://github.com/langfuse/langfuse-docs/security/code-scanning/12)",feedback,unclassified,0,1,unanswered,,,,
+2230104442,3261926734,OpenAI Codex,test,app/tests/utils/proving/coseVerify.test.ts,True,"_💡 Verification agent_
+
+<details>
+<summary>🧩 Analysis chain</summary>
+
+**Missing critical test coverage for COSE security scenarios.**
+
+The current test suite lacks coverage for several important security and edge cases that are crucial for cryptographic verification:
+
+1. No tests for different algorithm types (currently hardcoded to 18)
+2. Missing tests for malformed COSE structures
+3. No validation of protected header parsing
+4. Missing tests for key curve compatibility
+5. No tests for signature format validation
+
+
+
+Let me verify what other COSE-related tests exist and what the actual implementation covers:
+
+---
+
+🏁 Script executed:
+
+```shell
+#!/bin/bash
+# Description: Check for existing COSE-related tests and implementation details
+
+# Find other COSE-related test files
+echo ""=== Other COSE test files ===""
+fd -e test.ts -e spec.ts | xargs grep -l ""cose\|COSE"" 2>/dev/null || echo ""No other COSE test files found""
+
+# Check the actual COSE implementation
+echo -e ""\n=== COSE implementation structure ===""
+fd -name ""cose*"" --type f | head -10
+
+# Look for algorithm support in the implementation
+echo -e ""\n=== Algorithm support in COSE implementation ===""
+rg -A 5 -B 5 ""defaultType|algorithm"" --type ts | head -20
+```
+
+Length of output: 2097
+
+---
+
+I’ll locate the COSE implementation to confirm what’s covered and whether those security scenarios are tested.
+
+---
+
+🏁 Script executed:
+
+```shell
+#!/bin/bash
+# Find all TypeScript files with “cose” in their name
+echo ""=== TS files with 'cose' in filename ===""
+fd 'cose' -e ts || echo ""No TS files with 'cose' in name""
+
+# Look for where `cose` is defined or exported
+echo -e ""\n=== Definitions of cose namespace/object ===""
+rg -n ""export\\s+(namespace|const|function)\\s+cose"" -t ts || echo ""No direct export of cose found""
+
+# Find all occurrences of `.sign.verify` in TS source (excluding tests)
+echo -e ""\n=== Usage of sign.verify in source ===""
+rg -n ""sign\\.verify"" -t ts --ignore-file 'app/tests/**' || echo ""No implementation calls of sign.verify found""
+```
+
+Length of output: 1020
+
+---
+
+I need to inspect the actual COSE verify implementation to see what edge cases it handles. Let’s pull in the code:
+
+---
+
+🏁 Script executed:
+
+```shell
+#!/bin/bash
+# Dump the COSE implementation for review
+cat app/src/utils/proving/cose.ts || echo ""cose.ts not found""
+```
+
+Length of output: 2974
+
+---
+
+
+
+</details>
+
+**Enhance COSE.Sign1 test coverage for edge cases**
+
+We currently only cover the happy- and unhappy-path for a single curve, but several critical scenarios are untested in app/tests/utils/proving/coseVerify.test.ts:
+
+- **Malformed COSE_Sign1 structure**  
+  Simulate `decode` returning a non-array or an array of length ≠ 4 → expect an “Invalid COSE_Sign1 format” error.  
+- **Odd-length signature buffer**  
+  Provide a signature whose byte-length is not divisible by 2 → expect an “Invalid signature length” error.  
+- **Curve compatibility**  
+  Test with a `p384` key (or any other supported curve) to ensure the implementation handles different `verifier.key.curve` values properly.  
+- **`defaultType` behavior**  
+  Currently unused in the code. Either add tests to document its (no-op) behavior or remove/implement branching on algorithm type when supporting multiple COSE header types.  
+- **Future protected-header validation**  
+  Once you add header parsing or enforce specific header fields, add tests for malformed or unexpected protected headers.  
+
+Addressing these will shore up our cryptographic safety net.
+
+<details>
+<summary>🤖 Prompt for AI Agents</summary>
+
+```
+In app/tests/utils/proving/coseVerify.test.ts around lines 18 to 42, add tests
+to cover edge cases missing from the current suite: simulate decode returning a
+non-array or an array with length not equal to 4 and expect an ""Invalid
+COSE_Sign1 format"" error; test with a signature buffer of odd byte-length and
+expect an ""Invalid signature length"" error; add tests using a verifier key with
+a different curve like p384 to verify curve compatibility; add tests to document
+the behavior of the defaultType option, whether as a no-op or with branching if
+implemented; and prepare for future protected-header validation by adding tests
+for malformed or unexpected protected headers once that logic is added.
+```
+
+</details>
+
+<!-- fingerprinting:phantom:poseidon:panther -->
+
+<!-- This is an auto-generated comment by CodeRabbit -->
+
+✅ Addressed in commits bf3ef98 to 5116b29",feedback,coverage,1,3,unanswered,,,,
+2140849954,3137778879,OpenAI Codex,production,src/main/java/com/divudi/bean/pharmacy/TransferIssueController.java,False,"this can never be bull as getPharmaceuticalBillItem() creates a new item if it is null. please check
+also before calling this methoid, we make sure there is a bill items to pass this method.
+please don not issues for the sake of making an issue. DO some backgorund check. It we have multiple methods calling one another, we can not check all for null checks as it the first point, we check it to start with.",feedback,functional,0,1,unanswered,,,,
+2231885903,3200033873,GitHub Copilot,test,tests/test_augmentations.py,True,"Minimized blur tests by consolidating three separate test functions into one comprehensive test that covers single blur augmentation, custom parameters, and mixing with other augmentations. See commit c03d17e.",acknowledgement,n/a_acknowledgement,0,0,unanswered,,,,
+2104160872,3083352446,GitHub Copilot,test,packages/shared/test/workflow-import-schema.test.ts,True,Replaced the external file reference with the JSON directly in the test file in d7d399f.,feedback,unclassified,0,0,unanswered,,,,
+2059821395,3017016012,Devin,production,pageserver/src/consumption_metrics/metrics.rs,False,"@skyzh The description for https://github.com/neondatabase/neon/pull/11648 talks about setting synthetic size to 1, but the code sets resident size to 1 (and then this PR removes resident size code).  Is there something subtle going on, or was the intent of 11648 to set synthetic size to 1 rather than resident size?",feedback,unclassified,0,1,unanswered,,,,
+2141814430,3078353736,OpenAI Codex,test,test/database.test.ts,True,"_🧹 Nitpick (assertive)_
+
+**Avoid `delete` on `process.env` (Biome warning)**
+
+```diff
+-delete process.env.IS_TESTING;
++process.env.IS_TESTING = undefined;
+```
+
+This sidesteps the performance hit and maintains key ordering semantics.
+
+
+
+<!-- suggestion_start -->
+
+<details>
+<summary>📝 Committable suggestion</summary>
+
+> ‼️ **IMPORTANT**
+> Carefully review the code before committing. Ensure that it accurately replaces the highlighted code, contains no missing lines, and has no issues with indentation. Thoroughly test & benchmark the code to ensure it meets the requirements.
+
+```suggestion
+    process.env.IS_TESTING = undefined;
+```
+
+</details>
+
+<!-- suggestion_end -->
+
+<details>
+<summary>🧰 Tools</summary>
+
+<details>
+<summary>🪛 Biome (1.9.4)</summary>
+
+[error] 16-16: Avoid the delete operator which can impact performance.
+
+Unsafe fix: Use an undefined assignment instead.
+
+
+(lint/performance/noDelete)
+
+</details>
+
+</details>
+
+<details>
+<summary>🤖 Prompt for AI Agents</summary>
+
+```
+In test/database.test.ts at line 16, avoid using the delete operator on
+process.env as it causes performance issues and disrupts key ordering. Instead
+of deleting process.env.IS_TESTING, set it to undefined or an empty string to
+effectively clear the environment variable without deleting the property.
+```
+
+</details>
+
+<!-- This is an auto-generated comment by CodeRabbit -->",feedback,superficial,1,2,unanswered,,,,
